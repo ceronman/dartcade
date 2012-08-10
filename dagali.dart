@@ -6,11 +6,11 @@ class Resource {
   var element;
   String source;
   bool loaded;
-  
+
   Resource(this.element, this.source, this.loaded) {
     this.element.on.load.add((e) => this.loaded = true);
   }
-  
+
   void load() {
     this.element.src = this.source;
   }
@@ -28,7 +28,7 @@ class EventListeners implements EventListenerList {
     this.listeners.add(handler);
     return this;
   }
-  
+
   EventListeners remove(EventListener handler, [bool useCapture]) {
     var index = listeners.indexOf(handler);
     listeners.removeRange(index, index);
@@ -44,7 +44,7 @@ class EventListeners implements EventListenerList {
 
 class ResourceManagerEvents {
   EventListeners load;
-  
+
   ResourceManagerEvents() {
     this.load = new EventListeners();
   }
@@ -54,29 +54,33 @@ class ResourceManagerEvents {
 class ResourceManager {
   ResourceManagerEvents on;
   List<Resource> resources;
-  
+
   ResourceManager() {
-    this.resources = new List<Resource>();
-    this.on = new ResourceManagerEvents();
+    resources = new List<Resource>();
+    on = new ResourceManagerEvents();
   }
-  
+
   ImageElement image(String src) {
     var imageElement = new ImageElement();
-    this.resources.add(new Resource(imageElement, src, false));
-    imageElement.on.load.add(this.check);
+    resources.add(new Resource(imageElement, src, false));
+    imageElement.on.load.add(check);
     return imageElement;
   }
-  
+
   void check(Event event) {
-    if (this.resources.every((resource) => resource.loaded)) {
-      this.on.load.dispatch(new Event('loaded'));
+    if (resources.every((resource) => resource.loaded)) {
+      on.load.dispatch(new Event('loaded'));
     }
   }
-  
+
   void loadAll() {
-    this.resources.forEach((resource) {
+    if (resources.length == 0) {
+      on.load.dispatch(new Event('loaded'));
+      return;
+    }
+    for (var resource in resources) {
       resource.load();
-    });
+    }
   }
 }
 
@@ -192,19 +196,19 @@ class Keys {
 
 class KeyStateHandler {
   Map<num, bool> pressedKeys;
-  
+
   KeyStateHandler() {
     pressedKeys = new Map<num, bool>();
-    
+
     document.on.keyDown.add((KeyboardEvent event) {
       this.pressedKeys[event.keyCode] = true;
     });
-    
+
     document.on.keyUp.add((KeyboardEvent event) {
       this.pressedKeys[event.keyCode] = false;
     });
   }
-  
+
   bool operator [](num key) {
     if (this.pressedKeys.containsKey(key)) {
       return this.pressedKeys[key];
@@ -213,40 +217,129 @@ class KeyStateHandler {
   }
 }
 
-abstract class Game {
+class Director {
   ResourceManager resource;
   KeyStateHandler keyboard;
   CanvasElement canvas;
-  
-  Game() {
+  Scene scene;
+
+  Director() {
     resource = new ResourceManager();
     keyboard = new KeyStateHandler();
-    
+
     var gamebox = query('#gamebox');
     canvas = new CanvasElement(640, 480);
     canvas.style.backgroundColor = 'black';
     gamebox.elements.add(canvas);
-    
-    init();
   }
-  
-  abstract void init();
-  abstract void update(int dt);
-  abstract void paint();
-  
-  void run() {
+
+  void update(num dt) {
+
+  }
+
+  void draw(context) {
+    scene.drawWithChildren(context);
+  }
+
+  void run(Scene mainScene) {
+    this.scene = mainScene;
     resource.on.load.add((e) {
       var initTime = new Date.now().millisecondsSinceEpoch;
       drawFrame(int currentTime) {
-        var dt = (currentTime - initTime) / 1000; 
+        var dt = (currentTime - initTime) / 1000;
         initTime = currentTime;
         update(dt);
-        paint();
+        draw(canvas.context2d);
         window.requestAnimationFrame(drawFrame);
       }
       window.requestAnimationFrame(drawFrame);
     });
-    
+
     resource.loadAll();
+  }
+}
+
+
+class Vector {
+  num x;
+  num y;
+
+  Vector(this.x, this.y);
+}
+
+
+abstract class CocosNode {
+  Vector _position;
+  Vector anchor;
+  Vector scale;
+  double rotation;
+  bool visible;
+  List<CocosNode> children;
+  CocosNode parent;
+
+  Vector get position() => _position;
+  void set position(p) {
+    if (p is List) {
+      _position = new Vector(p[0], p[1]);
+    } else {
+      _position = p;
+    }
+  }
+
+  CocosNode() {
+    position = new Vector(0,0);
+    anchor = new Vector(0, 0);
+    scale = new Vector(1, 1);
+    rotation = 0.0;
+    visible = true;
+    children = new List<CocosNode>();
+  }
+
+  void draw(context) {
+  }
+
+  void drawWithChildren(context) {
+    for (CocosNode child in children) {
+      child.drawWithChildren(context);
+    }
+    draw(context);
+  }
+
+  void add(node) {
+    children.add(node);
+    node.parent = this;
+  }
+
+  void remove(CocosNode node) {
+    children.removeRange(children.indexOf(node), 1);
+    node.parent = null;
+  }
+}
+
+class Scene extends CocosNode {
+}
+
+class Layer extends CocosNode {
+}
+
+class Label extends CocosNode {
+
+  String font;
+  var color;
+  String align;
+  String text;
+
+  Label(this.text, [position, this.font, this.color, this.align]) {
+    this.position = position;
+    font = font != null ? font : '20pt Serif';
+    color = color != null ? color : 'white';
+    align = align != null ? align : 'start';
+  }
+
+  void draw(context) {
+    context.font = font;
+    context.fillStyle = color;
+    context.textAlign = align;
+    context.fillText(text, position.x, position.y);
   }
 }
