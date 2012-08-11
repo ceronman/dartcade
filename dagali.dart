@@ -317,6 +317,12 @@ abstract class CocosNode {
 }
 
 class Scene extends CocosNode {
+
+  Scene([Layer layer]): super() {
+    if (layer != null) {
+      this.add(layer);
+    }
+  }
 }
 
 class Layer extends CocosNode {
