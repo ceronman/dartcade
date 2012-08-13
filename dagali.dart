@@ -277,6 +277,12 @@ abstract class BaseNode {
   List<BaseNode> children;
   BaseNode parent;
 
+  abstract get width();
+  abstract set width(int w);
+
+  abstract get height();
+  abstract set height(int h);
+
   Vector get position() => _position;
   void set position(p) {
     if (p is List) {
@@ -295,14 +301,33 @@ abstract class BaseNode {
     children = new List<BaseNode>();
   }
 
-  void draw(context) {
+  void transform(CanvasRenderingContext2D context) {
+    context.translate(position.x, position.y);
+    if (scale.x != 1 || scale.y != 1) {
+      context.scale(scale.x, scale.y);
+    }
+    if (rotation != 0) {
+      context.rotate(rotation * Math.PI/180);
+    }
+  }
+
+  void drawWithTransform(context) {
+    if (visible) {
+      context.save();
+      transform(context);
+      draw(context);
+      context.restore();
+    }
   }
 
   void drawWithChildren(context) {
     for (BaseNode child in children) {
       child.drawWithChildren(context);
     }
-    draw(context);
+    drawWithTransform(context);
+  }
+
+  void draw(context) {
   }
 
   void add(node) {
@@ -335,8 +360,8 @@ class Label extends BaseNode {
   String align;
   String text;
 
-  Label(this.text, [position, this.font, this.color, this.align]) {
-    this.position = position;
+  Label(this.text, [pos, this.font, this.color, this.align]) {
+    position = pos != null ? pos : position;
     font = font != null ? font : '20pt Serif';
     color = color != null ? color : 'white';
     align = align != null ? align : 'start';
@@ -354,13 +379,11 @@ class Sprite extends BaseNode {
   ImageElement image;
 
 
-  Sprite(ImageElement this.image, [position]): super() {
-    if (position != null) {
-      this.position = position;
-    }
+  Sprite(ImageElement this.image, [pos]): super() {
+    position = pos != null ? pos : position;
   }
 
   void draw(context) {
-    context.drawImage(image, position.x, position.y);
+    context.drawImage(image, 0, 0);
   }
 }
