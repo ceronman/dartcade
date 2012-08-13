@@ -268,14 +268,14 @@ class Vector {
 }
 
 
-abstract class CocosNode {
+abstract class BaseNode {
   Vector _position;
   Vector anchor;
   Vector scale;
   double rotation;
   bool visible;
-  List<CocosNode> children;
-  CocosNode parent;
+  List<BaseNode> children;
+  BaseNode parent;
 
   Vector get position() => _position;
   void set position(p) {
@@ -286,20 +286,20 @@ abstract class CocosNode {
     }
   }
 
-  CocosNode() {
+  BaseNode() {
     position = new Vector(0,0);
     anchor = new Vector(0, 0);
     scale = new Vector(1, 1);
     rotation = 0.0;
     visible = true;
-    children = new List<CocosNode>();
+    children = new List<BaseNode>();
   }
 
   void draw(context) {
   }
 
   void drawWithChildren(context) {
-    for (CocosNode child in children) {
+    for (BaseNode child in children) {
       child.drawWithChildren(context);
     }
     draw(context);
@@ -310,13 +310,13 @@ abstract class CocosNode {
     node.parent = this;
   }
 
-  void remove(CocosNode node) {
+  void remove(BaseNode node) {
     children.removeRange(children.indexOf(node), 1);
     node.parent = null;
   }
 }
 
-class Scene extends CocosNode {
+class Scene extends BaseNode {
 
   Scene([Layer layer]): super() {
     if (layer != null) {
@@ -325,10 +325,10 @@ class Scene extends CocosNode {
   }
 }
 
-class Layer extends CocosNode {
+class Layer extends BaseNode {
 }
 
-class Label extends CocosNode {
+class Label extends BaseNode {
 
   String font;
   var color;
@@ -347,5 +347,20 @@ class Label extends CocosNode {
     context.fillStyle = color;
     context.textAlign = align;
     context.fillText(text, position.x, position.y);
+  }
+}
+
+class Sprite extends BaseNode {
+  ImageElement image;
+
+
+  Sprite(ImageElement this.image, [position]): super() {
+    if (position != null) {
+      this.position = position;
+    }
+  }
+
+  void draw(context) {
+    context.drawImage(image, position.x, position.y);
   }
 }
