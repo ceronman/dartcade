@@ -413,17 +413,17 @@ class Label extends BaseNode {
 
   String _text;
   String get text() => _text;
-  void set text(newText) {
+         set text(String value) {
     var canvas = new CanvasElement(0, 0);
     var context = canvas.context2d;
     _setStyle(context);
-    var dimensions = context.measureText(newText);
+    var dimensions = context.measureText(value);
     width = dimensions.width;
 
     // FIXME: Calculating height of text is very tricky.
     height = 0;
 
-    _text = newText;
+    _text = value;
   }
 
   Label(text, [position, font, color, align, baseline]):
