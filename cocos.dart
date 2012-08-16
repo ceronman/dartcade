@@ -1,4 +1,4 @@
-#library('dagali');
+#library('cocos.dart');
 
 #import('dart:html');
 
