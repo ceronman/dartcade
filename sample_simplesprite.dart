@@ -1,4 +1,4 @@
-#import('cocosdart.dart');
+#import('cocos.dart');
 
 void main() {
   Director director = new Director("#gamebox");
