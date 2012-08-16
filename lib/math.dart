@@ -11,9 +11,9 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-class vec2 {
+class Vec2 {
   num x;
   num y;
 
-  vec2(this.x, this.y);
+  Vec2(this.x, this.y);
 }

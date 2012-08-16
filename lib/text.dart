@@ -38,7 +38,7 @@ class Label extends BaseNode {
 
   Label(text, [position, font, color, align, baseline]):
       super() {
-    position_anchor = new vec2(0, 0);
+    position_anchor = new Vec2(0, 0);
     this.position = position != null ? position : this.position;
     this.font = font != null ? font : '20pt Serif';
     this.color = color != null ? color : 'white';
