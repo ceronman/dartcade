@@ -37,7 +37,7 @@ class Director {
   }
 
   void update(num dt) {
-
+    currentScene.update(dt);
   }
 
   void _debugDraw(CanvasRenderingContext2D context) {

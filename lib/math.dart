@@ -16,4 +16,6 @@ class vec2 {
   num y;
 
   vec2(this.x, this.y);
+
+  toString() => "$x, $y";
 }

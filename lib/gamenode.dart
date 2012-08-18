@@ -21,12 +21,13 @@ interface GameNode {
        set rotation_anchor(vec2 value);
   vec2 get scale();
        set scale(vec2 value);
-  num get rotation();
-      set rotation(num value);
+  num  get rotation();
+       set rotation(num value);
   bool get visible();
        set visible(bool value);
 
   List<GameNode> get children();
+  List<Action>   get actions();
 
   GameNode get parent();
            set parent(GameNode value);
@@ -41,6 +42,7 @@ interface GameNode {
   void update(dt);
   void add(node);
   void remove(GameNode node);
+  void runAction(Action action);
 }
 
 
@@ -51,6 +53,7 @@ abstract class AbstractNode implements GameNode{
   num rotation;
   bool visible;
   List<GameNode> children;
+  List<Action> actions;
   GameNode parent;
 
   abstract num get width();
@@ -74,9 +77,10 @@ abstract class AbstractNode implements GameNode{
     rotation_anchor = new vec2(0.5, 0.5);
     visible = true;
     children = new List<GameNode>();
+    actions = new List<Action>();
   }
 
-  void transform(CanvasRenderingContext2D context) {
+  transform(CanvasRenderingContext2D context) {
 
     context.translate(position.x, position.y);
 
@@ -95,35 +99,59 @@ abstract class AbstractNode implements GameNode{
     context.translate(-position_anchor.x * width, -position_anchor.y * height);
   }
 
-  void drawWithTransform(context) {
+  drawWithTransform(context) {
       context.save();
       transform(context);
       draw(context);
       context.restore();
   }
 
-  void drawWithChildren(context) {
+  drawWithChildren(context) {
     if (visible) {
-      for (GameNode child in children) {
+      for (var child in children) {
         child.drawWithChildren(context);
       }
       drawWithTransform(context);
     }
   }
 
-  void draw(context) {
+  draw(context) {
   }
 
-  void update(dt) {
+  update(dt) {
+    for (var child in children) {
+      child.update(dt);
+    }
+
+    var doneActions = [];
+    for (var i=0; i<actions.length; i++) {
+      var action = actions[i];
+      if (action.done) {
+        doneActions.add(i);
+      }
+      else {
+        action.step(dt);
+      }
+    }
+
+    for (var i in doneActions) {
+      actions.removeRange(i, 1);
+    }
   }
 
-  void add(node) {
+  add(node) {
     children.add(node);
     node.parent = this;
   }
 
-  void remove(GameNode node) {
+  remove(GameNode node) {
     children.removeRange(children.indexOf(node), 1);
     node.parent = null;
+  }
+
+  runAction(Action action) {
+    action.target = this;
+    actions.add(action);
+    action.start();
   }
 }
