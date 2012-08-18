@@ -15,12 +15,13 @@
 
 #import('dart:html');
 
-#source('util.dart');
-#source('resource.dart');
-#source('input.dart');
+#source('action.dart');
 #source('director.dart');
-#source('math.dart');
-#source('basenode.dart');
+#source('gamenode.dart');
+#source('input.dart');
 #source('layer.dart');
-#source('text.dart');
+#source('math.dart');
+#source('resource.dart');
 #source('sprite.dart');
+#source('text.dart');
+#source('util.dart');

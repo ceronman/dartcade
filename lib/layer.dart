@@ -11,7 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-class Scene extends BaseNode {
+class Scene extends AbstractNode {
 
   int width;
   int height;
@@ -23,7 +23,7 @@ class Scene extends BaseNode {
   }
 }
 
-class Layer extends BaseNode {
+class Layer extends AbstractNode {
   get width() => parent.width;
   get height() => parent.height;
 }

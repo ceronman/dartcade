@@ -11,17 +11,50 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-abstract class BaseNode {
+
+interface GameNode {
+  vec2 get position();
+       set position(vec2 value);
+  vec2 get position_anchor();
+       set position_anchor(vec2 value);
+  vec2 get rotation_anchor();
+       set rotation_anchor(vec2 value);
+  vec2 get scale();
+       set scale(vec2 value);
+  num get rotation();
+      set rotation(num value);
+  bool get visible();
+       set visible(bool value);
+
+  List<GameNode> get children();
+
+  GameNode get parent();
+           set parent(GameNode value);
+
+  num get width();
+  num get height();
+
+  void transform(context);
+  void drawWithTransform(context);
+  void drawWithChildren(context);
+  void draw(context);
+  void update(dt);
+  void add(node);
+  void remove(GameNode node);
+}
+
+
+abstract class AbstractNode implements GameNode{
   vec2 position_anchor;
   vec2 rotation_anchor;
   vec2 scale;
   num rotation;
   bool visible;
-  List<BaseNode> children;
-  BaseNode parent;
+  List<GameNode> children;
+  GameNode parent;
 
-  abstract int get width();
-  abstract int get height();
+  abstract num get width();
+  abstract num get height();
 
   vec2 _position;
   vec2 get position() => _position;
@@ -33,14 +66,14 @@ abstract class BaseNode {
     }
   }
 
-  BaseNode() {
+  AbstractNode() {
     position = new vec2(0, 0);
     position_anchor = new vec2(0.5, 0.5);
     scale = new vec2(1, 1);
     rotation = 0;
     rotation_anchor = new vec2(0.5, 0.5);
     visible = true;
-    children = new List<BaseNode>();
+    children = new List<GameNode>();
   }
 
   void transform(CanvasRenderingContext2D context) {
@@ -71,7 +104,7 @@ abstract class BaseNode {
 
   void drawWithChildren(context) {
     if (visible) {
-      for (BaseNode child in children) {
+      for (GameNode child in children) {
         child.drawWithChildren(context);
       }
       drawWithTransform(context);
@@ -81,12 +114,15 @@ abstract class BaseNode {
   void draw(context) {
   }
 
+  void update(dt) {
+  }
+
   void add(node) {
     children.add(node);
     node.parent = this;
   }
 
-  void remove(BaseNode node) {
+  void remove(GameNode node) {
     children.removeRange(children.indexOf(node), 1);
     node.parent = null;
   }
