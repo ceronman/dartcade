@@ -1,4 +1,4 @@
-// Copyright 2012 Manuel Cerón <ceronman@gmail.com
+// Copyright 2012 Manuel Cerón <ceronman@gmail.com>
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,9 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 abstract class BaseNode {
-  Vec2 position_anchor;
-  Vec2 rotation_anchor;
-  Vec2 scale;
+  vec2 position_anchor;
+  vec2 rotation_anchor;
+  vec2 scale;
   num rotation;
   bool visible;
   List<BaseNode> children;
@@ -23,22 +23,22 @@ abstract class BaseNode {
   abstract int get width();
   abstract int get height();
 
-  Vec2 _position;
-  Vec2 get position() => _position;
+  vec2 _position;
+  vec2 get position() => _position;
   void set position(p) {
     if (p is List) {
-      _position = new Vec2(p[0], p[1]);
+      _position = new vec2(p[0], p[1]);
     } else {
       _position = p;
     }
   }
 
   BaseNode() {
-    position = new Vec2(0, 0);
-    position_anchor = new Vec2(0.5, 0.5);
-    scale = new Vec2(1, 1);
+    position = new vec2(0, 0);
+    position_anchor = new vec2(0.5, 0.5);
+    scale = new vec2(1, 1);
     rotation = 0;
-    rotation_anchor = new Vec2(0.5, 0.5);
+    rotation_anchor = new vec2(0.5, 0.5);
     visible = true;
     children = new List<BaseNode>();
   }

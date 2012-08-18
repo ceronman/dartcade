@@ -1,4 +1,4 @@
-// Copyright 2012 Manuel Cerón <ceronman@gmail.com
+// Copyright 2012 Manuel Cerón <ceronman@gmail.com>
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -38,7 +38,7 @@ class Label extends BaseNode {
 
   Label(text, [position, font, color, align, baseline]):
       super() {
-    position_anchor = new Vec2(0, 0);
+    position_anchor = new vec2(0, 0);
     this.position = position != null ? position : this.position;
     this.font = font != null ? font : '20pt Serif';
     this.color = color != null ? color : 'white';
