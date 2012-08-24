@@ -69,7 +69,6 @@ class MoveTo extends AbstractAction {
   }
 
   step(dt) {
-    print('dt: $dt');
     ellapsedTime += dt;
     interval(ellapsedTime/duration);
   }

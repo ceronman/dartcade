@@ -52,13 +52,14 @@ class Director {
 
     var i = 0;
 
-    for (var row=0; row<rows; row++) {
+    context.beginPath();
+    for (var row=1; row<rows; row++) {
       i = row * size;
       context.moveTo(0, i);
       context.lineTo(canvas.width, i);
     }
 
-    for (var col=0; col<cols; col++) {
+    for (var col=1; col<cols; col++) {
       i = col * size;
       context.moveTo(i, 0);
       context.lineTo(i, canvas.height);
