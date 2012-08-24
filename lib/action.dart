@@ -22,7 +22,7 @@ interface Action {
   void stop();
 }
 
-abstract class AbstractAction implements Action{
+abstract class AbstractAction implements Action {
   GameNode _target;
   GameNode get target()                => _target;
            set target(GameNode value)  => _target = value;
@@ -35,7 +35,7 @@ abstract class AbstractAction implements Action{
   abstract void stop();
 }
 
-abstract class InstantAction extends AbstractAction{
+abstract class InstantAction extends AbstractAction {
   bool get done() => true;
   abstract void start();
 
@@ -49,4 +49,34 @@ class Place extends InstantAction {
   Place(this.position);
 
   start() => target.position = position;
+}
+
+class MoveTo extends AbstractAction {
+  vec2 endPosition;
+  num duration;
+  num ellapsedTime;
+
+  vec2 deltaPosition;
+  vec2 startPosition;
+
+  bool get done() => ellapsedTime >= duration;
+
+  MoveTo(this.endPosition, this.duration): ellapsedTime = 0;
+
+  start() {
+    startPosition = target.position;
+    deltaPosition = endPosition - startPosition;
+  }
+
+  step(dt) {
+    print('dt: $dt');
+    ellapsedTime += dt;
+    interval(ellapsedTime/duration);
+  }
+
+  interval(num t) {
+    target.position = startPosition + deltaPosition * t;
+  }
+
+  void stop() {}
 }

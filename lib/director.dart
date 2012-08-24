@@ -15,6 +15,7 @@ class Director {
   ResourceManager resource;
   KeyStateHandler keyboard;
   CanvasElement canvas;
+  num fps;
 
   Scene _currentScene;
   Scene get currentScene() => _currentScene;
@@ -41,24 +42,29 @@ class Director {
   }
 
   void _debugDraw(CanvasRenderingContext2D context) {
+    context.save();
+    context.translate(0.5, 0.5);
     var size = 20;
     var color = "#333333";
     var rows = canvas.height / size;
     var cols = canvas.width / size;
+    context.strokeStyle = color;
+
+    var i = 0;
 
     for (var row=0; row<rows; row++) {
-      context.strokeStyle = color;
-      context.moveTo(0, row * size + 0.5);
-      context.lineTo(canvas.width, row * size + 0.5);
-      context.stroke();
+      i = row * size;
+      context.moveTo(0, i);
+      context.lineTo(canvas.width, i);
     }
 
     for (var col=0; col<cols; col++) {
-      context.strokeStyle = color;
-      context.moveTo(col * size + 0.5, 0);
-      context.lineTo(col * size + 0.5, canvas.height);
-      context.stroke();
+      i = col * size;
+      context.moveTo(i, 0);
+      context.lineTo(i, canvas.height);
     }
+    context.stroke();
+    context.restore();
   }
 
   void draw(CanvasRenderingContext2D context) {
@@ -71,17 +77,25 @@ class Director {
     currentScene = mainScene;
     currentScene.width = canvas.width;
     currentScene.height = canvas.height;
-
     resource.on.load.add((e) {
       var initTime = new Date.now().millisecondsSinceEpoch;
-      drawFrame(int currentTime) {
+      var frameCount = 0;
+
+      drawFrame(num currentTime) {
+        frameCount++;
         var dt = (currentTime - initTime) / 1000;
         initTime = currentTime;
         update(dt);
         draw(canvas.context2d);
         window.requestAnimationFrame(drawFrame);
       }
+
       window.requestAnimationFrame(drawFrame);
+      window.setInterval(() {
+        fps = frameCount;
+        frameCount = 0;
+        print('fps: $fps');
+      }, 1000);
     });
 
     resource.loadAll();

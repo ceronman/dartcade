@@ -18,4 +18,16 @@ class vec2 {
   vec2(this.x, this.y);
 
   toString() => "$x, $y";
+
+  vec2 operator-(vec2 other) => new vec2(x - other.x, y - other.y);
+  vec2 operator+(vec2 other) => new vec2(x + other.x, y + other.y);
+
+  vec2 operator*(Dynamic other) {
+    if (other is num) {
+      return new vec2(x * other, y * other);
+    }
+    if (other is vec2) {
+      return new vec2(x * other.x, y * other.y);
+    }
+  }
 }
