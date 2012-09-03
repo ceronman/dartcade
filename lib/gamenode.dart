@@ -13,27 +13,27 @@
 // limitations under the License.
 
 interface GameNode {
-  vec2 get position();
+  vec2 get position;
        set position(vec2 value);
-  vec2 get position_anchor();
+  vec2 get position_anchor;
        set position_anchor(vec2 value);
-  vec2 get rotation_anchor();
+  vec2 get rotation_anchor;
        set rotation_anchor(vec2 value);
-  vec2 get scale();
+  vec2 get scale;
        set scale(vec2 value);
-  num  get rotation();
+  num  get rotation;
        set rotation(num value);
-  bool get visible();
+  bool get visible;
        set visible(bool value);
 
-  List<GameNode> get children();
-  List<Action>   get actions();
+  List<GameNode> get children;
+  List<Action>   get actions;
 
-  GameNode get parent();
+  GameNode get parent;
            set parent(GameNode value);
 
-  num get width();
-  num get height();
+  num get width;
+  num get height;
 
   void transform(context);
   void drawWithTransform(context);
@@ -56,11 +56,11 @@ abstract class AbstractNode implements GameNode{
   List<Action> actions;
   GameNode parent;
 
-  abstract num get width();
-  abstract num get height();
+  abstract num get width;
+  abstract num get height;
 
   vec2 _position;
-  vec2 get position() => _position;
+  vec2 get position => _position;
   void set position(p) {
     if (p is List) {
       _position = new vec2(p[0], p[1]);

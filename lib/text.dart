@@ -22,7 +22,7 @@ class Label extends AbstractNode {
   num height;
 
   String _text;
-  String get text() => _text;
+  String get text => _text;
          set text(String value) {
     var canvas = new CanvasElement(0, 0);
     var context = canvas.context2d;

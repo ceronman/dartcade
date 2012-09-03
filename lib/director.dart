@@ -18,7 +18,7 @@ class Director {
   num fps;
 
   Scene _currentScene;
-  Scene get currentScene() => _currentScene;
+  Scene get currentScene => _currentScene;
   void set currentScene(Scene scene) {
     _currentScene = scene;
     _currentScene.width = canvas.width;

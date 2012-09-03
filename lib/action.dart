@@ -12,10 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 interface Action {
-  GameNode get target();
+  GameNode get target;
            set target(GameNode);
 
-  bool get done();
+  bool get done;
 
   void start();
   void step(num dt);
@@ -24,7 +24,7 @@ interface Action {
 
 abstract class AbstractAction implements Action {
   GameNode _target;
-  GameNode get target()                => _target;
+  GameNode get target                => _target;
            set target(GameNode value)  => _target = value;
   bool done;
 
@@ -36,7 +36,7 @@ abstract class AbstractAction implements Action {
 }
 
 abstract class InstantAction extends AbstractAction {
-  bool get done() => true;
+  bool get done => true;
   abstract void start();
 
   void step(num dt) {}
@@ -59,7 +59,7 @@ class MoveTo extends AbstractAction {
   vec2 deltaPosition;
   vec2 startPosition;
 
-  bool get done() => ellapsedTime >= duration;
+  bool get done => ellapsedTime >= duration;
 
   MoveTo(this.endPosition, this.duration): ellapsedTime = 0;
 

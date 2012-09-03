@@ -24,6 +24,6 @@ class Scene extends AbstractNode {
 }
 
 class Layer extends AbstractNode {
-  get width() => parent.width;
-  get height() => parent.height;
+  get width => parent.width;
+  get height => parent.height;
 }
