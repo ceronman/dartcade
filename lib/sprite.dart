@@ -17,7 +17,7 @@ class Sprite extends AbstractNode {
   get width => image.width;
   get height => image.height;
 
-  Sprite(ImageElement this.image, [pos]): super() {
+  Sprite(ImageElement this.image, {pos}): super() {
     position = pos != null ? pos : position;
   }
 

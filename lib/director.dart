@@ -25,7 +25,7 @@ class Director {
     _currentScene.height = canvas.height;
   }
 
-  Director(selector, [int width, int height]) {
+  Director(selector, {int width, int height}) {
     width = width != null ? width : 640;
     height = height != null ? height : 480;
     resource = new ResourceManager();

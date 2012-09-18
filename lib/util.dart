@@ -18,7 +18,7 @@ class EventListeners implements EventListenerList {
     this.listeners = [];
   }
 
-  EventListeners add(EventListener handler, [bool useCapture]) {
+  EventListeners add(EventListener handler, {bool useCapture}) {
     this.listeners.add(handler);
     return this;
   }

@@ -36,7 +36,7 @@ class Label extends AbstractNode {
     _text = value;
   }
 
-  Label(text, [position, font, color, align, baseline]):
+  Label(text, {position, font, color, align, baseline}):
       super() {
     position_anchor = new vec2(0, 0);
     this.position = position != null ? position : this.position;
