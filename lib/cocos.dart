@@ -14,6 +14,7 @@
 #library('cocos.dart');
 
 #import('dart:html');
+#import('dart:math');
 
 #source('action.dart');
 #source('director.dart');

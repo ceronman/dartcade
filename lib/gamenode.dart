@@ -92,7 +92,7 @@ abstract class AbstractNode implements GameNode{
       var axis_x = (rotation_anchor.x - position_anchor.x) * width;
       var axis_y = (rotation_anchor.y - position_anchor.y) * height;
       context.translate(axis_x, axis_y);
-      context.rotate(rotation * Math.PI/180);
+      context.rotate(rotation * PI/180);
       context.translate(-axis_x, -axis_y);
     }
 
