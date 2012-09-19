@@ -24,8 +24,8 @@ interface Action {
 
 abstract class AbstractAction implements Action {
   GameNode _target;
-  GameNode get target                => _target;
-           set target(GameNode value)  => _target = value;
+  GameNode get target => _target;
+           set target(GameNode value) => _target = value;
   bool done;
 
   AbstractAction(): done=false;
@@ -51,116 +51,99 @@ class Place extends InstantAction {
   start() => target.position = position;
 }
 
-class MoveTo extends AbstractAction {
-  vec2 endPosition;
+abstract class IntervalAction extends AbstractAction {
   num duration;
-  num ellapsedTime;
-
-  vec2 deltaPosition;
-  vec2 startPosition;
+  num ellapsedTime = 0;
 
   bool get done => ellapsedTime >= duration;
 
-  MoveTo(this.endPosition, this.duration): ellapsedTime = 0;
+  IntervalAction(this.duration);
 
-  start() {
-    startPosition = target.position;
-    deltaPosition = endPosition - startPosition;
-  }
+  abstract start();
 
   step(dt) {
     ellapsedTime += dt;
     interval(ellapsedTime/duration); // FIXME: check duration == 0
   }
 
-  interval(num t) {
-    target.position = startPosition + deltaPosition * t;
-  }
+  abstract interval(num t);
 
   void stop() {}
 }
 
-class MoveBy extends AbstractAction {
-  num duration;
-  num ellapsedTime;
-
+class MoveBy extends IntervalAction {
   vec2 deltaPosition;
   vec2 startPosition;
 
-  bool get done => ellapsedTime >= duration;
-
-  MoveBy(this.deltaPosition, this.duration): ellapsedTime = 0;
+  MoveBy(this.deltaPosition, duration) : super(duration);
 
   start() {
     startPosition = target.position;
   }
 
-  step(dt) {
-    ellapsedTime += dt;
-    interval(ellapsedTime/duration);
+  interval(num t) {
+    target.position = startPosition + deltaPosition * t;
+  }
+}
+
+class MoveTo extends IntervalAction {
+
+  vec2 endPosition;
+  vec2 deltaPosition;
+  vec2 startPosition;
+
+  MoveTo(this.endPosition, duration) : super(duration);
+
+  start() {
+    startPosition = target.position;
+    deltaPosition = endPosition - startPosition;
   }
 
   interval(num t) {
     target.position = startPosition + deltaPosition * t;
   }
-
-  void stop() {}
 }
 
-class RotateBy extends AbstractAction {
-  num duration;
-  num ellapsedTime;
-
+class RotateBy extends IntervalAction {
   num startRotation;
   num deltaRotation;
 
-  bool get done => ellapsedTime >= duration;
-
-  //FIXME: Apply lazy evaluation
-  RotateBy(this.deltaRotation, this.duration): ellapsedTime = 0;
+  RotateBy(this.deltaRotation, duration) : super(duration);
 
   start() {
     startRotation = target.rotation;
   }
 
-  step(dt) {
-    ellapsedTime += dt;
-    interval(ellapsedTime/duration);
-  }
-
   interval(num t) {
     target.rotation = startRotation + deltaRotation * t;
   }
-
-  void stop() {}
 }
 
-class RotateTo extends AbstractAction {
-  num duration;
-  num ellapsedTime;
+const int CLOCKWISE = 1;
+const int ANTICLOCKWISE = 2;
 
+class RotateTo extends IntervalAction {
   num startRotation;
   num endRotation;
   num deltaRotation;
+  int direction;
 
-  bool get done => ellapsedTime >= duration;
-
-  //FIXME: Apply lazy evaluation
-  RotateTo(this.endRotation, this.duration): ellapsedTime = 0;
+  RotateTo(endRotation, duration, {int direction}) : super(duration) {
+    this.direction = direction != null ? direction : CLOCKWISE;
+    this.endRotation = endRotation % 360;
+  }
 
   start() {
     startRotation = target.rotation;
-    deltaRotation = endRotation - startRotation;
-  }
-
-  step(dt) {
-    ellapsedTime += dt;
-    interval(ellapsedTime/duration);
+    if (direction == CLOCKWISE) {
+      deltaRotation = endRotation - startRotation;
+    }
+    else {
+      deltaRotation = startRotation - endRotation;
+    }
   }
 
   interval(num t) {
     target.rotation = startRotation + deltaRotation * t;
   }
-
-  void stop() {}
 }
