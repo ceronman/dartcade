@@ -70,11 +70,96 @@ class MoveTo extends AbstractAction {
 
   step(dt) {
     ellapsedTime += dt;
+    interval(ellapsedTime/duration); // FIXME: check duration == 0
+  }
+
+  interval(num t) {
+    target.position = startPosition + deltaPosition * t;
+  }
+
+  void stop() {}
+}
+
+class MoveBy extends AbstractAction {
+  num duration;
+  num ellapsedTime;
+
+  vec2 deltaPosition;
+  vec2 startPosition;
+
+  bool get done => ellapsedTime >= duration;
+
+  MoveBy(this.deltaPosition, this.duration): ellapsedTime = 0;
+
+  start() {
+    startPosition = target.position;
+  }
+
+  step(dt) {
+    ellapsedTime += dt;
     interval(ellapsedTime/duration);
   }
 
   interval(num t) {
     target.position = startPosition + deltaPosition * t;
+  }
+
+  void stop() {}
+}
+
+class RotateBy extends AbstractAction {
+  num duration;
+  num ellapsedTime;
+
+  num startRotation;
+  num deltaRotation;
+
+  bool get done => ellapsedTime >= duration;
+
+  //FIXME: Apply lazy evaluation
+  RotateBy(this.deltaRotation, this.duration): ellapsedTime = 0;
+
+  start() {
+    startRotation = target.rotation;
+  }
+
+  step(dt) {
+    ellapsedTime += dt;
+    interval(ellapsedTime/duration);
+  }
+
+  interval(num t) {
+    target.rotation = startRotation + deltaRotation * t;
+  }
+
+  void stop() {}
+}
+
+class RotateTo extends AbstractAction {
+  num duration;
+  num ellapsedTime;
+
+  num startRotation;
+  num endRotation;
+  num deltaRotation;
+
+  bool get done => ellapsedTime >= duration;
+
+  //FIXME: Apply lazy evaluation
+  RotateTo(this.endRotation, this.duration): ellapsedTime = 0;
+
+  start() {
+    startRotation = target.rotation;
+    deltaRotation = endRotation - startRotation;
+  }
+
+  step(dt) {
+    ellapsedTime += dt;
+    interval(ellapsedTime/duration);
+  }
+
+  interval(num t) {
+    target.rotation = startRotation + deltaRotation * t;
   }
 
   void stop() {}

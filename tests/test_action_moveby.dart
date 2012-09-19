@@ -4,13 +4,13 @@ void main() {
   Director director = new Director('#gamebox');
 
   var layer = new Layer();
-  var label = new Label('MoveTo 200, 200');
+  var label = new Label('MoveBy -100, -100');
 
+  layer.add(label);
   label.position.x = director.canvas.width/2;
   label.position.y = director.canvas.height/2;
 
-  layer.add(label);
-  label.runAction(new MoveTo(new vec2(200, 200), 5));
+  label.runAction(new MoveBy(new vec2(-100, -100), 5));
 
   director.run(new Scene(layer));
 }

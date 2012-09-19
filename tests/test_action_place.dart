@@ -4,7 +4,7 @@ void main() {
   Director director = new Director('#gamebox');
 
   var layer = new Layer();
-  var label = new Label('Place!');
+  var label = new Label('Place 200, 200');
 
   layer.add(label);
   print('Old position: ${label.position}');
