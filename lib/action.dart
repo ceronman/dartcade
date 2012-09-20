@@ -147,3 +147,35 @@ class RotateTo extends IntervalAction {
     target.rotation = startRotation + deltaRotation * t;
   }
 }
+
+class ScaleTo extends IntervalAction {
+  vec2 startScale;
+  vec2 endScale;
+  vec2 deltaScale;
+
+  ScaleTo(this.endScale, duration) : super(duration);
+
+  start() {
+    startScale= target.scale;
+    deltaScale = endScale - startScale;
+  }
+
+  interval(num t) {
+    target.scale = startScale + deltaScale * t;
+  }
+}
+
+class ScaleBy extends IntervalAction {
+  vec2 startScale;
+  vec2 deltaScale;
+
+  ScaleBy(this.deltaScale, duration) : super(duration);
+
+  start() {
+    startScale= target.scale;
+  }
+
+  interval(num t) {
+    target.scale = startScale + deltaScale * t;
+  }
+}
