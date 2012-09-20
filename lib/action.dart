@@ -154,3 +154,41 @@ class ScaleBy extends ChangeAttributeByAction {
   get _changingValue        => target.scale;
   set _changingValue(value) => target.scale = value;
 }
+
+class Hide extends InstantAction {
+
+  start() => target.visible = false;
+}
+
+class Show extends InstantAction {
+
+  start() => target.visible = true;
+}
+
+class ToggleVisibility extends InstantAction {
+
+  start() => target.visible = !target.visible;
+}
+
+class Blink extends IntervalAction {
+  num blinkInterval;
+  num blinks = 0;
+  bool initialVisibility;
+
+  Blink(times, num duration) : super(duration) {
+    blinkInterval = 1 / times;
+  }
+
+  start() {
+    initialVisibility = target.visible;
+  }
+
+  interval(num t) {
+    if (t > (blinkInterval * blinks)) {
+      target.visible = !target.visible;
+      blinks++;
+    }
+  }
+
+  stop() => target.visible = initialVisibility;
+}
