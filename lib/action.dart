@@ -24,7 +24,7 @@ interface Action {
 
 abstract class AbstractAction implements Action {
   GameNode _target;
-  GameNode get target => _target;
+  GameNode get target                 => _target;
            set target(GameNode value) => _target = value;
   bool done;
 
@@ -39,8 +39,8 @@ abstract class InstantAction extends AbstractAction {
   bool get done => true;
   abstract void start();
 
-  void step(num dt) {}
-  void stop() {}
+  void step(num dt);
+  void stop();
 }
 
 class Place extends InstantAction {
@@ -57,7 +57,7 @@ abstract class IntervalAction extends AbstractAction {
 
   bool get done => ellapsedTime >= duration;
 
-  IntervalAction(this.duration);
+  IntervalAction(num this.duration);
 
   abstract start();
 
@@ -68,114 +68,89 @@ abstract class IntervalAction extends AbstractAction {
 
   abstract interval(num t);
 
-  void stop() {}
+  void stop();
 }
 
-class MoveBy extends IntervalAction {
-  vec2 deltaPosition;
-  vec2 startPosition;
+abstract class ChangeAttributeToAction extends IntervalAction {
+  var startValue;
+  var deltaValue;
+  var endValue;
 
-  MoveBy(this.deltaPosition, duration) : super(duration);
+  ChangeAttributeToAction(this.endValue, num duration) : super(duration);
 
   start() {
-    startPosition = target.position;
+    startValue = _changingValue;
+    deltaValue = calculateDeltaValue();
   }
 
-  interval(num t) {
-    target.position = startPosition + deltaPosition * t;
-  }
+  calculateDeltaValue() => endValue - startValue;
+  interval(num t)       => _changingValue = startValue + deltaValue * t;
+
+  abstract get _changingValue;
+  abstract set _changingValue(value);
 }
 
-class MoveTo extends IntervalAction {
+abstract class ChangeAttributeByAction extends IntervalAction {
+  var startValue;
+  var deltaValue;
 
-  vec2 endPosition;
-  vec2 deltaPosition;
-  vec2 startPosition;
+  ChangeAttributeByAction(this.deltaValue, num duration) : super(duration);
 
-  MoveTo(this.endPosition, duration) : super(duration);
+  start()         => startValue = _changingValue;
+  interval(num t) => _changingValue = startValue + deltaValue * t;
 
-  start() {
-    startPosition = target.position;
-    deltaPosition = endPosition - startPosition;
-  }
-
-  interval(num t) {
-    target.position = startPosition + deltaPosition * t;
-  }
+  abstract get _changingValue;
+  abstract set _changingValue(value);
 }
 
-class RotateBy extends IntervalAction {
-  num startRotation;
-  num deltaRotation;
+class MoveBy extends ChangeAttributeByAction {
+  MoveBy(vec2 deltaPosition, num duration) : super(deltaPosition, duration);
 
-  RotateBy(this.deltaRotation, duration) : super(duration);
+  get _changingValue        => target.position;
+  set _changingValue(value) => target.position = value;
+}
 
-  start() {
-    startRotation = target.rotation;
-  }
+class MoveTo extends ChangeAttributeToAction {
+  MoveTo(vec2 endPosition, num duration) : super(endPosition, duration);
 
-  interval(num t) {
-    target.rotation = startRotation + deltaRotation * t;
-  }
+  get _changingValue        => target.position;
+  set _changingValue(value) => target.position = value;
+}
+
+class RotateBy extends ChangeAttributeByAction {
+  RotateBy(num deltaRotation, num duration) : super(deltaRotation, duration);
+
+  get _changingValue        => target.rotation;
+  set _changingValue(value) => target.rotation = value;
 }
 
 const int CLOCKWISE = 1;
-const int ANTICLOCKWISE = 2;
+const int ANTICLOCKWISE =-1;
 
-class RotateTo extends IntervalAction {
-  num startRotation;
-  num endRotation;
-  num deltaRotation;
+class RotateTo extends ChangeAttributeToAction {
   int direction;
 
-  RotateTo(endRotation, duration, {int direction}) : super(duration) {
+  RotateTo(num endRotation, num duration, {int direction}) :
+      super(endRotation % 360, duration) {
     this.direction = direction != null ? direction : CLOCKWISE;
-    this.endRotation = endRotation % 360;
   }
 
-  start() {
-    startRotation = target.rotation;
-    if (direction == CLOCKWISE) {
-      deltaRotation = endRotation - startRotation;
-    }
-    else {
-      deltaRotation = startRotation - endRotation;
-    }
-  }
+  calculateDeltaValue() => (endValue - startValue) * direction;
 
-  interval(num t) {
-    target.rotation = startRotation + deltaRotation * t;
-  }
+  get _changingValue        => target.rotation;
+  set _changingValue(value) => target.rotation = value;
 }
 
-class ScaleTo extends IntervalAction {
-  vec2 startScale;
-  vec2 endScale;
-  vec2 deltaScale;
+class ScaleTo extends ChangeAttributeToAction {
+  ScaleTo(vec2 endScale, num duration) : super(endScale, duration);
 
-  ScaleTo(this.endScale, duration) : super(duration);
-
-  start() {
-    startScale= target.scale;
-    deltaScale = endScale - startScale;
-  }
-
-  interval(num t) {
-    target.scale = startScale + deltaScale * t;
-  }
+  get _changingValue        => target.scale;
+  set _changingValue(value) => target.scale = value;
 }
 
-class ScaleBy extends IntervalAction {
-  vec2 startScale;
-  vec2 deltaScale;
+class ScaleBy extends ChangeAttributeByAction {
+  ScaleBy(vec2 deltaScale, num duration) : super(deltaScale, duration);
 
-  ScaleBy(this.deltaScale, duration) : super(duration);
-
-  start() {
-    startScale= target.scale;
-  }
-
-  interval(num t) {
-    target.scale = startScale + deltaScale * t;
-  }
+  get _changingValue        => target.scale;
+  set _changingValue(value) => target.scale = value;
 }

@@ -10,7 +10,7 @@ void main() {
   label1.position.y = director.canvas.height/2;
 
   layer.add(label1);
-  label1.runAction(new RotateTo(45, 5));
+  label1.runAction(new RotateTo(45, 2));
 
   var label2 = new Label('RotateTo 45 ACW');
 
@@ -18,7 +18,7 @@ void main() {
   label2.position.y = director.canvas.height/2;
 
   layer.add(label2);
-  label2.runAction(new RotateTo(45, 5, direction: ANTICLOCKWISE));
+  label2.runAction(new RotateTo(45, 2, direction: ANTICLOCKWISE));
 
   director.run(new Scene(layer));
 }

@@ -10,7 +10,7 @@ void main() {
   label.position.y = director.canvas.height/2;
 
   layer.add(label);
-  label.runAction(new ScaleTo(new vec2(2, 4), 5));
+  label.runAction(new ScaleTo(new vec2(2, 4), 2));
 
   director.run(new Scene(layer));
 }

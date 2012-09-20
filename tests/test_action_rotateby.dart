@@ -10,7 +10,7 @@ void main() {
   label.position.x = director.canvas.width/2;
   label.position.y = director.canvas.height/2;
 
-  label.runAction(new RotateBy(90, 5));
+  label.runAction(new RotateBy(90, 2));
 
   director.run(new Scene(layer));
 }
