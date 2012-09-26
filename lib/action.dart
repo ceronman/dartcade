@@ -37,10 +37,9 @@ abstract class AbstractAction implements Action {
 
 abstract class InstantAction extends AbstractAction {
   bool get done => true;
-  abstract void start();
 
-  void step(num dt);
-  void stop();
+  void step(num dt) {}
+  void stop() {}
 }
 
 class Place extends InstantAction {
@@ -51,6 +50,21 @@ class Place extends InstantAction {
   start() => target.position = position;
 }
 
+class Hide extends InstantAction {
+
+  start() => target.visible = false;
+}
+
+class Show extends InstantAction {
+
+  start() => target.visible = true;
+}
+
+class ToggleVisibility extends InstantAction {
+
+  start() => target.visible = !target.visible;
+}
+
 abstract class IntervalAction extends AbstractAction {
   num duration;
   num ellapsedTime = 0;
@@ -59,8 +73,6 @@ abstract class IntervalAction extends AbstractAction {
 
   IntervalAction(num this.duration);
 
-  abstract start();
-
   step(dt) {
     ellapsedTime += dt;
     interval(ellapsedTime/duration); // FIXME: check duration == 0
@@ -68,7 +80,7 @@ abstract class IntervalAction extends AbstractAction {
 
   abstract interval(num t);
 
-  void stop();
+  void stop(){}
 }
 
 abstract class ChangeAttributeToAction extends IntervalAction {
@@ -153,21 +165,6 @@ class ScaleBy extends ChangeAttributeByAction {
 
   get _changingValue        => target.scale;
   set _changingValue(value) => target.scale = value;
-}
-
-class Hide extends InstantAction {
-
-  start() => target.visible = false;
-}
-
-class Show extends InstantAction {
-
-  start() => target.visible = true;
-}
-
-class ToggleVisibility extends InstantAction {
-
-  start() => target.visible = !target.visible;
 }
 
 class Blink extends IntervalAction {

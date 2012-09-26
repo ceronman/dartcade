@@ -4,7 +4,7 @@ void main() {
   Director director = new Director('#gamebox');
 
   var layer = new Layer();
-  var label = new Label('S: Show. H: Hide. T: Toggle');
+  var label = new Label('Blink for 5 seconds');
 
   label.align = 'center';
   label.position.x = director.canvas.width/2;
