@@ -11,6 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
 interface Action {
   GameNode get target;
            set target(GameNode);
@@ -75,12 +76,10 @@ abstract class IntervalAction extends AbstractAction {
 
   step(dt) {
     ellapsedTime += dt;
-    interval(ellapsedTime/duration); // FIXME: check duration == 0
+    _interval(ellapsedTime/duration); // FIXME: check duration == 0
   }
 
-  abstract interval(num t);
-
-  void stop(){}
+  abstract _interval(num t);
 }
 
 abstract class ChangeAttributeToAction extends IntervalAction {
@@ -88,104 +87,106 @@ abstract class ChangeAttributeToAction extends IntervalAction {
   var deltaValue;
   var endValue;
 
+  abstract get _changingValue;
+  abstract set _changingValue(value);
+
   ChangeAttributeToAction(this.endValue, num duration) : super(duration);
 
   start() {
     startValue = _changingValue;
-    deltaValue = calculateDeltaValue();
+    deltaValue = endValue - startValue;
   }
 
-  calculateDeltaValue() => endValue - startValue;
-  interval(num t)       => _changingValue = startValue + deltaValue * t;
+  stop() => _changingValue = this.endValue;
 
-  abstract get _changingValue;
-  abstract set _changingValue(value);
+  _interval(num t)       => _changingValue = startValue + deltaValue * t;
 }
 
 abstract class ChangeAttributeByAction extends IntervalAction {
   var startValue;
   var deltaValue;
 
-  ChangeAttributeByAction(this.deltaValue, num duration) : super(duration);
-
-  start()         => startValue = _changingValue;
-  interval(num t) => _changingValue = startValue + deltaValue * t;
-
   abstract get _changingValue;
   abstract set _changingValue(value);
+
+  ChangeAttributeByAction(this.deltaValue, num duration) : super(duration);
+
+  start() => startValue = _changingValue;
+  stop()  => _changingValue = startValue + deltaValue;
+
+  _interval(num t) => _changingValue = startValue + deltaValue * t;
 }
 
 class MoveBy extends ChangeAttributeByAction {
-  MoveBy(vec2 deltaPosition, num duration) : super(deltaPosition, duration);
-
   get _changingValue        => target.position;
   set _changingValue(value) => target.position = value;
+
+  MoveBy(vec2 deltaPosition, num duration) : super(deltaPosition, duration);
 }
 
 class MoveTo extends ChangeAttributeToAction {
-  MoveTo(vec2 endPosition, num duration) : super(endPosition, duration);
-
   get _changingValue        => target.position;
   set _changingValue(value) => target.position = value;
+
+  MoveTo(vec2 endPosition, num duration) : super(endPosition, duration);
 }
 
 class RotateBy extends ChangeAttributeByAction {
-  RotateBy(num deltaRotation, num duration) : super(deltaRotation, duration);
-
   get _changingValue        => target.rotation;
   set _changingValue(value) => target.rotation = value;
+
+  RotateBy(num deltaRotation, num duration) : super(deltaRotation, duration);
 }
 
-const int CLOCKWISE = 1;
-const int ANTICLOCKWISE =-1;
-
-class RotateTo extends ChangeAttributeToAction {
-  int direction;
-
-  RotateTo(num endRotation, num duration, {int direction}) :
-      super(endRotation % 360, duration) {
-    this.direction = direction != null ? direction : CLOCKWISE;
-  }
-
-  calculateDeltaValue() => (endValue - startValue) * direction;
-
+class RotateToCW extends ChangeAttributeToAction {
   get _changingValue        => target.rotation;
   set _changingValue(value) => target.rotation = value;
+
+  RotateToCW(num endRotation, num duration) :
+     super(endRotation % 360, duration);
+}
+
+class RotateToACW extends ChangeAttributeToAction {
+  get _changingValue        => target.rotation;
+  set _changingValue(value) => target.rotation = value;
+
+  RotateToACW(num endRotation, num duration) :
+    super(endRotation % 360 - 360, duration);
 }
 
 class ScaleTo extends ChangeAttributeToAction {
-  ScaleTo(vec2 endScale, num duration) : super(endScale, duration);
-
   get _changingValue        => target.scale;
   set _changingValue(value) => target.scale = value;
+
+  ScaleTo(vec2 endScale, num duration) : super(endScale, duration);
 }
 
 class ScaleBy extends ChangeAttributeByAction {
-  ScaleBy(vec2 deltaScale, num duration) : super(deltaScale, duration);
-
   get _changingValue        => target.scale;
   set _changingValue(value) => target.scale = value;
+
+  ScaleBy(vec2 deltaScale, num duration) : super(deltaScale, duration);
 }
 
 class Blink extends IntervalAction {
-  num blinkInterval;
-  num blinks = 0;
-  bool initialVisibility;
+  num _blinkInterval;
+  num _blinks = 0;
+  bool _initialVisibility;
 
   Blink(times, num duration) : super(duration) {
-    blinkInterval = 1 / times;
+    _blinkInterval = 1 / times;
   }
 
   start() {
-    initialVisibility = target.visible;
+    _initialVisibility = target.visible;
   }
 
-  interval(num t) {
-    if (t > (blinkInterval * blinks)) {
+  stop() => target.visible = _initialVisibility;
+
+  _interval(num t) {
+    if (t > (_blinkInterval * _blinks)) {
       target.visible = !target.visible;
-      blinks++;
+      _blinks++;
     }
   }
-
-  stop() => target.visible = initialVisibility;
 }

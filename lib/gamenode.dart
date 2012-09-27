@@ -124,19 +124,18 @@ abstract class AbstractNode implements GameNode{
     }
 
     var doneActions = [];
-    for (var i=0; i<actions.length; i++) {
-      var action = actions[i];
-      if (action.done) {
-        action.stop();
-        doneActions.add(i);
+    for (var action in actions) {
+      if (!action.done) {
+        action.step(dt);
       }
       else {
-        action.step(dt);
+        doneActions.add(action);
       }
     }
 
-    for (var i in doneActions) {
-      actions.removeRange(i, 1);
+    for (var action in doneActions) {
+      action.stop();
+      actions.removeRange(actions.indexOf(action), 1);
     }
   }
 
