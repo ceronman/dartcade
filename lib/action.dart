@@ -24,12 +24,10 @@ interface Action {
 }
 
 abstract class AbstractAction implements Action {
-  GameNode _target;
-  GameNode get target                 => _target;
-           set target(GameNode value) => _target = value;
-  bool done;
+  GameNode target;
+  bool done = false;
 
-  AbstractAction(): done=false;
+  AbstractAction();
 
   abstract void start();
   abstract void step(num dt);
@@ -187,6 +185,52 @@ class Blink extends IntervalAction {
     if (t > (_blinkInterval * _blinks)) {
       target.visible = !target.visible;
       _blinks++;
+    }
+  }
+}
+
+class ActionSequence extends AbstractAction {
+  List<Action> _actions;
+  int _currentAction;
+
+  // FIXME: add a type here. Maybe Enumerable?
+  ActionSequence(actions) {
+    // FIXME: Throw on empty actions
+    _actions = new List<Action>.from(actions);
+  }
+
+  void start() {
+    _nextAction();
+  }
+
+  void step(num dt) {
+    _actions[_currentAction].step(dt);
+    if (_actions[_currentAction].done) {
+      _nextAction();
+    }
+  }
+
+  void stop() {}
+
+  _nextAction() {
+    if (_currentAction == null) {
+      _currentAction = 0;
+    }
+    else {
+      _actions[_currentAction].stop();
+      _currentAction++;
+    }
+    if (_currentAction < _actions.length) {
+      _actions[_currentAction].target = target;
+      _actions[_currentAction].start();
+
+      // this is useful for instant actions
+      if (_actions[_currentAction].done) {
+        _nextAction();
+      }
+    }
+    else {
+      done = true;
     }
   }
 }
