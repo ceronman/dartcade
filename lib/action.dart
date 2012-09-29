@@ -73,7 +73,7 @@ abstract class IntervalAction extends AbstractAction {
   IntervalAction(num this.duration);
 
   step(dt) {
-    ellapsedTime += dt;
+    ellapsedTime = min(ellapsedTime + dt, duration);
     _interval(ellapsedTime/duration); // FIXME: check duration == 0
   }
 
@@ -95,7 +95,7 @@ abstract class ChangeAttributeToAction extends IntervalAction {
     deltaValue = endValue - startValue;
   }
 
-  stop() => _changingValue = this.endValue;
+  stop() {}
 
   _interval(num t)       => _changingValue = startValue + deltaValue * t;
 }
@@ -231,6 +231,54 @@ class ActionSequence extends AbstractAction {
     }
     else {
       done = true;
+    }
+  }
+}
+
+class ActionSpawn extends AbstractAction {
+  List<Action> _actions;
+
+  bool get done => _actions.length == 0;
+
+  // FIXME: add a type here. Maybe Enumerable?
+  ActionSpawn(actions) {
+    // FIXME: Throw on empty actions
+    _actions = new List<Action>.from(actions);
+  }
+
+  void start() {
+    var doneActions = [];
+    for (var action in _actions) {
+      action.target = target;
+      action.start();
+      // For instant actions.
+      if (action.done) {
+        doneActions.add(action);
+      }
+    }
+    _removeActions(doneActions);
+  }
+
+  void step(num dt) {
+    var doneActions = [];
+    for (var action in _actions) {
+      if (!action.done) {
+        action.step(dt);
+      }
+      else {
+        doneActions.add(action);
+      }
+    }
+    _removeActions(doneActions);
+  }
+
+  void stop() {}
+
+  _removeActions(actions) {
+    for (var action in actions) {
+      action.stop();
+      print('Stopping $action');
+      _actions.removeRange(_actions.indexOf(action), 1);
     }
   }
 }
