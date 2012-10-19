@@ -8,12 +8,12 @@
   <body>
   	<div id="tests">
 	    <h1>tests</h1>
-	    
+
 	    <ul id="test-list">
 	    Loading...
 	    </ul>
     </div>
-    
+
     <div id="gamebox"></div>
 
     <script src="http://dart.googlecode.com/svn/branches/bleeding_edge/dart/client/dart.js"></script>
@@ -34,7 +34,7 @@
 	  }
 	  return result;
 	}
-	
+
 	main () {
 	  var testTitles = {
 	    'action_place':      'Place Action',
@@ -48,10 +48,11 @@
 	    'action_blink':      'Blink Action',
 	    'actions_multiple':  'Multiple Actions',
 	    'action_sequence':   'Action Sequence',
+	    'action_repeat':     'Action Repeat',
 	    'action_spawn': 	   'Action Spawn',
 	    'action_operators':  'Action operators',
 	  };
-	
+
 	  var testName = getQueryArgs()['test'];
 	  if (testName == null) {
 	    query('#test-list').text = '';
@@ -71,7 +72,7 @@
 	    script.type = 'application/dart';
 	    script.src = 'test_${testName}.dart';
 	    document.body.elements.add(script);
-	
+
 	    window.document.title = title;
 	    query('#tests').hidden = true;
 	  }

@@ -14,10 +14,11 @@
 
 abstract class Action {
   GameNode target;
-  bool done = false;
+  bool get done => false;
 
-  AbstractAction();
+  Action();
 
+  abstract Action clone();
   abstract void start();
   abstract void step(num dt);
   abstract void stop();
@@ -43,21 +44,25 @@ class Place extends InstantAction {
 
   Place(this.position);
 
+  Place clone() => new Place(position);
   start() => target.position = position;
 }
 
 class Hide extends InstantAction {
 
+  Hide clone() => new Hide();
   start() => target.visible = false;
 }
 
 class Show extends InstantAction {
 
+  Show clone() => new Show();
   start() => target.visible = true;
 }
 
 class ToggleVisibility extends InstantAction {
 
+  ToggleVisibility clone() => new ToggleVisibility();
   start() => target.visible = !target.visible;
 }
 
@@ -117,6 +122,7 @@ class MoveBy extends ChangeAttributeByAction {
   set _changingValue(value) => target.position = value;
 
   MoveBy(vec2 deltaPosition, num duration) : super(deltaPosition, duration);
+  MoveBy clone() => new MoveBy(deltaValue, duration);
 }
 
 class MoveTo extends ChangeAttributeToAction {
@@ -124,6 +130,7 @@ class MoveTo extends ChangeAttributeToAction {
   set _changingValue(value) => target.position = value;
 
   MoveTo(vec2 endPosition, num duration) : super(endPosition, duration);
+  MoveTo clone() => new MoveTo(endValue, duration);
 }
 
 class RotateBy extends ChangeAttributeByAction {
@@ -131,6 +138,7 @@ class RotateBy extends ChangeAttributeByAction {
   set _changingValue(value) => target.rotation = value;
 
   RotateBy(num deltaRotation, num duration) : super(deltaRotation, duration);
+  RotateBy clone() => new RotateBy(deltaValue, duration);
 }
 
 class RotateToCW extends ChangeAttributeToAction {
@@ -139,6 +147,7 @@ class RotateToCW extends ChangeAttributeToAction {
 
   RotateToCW(num endRotation, num duration) :
      super(endRotation % 360, duration);
+  RotateToCW clone() => new RotateToCW(endValue, duration);
 }
 
 class RotateToACW extends ChangeAttributeToAction {
@@ -147,6 +156,7 @@ class RotateToACW extends ChangeAttributeToAction {
 
   RotateToACW(num endRotation, num duration) :
     super(endRotation % 360 - 360, duration);
+  RotateToACW clone() => new RotateToACW(endValue, duration);
 }
 
 class ScaleTo extends ChangeAttributeToAction {
@@ -154,6 +164,7 @@ class ScaleTo extends ChangeAttributeToAction {
   set _changingValue(value) => target.scale = value;
 
   ScaleTo(vec2 endScale, num duration) : super(endScale, duration);
+  ScaleTo clone() => new ScaleTo(endValue, duration);
 }
 
 class ScaleBy extends ChangeAttributeByAction {
@@ -161,6 +172,7 @@ class ScaleBy extends ChangeAttributeByAction {
   set _changingValue(value) => target.scale = value;
 
   ScaleBy(vec2 deltaScale, num duration) : super(deltaScale, duration);
+  ScaleBy clone() => new ScaleBy(deltaValue, duration);
 }
 
 class Blink extends IntervalAction {
@@ -171,6 +183,7 @@ class Blink extends IntervalAction {
   Blink(times, num duration) : super(duration) {
     _blinkInterval = 1 / times;
   }
+  Blink clone() => new Blink(1 / _blinkInterval, duration);
 
   start() {
     _initialVisibility = target.visible;
@@ -189,6 +202,7 @@ class Blink extends IntervalAction {
 class Delay extends IntervalAction {
 
   Delay(num duration): super(duration);
+  Delay clone() => new Delay(duration);
 
   start() {}
   stop() {}
@@ -198,12 +212,17 @@ class Delay extends IntervalAction {
 class ActionSequence extends Action {
   List<Action> _actions;
   int _currentAction;
+  bool done = false;
 
   // FIXME: add a type here. Maybe Enumerable?
   ActionSequence(actions) {
     // FIXME: Throw on empty actions
-    _actions = new List<Action>.from(actions);
+    _actions = new List<Action>();
+    for (var action in actions) {
+      _actions.add(action.clone());
+    }
   }
+  ActionSequence clone() => new ActionSequence(_actions);
 
   void start() {
     _nextAction();
@@ -249,8 +268,12 @@ class ActionSpawn extends Action {
   // FIXME: add a type here. Maybe Enumerable?
   ActionSpawn(actions) {
     // FIXME: Throw on empty actions
-    _actions = new List<Action>.from(actions);
+    _actions = new List<Action>();
+    for (var action in actions) {
+      _actions.add(action.clone());
+    }
   }
+  ActionSpawn clone() => new ActionSpawn(_actions);
 
   void start() {
     var doneActions = [];
@@ -283,8 +306,52 @@ class ActionSpawn extends Action {
   _removeActions(actions) {
     for (var action in actions) {
       action.stop();
-      print('Stopping $action');
       _actions.removeRange(_actions.indexOf(action), 1);
+    }
+  }
+}
+
+class Repeat extends Action {
+  Action action;
+  num times;
+  bool done = false;
+  Action _currentAction = null;
+  num _repetitions = 0;
+
+  Repeat(Action this.action, num this.times);
+  Repeat clone() => new Repeat(action, times);
+
+  void start() {
+    _nextAction();
+  }
+
+  void step(num dt) {
+    _currentAction.step(dt);
+    if (_currentAction.done) {
+      _nextAction();
+    }
+  }
+
+  void stop() {}
+
+  _nextAction() {
+    if (_currentAction != null) {
+      _currentAction.stop();
+    }
+    _currentAction = action.clone();
+    _repetitions++;
+
+    if (_repetitions <= times) {
+      _currentAction.target = target;
+      _currentAction.start();
+
+      // this is useful for instant actions
+      if (_currentAction.done) {
+        _nextAction();
+      }
+    }
+    else {
+      done = true;
     }
   }
 }
