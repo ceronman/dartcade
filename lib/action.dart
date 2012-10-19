@@ -186,6 +186,15 @@ class Blink extends IntervalAction {
   }
 }
 
+class Delay extends IntervalAction {
+
+  Delay(num duration): super(duration);
+
+  start() {}
+  stop() {}
+  _interval(num t) {}
+}
+
 class ActionSequence extends Action {
   List<Action> _actions;
   int _currentAction;
