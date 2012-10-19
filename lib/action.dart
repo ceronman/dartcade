@@ -21,6 +21,9 @@ interface Action {
   void start();
   void step(num dt);
   void stop();
+
+  Action operator +(Action action);
+  Action operator |(Action action);
 }
 
 abstract class AbstractAction implements Action {
@@ -32,6 +35,14 @@ abstract class AbstractAction implements Action {
   abstract void start();
   abstract void step(num dt);
   abstract void stop();
+
+  Action operator +(Action action) {
+    return new ActionSequence([this, action]);
+  }
+
+  Action operator |(Action action) {
+    return new ActionSpawn([this, action]);
+  }
 }
 
 abstract class InstantAction extends AbstractAction {
