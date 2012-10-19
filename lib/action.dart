@@ -12,21 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-interface Action {
-  GameNode get target;
-           set target(GameNode);
-
-  bool get done;
-
-  void start();
-  void step(num dt);
-  void stop();
-
-  Action operator +(Action action);
-  Action operator |(Action action);
-}
-
-abstract class AbstractAction implements Action {
+abstract class Action {
   GameNode target;
   bool done = false;
 
@@ -45,7 +31,7 @@ abstract class AbstractAction implements Action {
   }
 }
 
-abstract class InstantAction extends AbstractAction {
+abstract class InstantAction extends Action {
   bool get done => true;
 
   void step(num dt) {}
@@ -75,7 +61,7 @@ class ToggleVisibility extends InstantAction {
   start() => target.visible = !target.visible;
 }
 
-abstract class IntervalAction extends AbstractAction {
+abstract class IntervalAction extends Action {
   num duration;
   num ellapsedTime = 0;
 
@@ -200,7 +186,7 @@ class Blink extends IntervalAction {
   }
 }
 
-class ActionSequence extends AbstractAction {
+class ActionSequence extends Action {
   List<Action> _actions;
   int _currentAction;
 
@@ -246,7 +232,7 @@ class ActionSequence extends AbstractAction {
   }
 }
 
-class ActionSpawn extends AbstractAction {
+class ActionSpawn extends Action {
   List<Action> _actions;
 
   bool get done => _actions.length == 0;
