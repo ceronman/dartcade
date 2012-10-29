@@ -11,18 +11,18 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-#library('cocos.dart');
+library cocos;
 
-#import('dart:html');
-#import('dart:math');
+import 'dart:html';
+import 'dart:math';
 
-#source('action.dart');
-#source('director.dart');
-#source('gamenode.dart');
-#source('input.dart');
-#source('layer.dart');
-#source('math.dart');
-#source('resource.dart');
-#source('sprite.dart');
-#source('text.dart');
-#source('util.dart');
+part 'action.dart';
+part 'director.dart';
+part 'gamenode.dart';
+part 'input.dart';
+part 'layer.dart';
+part 'math.dart';
+part 'resource.dart';
+part 'sprite.dart';
+part 'text.dart';
+part 'util.dart';

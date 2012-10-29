@@ -1,6 +1,6 @@
 // FIXME: don't use dart:html here!!!
-#import('dart:html');
-#import('../lib/cocos.dart');
+import 'dart:html';
+import '../lib/cocos.dart';
 
 void main() {
   Director director = new Director('#gamebox');

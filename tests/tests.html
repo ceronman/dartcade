@@ -58,7 +58,7 @@
 	    query('#test-list').text = '';
 	    testTitles.forEach((key, value) {
 	      var listItem = new LIElement();
-	      var link = new AnchorElement('${window.location.href}?test=${key}');
+	      var link = new AnchorElement(href:'${window.location.href}?test=${key}');
 	      link.text = value;
 	      listItem.elements.add(link);
 	      query('#test-list').elements.add(listItem);

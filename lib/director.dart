@@ -1,3 +1,5 @@
+part of cocos;
+
 // Copyright 2012 Manuel Cerón <ceronman@gmail.com>
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -32,7 +34,7 @@ class Director {
     keyboard = new KeyStateHandler();
 
     var gamebox = query(selector);
-    canvas = new CanvasElement(width, height);
+    canvas = new CanvasElement(width:width, height:height);
     canvas.style.backgroundColor = 'black';
     gamebox.elements.add(canvas);
   }

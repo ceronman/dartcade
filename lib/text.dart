@@ -1,3 +1,5 @@
+part of cocos;
+
 // Copyright 2012 Manuel Cerón <ceronman@gmail.com>
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -24,7 +26,7 @@ class Label extends AbstractNode {
   String _text;
   String get text => _text;
          set text(String value) {
-    var canvas = new CanvasElement(0, 0);
+    var canvas = new CanvasElement(width:0, height:0);
     var context = canvas.context2d;
     _setStyle(context);
     var dimensions = context.measureText(value);
