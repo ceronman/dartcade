@@ -76,15 +76,18 @@ class Director {
     currentScene.drawWithChildren(context);
   }
 
-  void run(Scene mainScene) {
-    currentScene = mainScene;
-    currentScene.width = canvas.width;
-    currentScene.height = canvas.height;
+  void run([Scene scene]) {
+    if (?scene) {
+      currentScene = scene;
+    }
     resource.on.load.add((e) {
-      var initTime = new Date.now().millisecondsSinceEpoch;
+      var initTime;
       var frameCount = 0;
 
       drawFrame(num currentTime) {
+        if (initTime == null) {
+          initTime = currentTime;
+        }
         frameCount++;
         var dt = (currentTime - initTime) / 1000;
         initTime = currentTime;
