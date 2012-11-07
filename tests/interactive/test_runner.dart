@@ -24,7 +24,7 @@ main() {
 
     if (testName.isEmpty) {
       query('#gamebox').hidden = true;
-      query('#test-naviation').hidden = true;
+      queryAll('.test-naviation').forEach((e) => e.hidden = true);
       query('#test-list').hidden = false;
       var testsUL = new UListElement();
       for (var testName in testFunctions) {
@@ -40,7 +40,7 @@ main() {
     }
     else {
       query('#gamebox').hidden = false;
-      query('#test-naviation').hidden = false;
+      queryAll('.test-naviation').forEach((e) => e.hidden = false);
       query('#test-list').hidden = true;
       var testIndex = testFunctions.indexOf(testName);
       if (testIndex == -1) {
@@ -72,5 +72,9 @@ main() {
   };
 
   window.on.hashChange.add(hashChange);
+  query('#current-anchor').on.click.add((e) {
+    hashChange(e);
+    e.preventDefault();
+  });
   hashChange(null);
 }

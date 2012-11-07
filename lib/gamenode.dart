@@ -60,6 +60,13 @@ abstract class GameNode {
   }
 
   drawWithTransform(context) {
+//      context.save();
+//      context.strokeStyle = "#FF0000";
+//      context.beginPath();
+//      context.rect(position.x, position.y, width, height);
+//      context.stroke();
+//      context.restore();
+
       context.save();
       transform(context);
       draw(context);

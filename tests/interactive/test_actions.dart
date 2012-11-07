@@ -6,9 +6,7 @@ void testActionPlace(director) {
   var label = new Label('Place 200, 200');
 
   layer.add(label);
-  print('Old position: ${label.position}');
   label.runAction(new Place(new vec2(200, 200)));
-  print('New position: ${label.position}');
 
   director.currentScene = new Scene(layer);
 }
@@ -26,6 +24,19 @@ void testActionDelay(director) {
                  new MoveTo(new vec2(0, director.canvas.height), 1)];
 
   label.runAction(new ActionSequence(actions));
+
+  director.currentScene = new Scene(layer);
+}
+
+void testActionSpeed(director) {
+  var layer = new Layer();
+  var label = new Label('RotateBy 360 4 seconds 2X speed');
+
+  layer.add(label);
+  label.position.x = director.canvas.width / 2 - label.width / 2;
+  label.position.y = director.canvas.height/2;
+
+  label.runAction(new Speed(new RotateBy(360, 4), 2));
 
   director.currentScene = new Scene(layer);
 }

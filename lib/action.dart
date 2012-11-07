@@ -229,6 +229,33 @@ class Delay extends IntervalAction {
   _interval(num t) {}
 }
 
+class Speed extends IntervalAction {
+  IntervalAction action;
+
+  Speed(IntervalAction action, num speedFactor) :
+      super(0) {
+    // TODO: check speedFactor == 0;
+    this.duration = action.duration / speedFactor;
+    this.action = action;
+  }
+  Speed clone() {
+    return new Speed(action.clone(), action.duration/duration);
+  }
+
+  void start() {
+    action.target = this.target;
+    action.start();
+  }
+
+  void stop() {
+    action.stop();
+  }
+
+  void _interval(num t) {
+    action._interval(t);
+  }
+}
+
 class ActionSequence extends Action {
   List<Action> _actions;
   int _currentAction;
