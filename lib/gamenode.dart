@@ -14,43 +14,7 @@ part of cocos;
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-interface GameNode {
-  vec2 get position;
-       set position(vec2 value);
-  vec2 get position_anchor;
-       set position_anchor(vec2 value);
-  vec2 get rotation_anchor;
-       set rotation_anchor(vec2 value);
-  vec2 get scale;
-       set scale(vec2 value);
-  num  get rotation;
-       set rotation(num value);
-  num  get opacity;
-       set opacity(num value);
-  bool get visible;
-       set visible(bool value);
-
-  List<GameNode> get children;
-  List<Action>   get actions;
-
-  GameNode get parent;
-           set parent(GameNode value);
-
-  num get width;
-  num get height;
-
-  void transform(context);
-  void drawWithTransform(context);
-  void drawWithChildren(context);
-  void draw(context);
-  void update(dt);
-  void add(node);
-  void remove(GameNode node);
-  void runAction(Action action);
-}
-
-
-abstract class AbstractNode implements GameNode{
+abstract class GameNode {
   vec2 position_anchor = new vec2(0.5, 0.5);
   vec2 rotation_anchor = new vec2(0.5, 0.5);
   vec2 scale = new vec2(1, 1);

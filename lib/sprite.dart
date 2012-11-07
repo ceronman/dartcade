@@ -13,7 +13,7 @@ part of cocos;
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-class Sprite extends AbstractNode {
+class Sprite extends GameNode {
   ImageElement image;
 
   get width => image.width;

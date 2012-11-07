@@ -13,7 +13,7 @@ part of cocos;
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-class Scene extends AbstractNode {
+class Scene extends GameNode {
 
   int width;
   int height;
@@ -25,7 +25,7 @@ class Scene extends AbstractNode {
   }
 }
 
-class Layer extends AbstractNode {
+class Layer extends GameNode {
   get width => parent.width;
   get height => parent.height;
 }
