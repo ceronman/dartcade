@@ -17,6 +17,7 @@ main() {
       return testName.startsWith('test');
     });
     testFunctions = new List.from(testFunctions);
+    testFunctions.sort();
 
     var hash = window.location.hash;
     var testName = hash.isEmpty ? '' : hash.substring(1);

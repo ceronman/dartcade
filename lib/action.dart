@@ -177,6 +177,24 @@ class ScaleBy extends ChangeAttributeByAction {
   ScaleBy clone() => new ScaleBy(deltaValue, duration);
 }
 
+class FadeTo extends ChangeAttributeToAction {
+  get _changingValue        => target.opacity;
+  set _changingValue(value) => target.opacity = value;
+
+  FadeTo(num endOpacity, num duration) : super(endOpacity, duration);
+  FadeTo clone() => new FadeTo(endValue, duration);
+}
+
+class FadeOut extends FadeTo {
+  FadeOut(num duration) : super(0.0, duration);
+  FadeOut clone() => new FadeOut(duration);
+}
+
+class FadeIn extends FadeTo {
+  FadeIn(num duration) : super(1.0, duration);
+  FadeIn clone() => new FadeIn(duration);
+}
+
 class Blink extends IntervalAction {
   num _blinkInterval;
   num _blinks = 0;

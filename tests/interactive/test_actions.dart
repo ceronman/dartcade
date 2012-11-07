@@ -131,6 +131,38 @@ void testActionScaleBy(director) {
   director.currentScene = new Scene(layer);
 }
 
+void testActionFade(director) {
+  var layer = new Layer();
+
+  var label1 = new Label('Fade Out');
+  label1.align = 'center';
+  label1.position.x = director.canvas.width/4;
+  label1.position.y = director.canvas.height/2;
+
+  layer.add(label1);
+  label1.runAction(new FadeOut(2));
+
+  var label2 = new Label('Fade In');
+  label2.position.x = director.canvas.width/2;
+  label2.position.y = director.canvas.height/2;
+  label2.align = 'center';
+  label2.opacity = 0.0;
+
+  layer.add(label2);
+  label2.runAction(new FadeIn(2));
+
+  var label3 = new Label('Fade To 0.5');
+  label3.position.x = 3 * director.canvas.width/4;
+  label3.position.y = director.canvas.height/2;
+  label3.align = 'center';
+  label3.opacity = 0.0;
+
+  layer.add(label3);
+  label3.runAction(new FadeTo(0.5, 2));
+
+  director.currentScene = new Scene(layer);
+}
+
 void testActionRepeat(director) {
   var layer = new Layer();
   var label = new Label('Repeat 4 (Move + Move)');

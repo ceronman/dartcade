@@ -25,6 +25,8 @@ interface GameNode {
        set scale(vec2 value);
   num  get rotation;
        set rotation(num value);
+  num  get opacity;
+       set opacity(num value);
   bool get visible;
        set visible(bool value);
 
@@ -49,19 +51,20 @@ interface GameNode {
 
 
 abstract class AbstractNode implements GameNode{
-  vec2 position_anchor;
-  vec2 rotation_anchor;
-  vec2 scale;
-  num rotation;
-  bool visible;
-  List<GameNode> children;
-  List<Action> actions;
+  vec2 position_anchor = new vec2(0.5, 0.5);
+  vec2 rotation_anchor = new vec2(0.5, 0.5);
+  vec2 scale = new vec2(1, 1);
+  num rotation = 0;
+  num opacity = 1.0;
+  bool visible = true;
+  List<GameNode> children = new List<GameNode>();
+  List<Action> actions = new List<Action>();
   GameNode parent;
 
   abstract num get width;
   abstract num get height;
 
-  vec2 _position;
+  vec2 _position = new vec2(0, 0);
   vec2 get position => _position;
   void set position(p) {
     if (p is List) {
@@ -71,18 +74,9 @@ abstract class AbstractNode implements GameNode{
     }
   }
 
-  AbstractNode() {
-    position = new vec2(0, 0);
-    position_anchor = new vec2(0.5, 0.5);
-    scale = new vec2(1, 1);
-    rotation = 0;
-    rotation_anchor = new vec2(0.5, 0.5);
-    visible = true;
-    children = new List<GameNode>();
-    actions = new List<Action>();
-  }
-
   transform(CanvasRenderingContext2D context) {
+
+    context.globalAlpha = opacity;
 
     context.translate(position.x, position.y);
 
