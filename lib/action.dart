@@ -232,8 +232,7 @@ class Delay extends IntervalAction {
 class Speed extends IntervalAction {
   IntervalAction action;
 
-  Speed(IntervalAction action, num speedFactor) :
-      super(0) {
+  Speed(IntervalAction action, num speedFactor) : super(0) { // <-- FIXME
     // TODO: check speedFactor == 0;
     this.duration = action.duration / speedFactor;
     this.action = action;
@@ -253,6 +252,31 @@ class Speed extends IntervalAction {
 
   void _interval(num t) {
     action._interval(t);
+  }
+}
+
+class Accelerate extends IntervalAction {
+  IntervalAction action;
+  num rate;
+
+  Accelerate(IntervalAction action, num this.rate) : super(action.duration) {
+    this.action = action;
+  }
+  Accelerate clone() {
+    return new Accelerate(action.clone(), rate);
+  }
+
+  void start() {
+    action.target = this.target;
+    action.start();
+  }
+
+  void stop() {
+    action.stop();
+  }
+
+  void _interval(num t) {
+    action._interval(pow(t, rate));
   }
 }
 

@@ -41,6 +41,21 @@ void testActionSpeed(director) {
   director.currentScene = new Scene(layer);
 }
 
+void testActionAccelerate(director) {
+  var layer = new Layer();
+  var label = new Label('Move to top with 2X accell');
+
+  layer.add(label);
+  label.position.x = director.canvas.width / 2 - label.width / 2;
+  label.position.y = director.canvas.height;
+
+  var newPos = new vec2(director.canvas.width / 2 - label.width / 2, 50);
+
+  label.runAction(new Accelerate(new MoveTo(newPos, 2), 2));
+
+  director.currentScene = new Scene(layer);
+}
+
 void testActionBlink(director) {
   var layer = new Layer();
   var label = new Label('Blink for 5 seconds');
