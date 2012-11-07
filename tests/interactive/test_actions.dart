@@ -43,7 +43,7 @@ void testActionSpeed(director) {
 
 void testActionAccelerate(director) {
   var layer = new Layer();
-  var label = new Label('Move to top with 2X accell');
+  var label = new Label('Move to top with 2X accel');
 
   layer.add(label);
   label.position.x = director.canvas.width / 2 - label.width / 2;
@@ -52,6 +52,21 @@ void testActionAccelerate(director) {
   var newPos = new vec2(director.canvas.width / 2 - label.width / 2, 50);
 
   label.runAction(new Accelerate(new MoveTo(newPos, 2), 2));
+
+  director.currentScene = new Scene(layer);
+}
+
+void testActionAccelDeccel(director) {
+  var layer = new Layer();
+  var label = new Label('Move to top with 2X accel-deccel');
+
+  layer.add(label);
+  label.position.x = director.canvas.width / 2 - label.width / 2;
+  label.position.y = director.canvas.height;
+
+  var newPos = new vec2(director.canvas.width / 2 - label.width / 2, 50);
+
+  label.runAction(new AccelDeccel(new MoveTo(newPos, 2), 2));
 
   director.currentScene = new Scene(layer);
 }

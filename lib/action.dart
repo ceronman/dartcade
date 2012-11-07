@@ -262,9 +262,7 @@ class Accelerate extends IntervalAction {
   Accelerate(IntervalAction action, num this.rate) : super(action.duration) {
     this.action = action;
   }
-  Accelerate clone() {
-    return new Accelerate(action.clone(), rate);
-  }
+  Accelerate clone() => new Accelerate(action.clone(), rate);
 
   void start() {
     action.target = this.target;
@@ -277,6 +275,19 @@ class Accelerate extends IntervalAction {
 
   void _interval(num t) {
     action._interval(pow(t, rate));
+  }
+}
+
+class AccelDeccel extends Accelerate {
+  AccelDeccel(IntervalAction action, rate): super(action, rate);
+  AccelDeccel clone() => new AccelDeccel(action.clone(), rate);
+
+  void _interval(num t) {
+    if (t != 1.0) {
+      var ft = (t - 0.5) * 12;
+      t = 1.0 / ( 1.0 + exp(-ft) );
+    }
+    action._interval(t);
   }
 }
 
