@@ -20,12 +20,12 @@ class EventListeners implements EventListenerList {
     this.listeners = [];
   }
 
-  EventListeners add(EventListener handler, {bool useCapture}) {
+  EventListeners add(EventListener handler, [bool useCapture=false]) {
     this.listeners.add(handler);
     return this;
   }
 
-  EventListeners remove(EventListener handler, [bool useCapture]) {
+  EventListeners remove(EventListener handler, [bool useCapture=false]) {
     var index = listeners.indexOf(handler);
     listeners.removeRange(index, index);
     return this;

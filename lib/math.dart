@@ -21,15 +21,19 @@ class vec2 {
 
   toString() => "$x, $y";
 
-  vec2 operator-(vec2 other) => new vec2(x - other.x, y - other.y);
-  vec2 operator+(vec2 other) => new vec2(x + other.x, y + other.y);
+  vec2 operator -(vec2 other) => new vec2(x - other.x, y - other.y);
+  vec2 operator +(vec2 other) => new vec2(x + other.x, y + other.y);
 
-  vec2 operator*(other) {
+  vec2 operator *(other) {
     if (other is num) {
       return new vec2(x * other, y * other);
     }
     if (other is vec2) {
       return new vec2(x * other.x, y * other.y);
     }
+  }
+
+  vec2 operator -() {
+    return new vec2(-x, -y);
   }
 }

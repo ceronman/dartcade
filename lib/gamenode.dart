@@ -25,8 +25,8 @@ abstract class GameNode {
   List<Action> actions = new List<Action>();
   GameNode parent;
 
-  abstract num get width;
-  abstract num get height;
+  num get width;
+  num get height;
 
   vec2 _position = new vec2(0, 0);
   vec2 get position => _position;
@@ -39,9 +39,7 @@ abstract class GameNode {
   }
 
   transform(CanvasRenderingContext2D context) {
-
     context.globalAlpha = opacity;
-
     context.translate(position.x, position.y);
 
     if (scale.x != 1 || scale.y != 1) {
