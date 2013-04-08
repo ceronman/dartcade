@@ -37,7 +37,7 @@ class Director {
     var gamebox = query(selector);
     canvas = new CanvasElement(width:width, height:height);
     canvas.style.backgroundColor = 'black';
-    gamebox.elements.add(canvas);
+    gamebox.children.add(canvas);
   }
 
   void update(num dt) {
@@ -81,7 +81,7 @@ class Director {
     if (?scene) {
       currentScene = scene;
     }
-    resource.on.load.add((e) {
+    resource.onLoad.listen((e) {
       var initTime;
       var frameCount = 0;
 
@@ -98,16 +98,18 @@ class Director {
       }
 
       window.requestAnimationFrame(drawFrame);
-      window.setInterval(() {
+      
+      new Timer.periodic(new Duration(seconds:1), (t) {
         fps = frameCount;
         frameCount = 0;
         print('fps: $fps');
-      }, 1000);
+      });
+      
     });
 
     resource.loadAll();
-    document.on.keyDown.add(keyPress);
-    document.on.mouseDown.add(mouseDown);
+//    document.onKeyDown.listen(keyPress);
+//    document.onMouseDown.listen(mouseDown);
   }
 
   keyPress(KeyboardEvent event) => currentScene.keyPress(event);

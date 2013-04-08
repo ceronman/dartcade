@@ -28,18 +28,13 @@ class Resource {
   }
 }
 
-class ResourceManagerEvents {
-  EventListeners load = new EventListeners();
-}
-
-
 class ResourceManager {
-  ResourceManagerEvents on;
+  StreamController onLoadController = new StreamController();
+  Stream get onLoad => onLoadController.stream;
   List<Resource> resources;
 
   ResourceManager() {
     resources = new List<Resource>();
-    on = new ResourceManagerEvents();
   }
 
   ImageElement image(String src) {
@@ -50,19 +45,19 @@ class ResourceManager {
     }
     var imageElement = new ImageElement();
     resources.add(new Resource(imageElement, src, false));
-    imageElement.on.load.add(check);
+    imageElement.onLoad.listen(check);
     return imageElement;
   }
 
   void check(Event event) {
     if (resources.every((resource) => resource.loaded)) {
-      on.load.dispatch(new Event('loaded'));
+      onLoadController.add('loaded');
     }
   }
 
   void loadAll() {
     if (resources.length == 0) {
-      on.load.dispatch(new Event('loaded'));
+      onLoadController.add('loaded empty');
       return;
     }
     for (var resource in resources) {

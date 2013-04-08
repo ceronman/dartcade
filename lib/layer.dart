@@ -25,9 +25,7 @@ class Scene extends GameNode {
     if (layer != null) {
       this.add(layer);
     }
-
     this.layer = layer;
-
   }
 
   keyPress(KeyboardEvent event) => layer.keyPress(event);

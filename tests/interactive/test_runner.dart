@@ -28,7 +28,7 @@ main() {
     var ms = currentMirrorSystem();
     var libraryMirror = ms.libraries['cocostest'];
     var functionNames = libraryMirror.functions.keys;
-    var testFunctions = libraryMirror.functions.keys.filter((testName) {
+    var testFunctions = libraryMirror.functions.keys.where((testName) {
       return testName.startsWith('test');
     });
     testFunctions = new List.from(testFunctions);
@@ -46,11 +46,11 @@ main() {
         var item = new LIElement();
         var link = new AnchorElement(href:'#${testName}');
         link.text = testName;
-        item.elements.add(link);
-        testsUL.elements.add(item);
+        item.children.add(link);
+        testsUL.children.add(item);
       }
-      query('#test-list').elements.clear();
-      query('#test-list').elements.add(testsUL);
+      query('#test-list').children.clear();
+      query('#test-list').children.add(testsUL);
       query('#test-title').text = 'Cocos Interactive Tests';
     }
     else {
@@ -86,8 +86,8 @@ main() {
     }
   };
 
-  window.on.hashChange.add(hashChange);
-  query('#current-anchor').on.click.add((e) {
+  window.onHashChange.listen(hashChange);
+  query('#current-anchor').onClick.listen((e) {
     hashChange(e);
     e.preventDefault();
   });

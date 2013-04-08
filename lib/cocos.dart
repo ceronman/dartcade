@@ -16,6 +16,7 @@ library cocos;
 
 import 'dart:html';
 import 'dart:math';
+import 'dart:async';
 
 part 'action.dart';
 part 'director.dart';
@@ -26,4 +27,3 @@ part 'math.dart';
 part 'resource.dart';
 part 'sprite.dart';
 part 'text.dart';
-part 'util.dart';

@@ -348,7 +348,7 @@ class ActionSequence extends Action {
   // FIXME: add a type here. Maybe Enumerable?
   ActionSequence(actions) {
     // FIXME: Throw on empty actions
-    _actions = actions.map((action) => action.clone());
+    _actions = new List.from(actions.map((action) => action.clone()));
   }
   ActionSequence clone() => new ActionSequence(_actions);
   ActionSequence reverse() {

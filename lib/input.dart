@@ -129,11 +129,11 @@ class KeyStateHandler {
   KeyStateHandler() {
     pressedKeys = new Map<num, bool>();
 
-    document.on.keyDown.add((KeyboardEvent event) {
+    document.onKeyDown.listen((KeyboardEvent event) {
       this.pressedKeys[event.keyCode] = true;
     });
 
-    document.on.keyUp.add((KeyboardEvent event) {
+    document.onKeyUp.listen((KeyboardEvent event) {
       this.pressedKeys[event.keyCode] = false;
     });
   }
