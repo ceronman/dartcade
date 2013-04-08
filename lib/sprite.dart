@@ -20,6 +20,17 @@ class Sprite extends GameNode {
   get width => image.width;
   get height => image.height;
 
+  Rectangle get rect {
+    return new Rectangle(position.x - width * positionAnchor.x,
+                         position.y - height * positionAnchor.y,
+                         position.x + width * positionAnchor.x,
+                         position.y + height * positionAnchor.y);
+  }
+
+  kill() {
+    parent.remove(this);
+  }
+
   Sprite(ImageElement this.image, {pos}): super() {
     position = pos != null ? pos : position;
   }

@@ -73,7 +73,7 @@ class Director {
 
   void draw(CanvasRenderingContext2D context) {
     context.clearRect(0, 0, canvas.width, canvas.height);
-    _debugDraw(context);
+//    _debugDraw(context);
     currentScene.drawWithChildren(context);
   }
 
@@ -106,5 +106,10 @@ class Director {
     });
 
     resource.loadAll();
+    document.on.keyDown.add(keyPress);
+    document.on.mouseDown.add(mouseDown);
   }
+
+  keyPress(KeyboardEvent event) => currentScene.keyPress(event);
+  mouseDown(MouseEvent event) => currentScene.mouseDown(event);
 }

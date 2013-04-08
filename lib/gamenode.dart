@@ -15,8 +15,8 @@
 part of cocos;
 
 abstract class GameNode {
-  vec2 position_anchor = new vec2(0.5, 0.5);
-  vec2 rotation_anchor = new vec2(0.5, 0.5);
+  vec2 positionAnchor = new vec2(0.5, 0.5);
+  vec2 rotationAnchor = new vec2(0.5, 0.5);
   vec2 scale = new vec2(1, 1);
   num rotation = 0;
   num opacity = 1.0;
@@ -47,14 +47,14 @@ abstract class GameNode {
     }
 
     if (rotation != 0) {
-      var axis_x = (rotation_anchor.x - position_anchor.x) * width;
-      var axis_y = (rotation_anchor.y - position_anchor.y) * height;
+      var axis_x = (rotationAnchor.x - positionAnchor.x) * width;
+      var axis_y = (rotationAnchor.y - positionAnchor.y) * height;
       context.translate(axis_x, axis_y);
       context.rotate(rotation * PI/180);
       context.translate(-axis_x, -axis_y);
     }
 
-    context.translate(-position_anchor.x * width, -position_anchor.y * height);
+    context.translate(-positionAnchor.x * width, -positionAnchor.y * height);
   }
 
   drawWithTransform(context) {
@@ -118,5 +118,12 @@ abstract class GameNode {
     action.target = this;
     actions.add(action);
     action.start();
+  }
+
+  stopActions() {
+    for (var action in new List.from(actions)) {
+      action.stop();
+      actions.removeRange(actions.indexOf(action), 1);
+    }
   }
 }

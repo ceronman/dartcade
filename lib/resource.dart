@@ -29,11 +29,7 @@ class Resource {
 }
 
 class ResourceManagerEvents {
-  EventListeners load;
-
-  ResourceManagerEvents() {
-    this.load = new EventListeners();
-  }
+  EventListeners load = new EventListeners();
 }
 
 
@@ -47,6 +43,11 @@ class ResourceManager {
   }
 
   ImageElement image(String src) {
+    for (Resource resource in resources) {
+      if (resource.source == src) {
+        return resource.element;
+      }
+    }
     var imageElement = new ImageElement();
     resources.add(new Resource(imageElement, src, false));
     imageElement.on.load.add(check);

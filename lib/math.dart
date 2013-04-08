@@ -19,6 +19,10 @@ class vec2 {
   num y;
 
   vec2(this.x, this.y);
+  vec2.copy(vec2 other) {
+    x = other.x;
+    y = other.y;
+  }
 
   toString() => "$x, $y";
 
@@ -36,5 +40,48 @@ class vec2 {
 
   vec2 operator -() {
     return new vec2(-x, -y);
+  }
+
+  double get length {
+    double sum = 0.0;
+    sum += (x * x);
+    sum += (y * y);
+    return sqrt(sum);
+  }
+
+  double get length2 {
+    double sum = 0.0;
+    sum += (x * x);
+    sum += (y * y);
+    return sum;
+  }
+
+  vec2 normalize() {
+    double l = length;
+    if (l == 0.0) {
+      return this;
+    }
+    x /= l;
+    y /= l;
+    return this;
+  }
+}
+
+class Rectangle {
+  num x1, y1, x2, y2;
+
+  Rectangle(this.x1, this.y1, this.x2, this.y2);
+
+  num get width => x2 - x1;
+  num get height => y2 - y1;
+
+  num get left => x1;
+  num get top => y1;
+  num get right => x1 + width;
+  num get bottom => y1 + height;
+
+  bool collide(Rectangle other) {
+    return (other.left > left && other.left < right
+            && other.top > top && other.top < bottom);
   }
 }

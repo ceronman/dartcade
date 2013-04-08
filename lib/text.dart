@@ -41,7 +41,7 @@ class Label extends GameNode {
 
   Label(text, {position, font, color, align, baseline}):
       super() {
-    position_anchor = new vec2(0, 0);
+    positionAnchor = new vec2(0, 0);
     this.position = position != null ? position : this.position;
     this.font = font != null ? font : '20pt Serif';
     this.color = color != null ? color : 'white';

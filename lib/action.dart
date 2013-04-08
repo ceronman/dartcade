@@ -25,7 +25,9 @@ abstract class Action {
   void step(num dt);
   void stop();
 
-  reverse() => throw "Reverse not available";
+  reverse() {
+    throw "Reverse not available";
+  }
 
   Action operator +(Action action) {
     return new ActionSequence([this, action]);
@@ -50,6 +52,16 @@ class Place extends InstantAction {
 
   Place clone() => new Place(position);
   start() => target.position = position;
+}
+
+class CallFunction extends InstantAction {
+  dynamic method;
+  vec2 position;
+
+  CallFunction(this.method);
+
+  CallFunction clone() => new CallFunction(method);
+  start() => method();
 }
 
 class Hide extends InstantAction {
@@ -244,6 +256,20 @@ class Delay extends IntervalAction {
   start() {}
   stop() {}
   _interval(num t) {}
+}
+
+class RandomDelay extends Delay {
+  num min;
+  num max;
+
+  RandomDelay(num min, num max):
+    super(min + new Random().nextDouble() * (max-min)) {
+
+    this.min = min;
+    this.max = max;
+  }
+
+  RandomDelay clone() => new RandomDelay(min, max);
 }
 
 class Speed extends IntervalAction {
@@ -471,6 +497,44 @@ class Repeat extends Action {
     }
     else {
       done = true;
+    }
+  }
+}
+
+class Loop extends Action {
+  Action action;
+  bool done = false;
+  Action _currentAction = null;
+
+  Loop(Action this.action);
+  Loop clone() => new Loop(action);
+  Loop reverse() => new Loop(action.reverse());
+
+  void start() {
+    _nextAction();
+  }
+
+  void step(num dt) {
+    _currentAction.step(dt);
+    if (_currentAction.done) {
+      _nextAction();
+    }
+  }
+
+  void stop() {}
+
+  _nextAction() {
+    if (_currentAction != null) {
+      _currentAction.stop();
+    }
+    _currentAction = action.clone();
+
+    _currentAction.target = target;
+    _currentAction.start();
+
+    // this is useful for instant actions
+    if (_currentAction.done) {
+      _nextAction();
     }
   }
 }
