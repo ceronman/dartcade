@@ -1,0 +1,8 @@
+name: dartcocos
+description: A sample application
+dependencies:
+  browser: any
+
+#dependencies:
+#  js: any
+#  unittest: any

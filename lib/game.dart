@@ -14,8 +14,8 @@
 
 part of cocos;
 
-class Director {
-  ResourceManager resource;
+class Game {
+  AssetManager assets;
   KeyStateHandler keyboard;
   CanvasElement canvas;
   num fps;
@@ -27,11 +27,14 @@ class Director {
     _currentScene.width = canvas.width;
     _currentScene.height = canvas.height;
   }
+  
+  num get width => canvas.width;
+  num get height => canvas.height;
 
-  Director(selector, {int width, int height}) {
+  void init(selector, {int width, int height}) {
     width = width != null ? width : 640;
     height = height != null ? height : 480;
-    resource = new ResourceManager();
+    assets = new AssetManager();
     keyboard = new KeyStateHandler();
 
     var gamebox = query(selector);
@@ -81,33 +84,27 @@ class Director {
     if (?scene) {
       currentScene = scene;
     }
-    resource.onLoad.listen((e) {
       var initTime;
       var frameCount = 0;
 
-      drawFrame(num currentTime) {
-        if (initTime == null) {
-          initTime = currentTime;
-        }
-        frameCount++;
-        var dt = (currentTime - initTime) / 1000;
+    drawFrame(num currentTime) {
+      if (initTime == null) {
         initTime = currentTime;
-        update(dt);
-        draw(canvas.context2d);
-        window.requestAnimationFrame(drawFrame);
       }
-
+      frameCount++;
+      var dt = (currentTime - initTime) / 1000;
+      initTime = currentTime;
+      update(dt);
+      draw(canvas.context2d);
       window.requestAnimationFrame(drawFrame);
-      
-      new Timer.periodic(new Duration(seconds:1), (t) {
-        fps = frameCount;
-        frameCount = 0;
-        print('fps: $fps');
-      });
-      
+    }
+    window.requestAnimationFrame(drawFrame);
+    
+    new Timer.periodic(new Duration(seconds:1), (t) {
+      fps = frameCount;
+      frameCount = 0;
+      print('fps: $fps');
     });
-
-    resource.loadAll();
 //    document.onKeyDown.listen(keyPress);
 //    document.onMouseDown.listen(mouseDown);
   }
@@ -115,3 +112,5 @@ class Director {
   keyPress(KeyboardEvent event) => currentScene.keyPress(event);
   mouseDown(MouseEvent event) => currentScene.mouseDown(event);
 }
+
+final Game game = new Game();

@@ -19,11 +19,11 @@ import 'dart:math';
 import 'dart:async';
 
 part 'action.dart';
-part 'director.dart';
+part 'game.dart';
 part 'gamenode.dart';
 part 'input.dart';
 part 'layer.dart';
 part 'math.dart';
-part 'resource.dart';
+part 'assets.dart';
 part 'sprite.dart';
 part 'text.dart';

@@ -15,14 +15,16 @@
 library cocostest;
 
 import 'dart:mirrors';
+import 'dart:async';
 import 'dart:html';
 import '../../lib/cocos.dart';
 
 part 'test_actions.dart';
+part 'test_assets.dart';
 
 main() {
-  Director director = new Director('#gamebox');
-  director.run(new Scene());
+  game.init('#gamebox');
+  game.run(new Scene());
 
   hashChange(e) {
     var ms = currentMirrorSystem();
@@ -82,7 +84,7 @@ main() {
       }
 
       query('#test-title').text = testName;
-      libraryMirror.invoke(testName, [reflect(director)]);
+      libraryMirror.invoke(testName, []);
     }
   };
 
