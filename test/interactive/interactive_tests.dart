@@ -137,10 +137,7 @@ main() {
       runTest(testLink);
     }
   };
-
   window.onHashChange.listen(hashChange);
-
-
   query('#current-anchor').onClick.listen((e) {
     hashChange(e);
     e.preventDefault();
