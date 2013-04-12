@@ -12,30 +12,33 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-part of cocostest;
+part of dartcocos_test;
 
-void testLoadingScene() {
-  var layer = new Layer();
-  var label = new Label('New scene');
-  label.position.x = 50;
-  label.position.y = 50;
-  layer.add(label);
-  var nextScene = new Scene(layer); 
-  
-  fakeProgress() {
-    var controller = new StreamController();
-    num progress = 0;
-    
-    new Timer.periodic(new Duration(seconds:1), (timer) {
-      progress += 0.1;
-      controller.add(progress);
-      if (progress >= 1) {
-        controller.close();
-        timer.cancel();
-      }
-    });
-    return controller.stream;
-  }
-  
-  game.currentScene = new LoadingScene(fakeProgress(), nextScene);
-}
+var assetsTests = [
+
+  test('LoadingScene', () {
+    var layer = new Layer();
+    var label = new Label('New scene');
+    label.position.x = 50;
+    label.position.y = 50;
+    layer.add(label);
+    var nextScene = new Scene(layer);
+
+    fakeProgress() {
+      var controller = new StreamController();
+      num progress = 0;
+
+      new Timer.periodic(new Duration(milliseconds:100), (timer) {
+        progress += 0.1;
+        controller.add(progress);
+        if (progress >= 1) {
+          controller.close();
+          timer.cancel();
+        }
+      });
+      return controller.stream;
+    }
+
+    game.currentScene = new LoadingScene(fakeProgress(), nextScene);
+  }),
+];

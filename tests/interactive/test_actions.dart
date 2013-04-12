@@ -12,342 +12,362 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-part of cocostest;
+part of dartcocos_test;
 
-void testActionPlace() {
-  var layer = new Layer();
-  var label = new Label('Place 200, 200');
+var actionTests = [
 
-  layer.add(label);
-  label.runAction(new Place(new vec2(200, 200)));
+  test('Place', () {
+    var layer = new Layer();
+    var label = new Label('Place 200, 200');
 
-  game.currentScene = new Scene(layer);
-}
+    layer.add(label);
+    label.runAction(new Place(new vec2(200, 200)));
 
-void testActionVisibility() {
-  var layer = new Layer();
+    game.currentScene = new Scene(layer);
+  }),
 
-  var label1 = new Label('Show');
-  label1.align = 'center';
-  label1.visible = false;
-  label1.position.x = game.width/4;
-  label1.position.y = game.height/2;
 
-  layer.add(label1);
-  label1.runAction(new Delay(1) + new Show() +
-                   new Delay(1) + new Show().reverse());
+  test('Show, Hide, ToggleVisibility', () {
+    var layer = new Layer();
 
-  var label2 = new Label('Hide');
-  label2.position.x = game.width/2;
-  label2.position.y = game.height/2;
-  label2.align = 'center';
+    var label1 = new Label('Show');
+    label1.align = 'center';
+    label1.visible = false;
+    label1.position.x = game.width/4;
+    label1.position.y = game.height/2;
 
-  layer.add(label2);
-  label2.runAction(new Delay(1) + new Hide() +
-                   new Delay(1) + new Hide().reverse());
+    layer.add(label1);
+    label1.runAction(new Delay(1) + new Show() +
+        new Delay(1) + new Show().reverse());
 
-  var label3 = new Label('ToggleVisibility');
-  label3.position.x = 3 * game.width/4;
-  label3.position.y = game.height/2;
-  label3.align = 'center';
+    var label2 = new Label('Hide');
+    label2.position.x = game.width/2;
+    label2.position.y = game.height/2;
+    label2.align = 'center';
 
-  layer.add(label3);
-  label3.runAction(new Delay(1) + new ToggleVisibility() +
-                   new Delay(1) + new ToggleVisibility());
+    layer.add(label2);
+    label2.runAction(new Delay(1) + new Hide() +
+        new Delay(1) + new Hide().reverse());
 
-  game.currentScene = new Scene(layer);
-}
+    var label3 = new Label('ToggleVisibility');
+    label3.position.x = 3 * game.width/4;
+    label3.position.y = game.height/2;
+    label3.align = 'center';
 
-void testActionDelay() {
-  var layer = new Layer();
-  var label = new Label('Move + Delay + Move');
+    layer.add(label3);
+    label3.runAction(new Delay(1) + new ToggleVisibility() +
+        new Delay(1) + new ToggleVisibility());
 
-  layer.add(label);
-  label.position.x = 0;
-  label.position.y = game.height;
+    game.currentScene = new Scene(layer);
+  }),
 
-  var actions = [new MoveTo(new vec2(0, game.height/2), 1),
-                 new Delay(1),
-                 new MoveTo(new vec2(0, game.height), 1)];
 
-  label.runAction(new ActionSequence(actions));
+  test('Delay', () {
+    var layer = new Layer();
+    var label = new Label('Move + Delay + Move');
 
-  game.currentScene = new Scene(layer);
-}
+    layer.add(label);
+    label.position.x = 0;
+    label.position.y = game.height;
 
-void testActionSpeed() {
-  var layer = new Layer();
-  var label = new Label('RotateBy 360 2 seconds 2X speed');
+    var actions = [new MoveTo(new vec2(0, game.height/2), 1),
+                   new Delay(1),
+                   new MoveTo(new vec2(0, game.height), 1)];
 
-  layer.add(label);
-  label.position.x = game.width / 2 - label.width / 2;
-  label.position.y = game.height/2;
+    label.runAction(new ActionSequence(actions));
 
-  var action = new Speed(new RotateBy(360, 2), 2);
-  label.runAction(action + action.reverse());
+    game.currentScene = new Scene(layer);
+  }),
 
-  game.currentScene = new Scene(layer);
-}
 
-void testActionAccelerate() {
-  var layer = new Layer();
-  var label = new Label('Move to top with 2X accel');
+  test('Speed', () {
+    var layer = new Layer();
+    var label = new Label('RotateBy 360 2 seconds 2X speed');
 
-  layer.add(label);
-  label.position.x = game.width / 2 - label.width / 2;
-  label.position.y = game.height;
+    layer.add(label);
+    label.position.x = game.width / 2 - label.width / 2;
+    label.position.y = game.height/2;
 
-  var newPos = new vec2(0, 50-game.height);
-  Accelerate action = new Accelerate(new MoveBy(newPos, 2), 2);
-  label.runAction(action + action.reverse());
+    var action = new Speed(new RotateBy(360, 2), 2);
+    label.runAction(action + action.reverse());
 
-  game.currentScene = new Scene(layer);
-}
+    game.currentScene = new Scene(layer);
+  }),
 
-void testActionAccelDeccel() {
-  var layer = new Layer();
-  var label = new Label('Move to top with 2X accel-deccel');
 
-  layer.add(label);
-  label.position.x = game.width / 2 - label.width / 2;
-  label.position.y = game.height;
+  test('Accelerate', () {
+    var layer = new Layer();
+    var label = new Label('Move to top with 2X accel');
 
-  var newPos = new vec2(0, 50-game.height);
-  AccelDeccel action = new AccelDeccel(new MoveBy(newPos, 2), 2);
-  label.runAction(action + action.reverse());
+    layer.add(label);
+    label.position.x = game.width / 2 - label.width / 2;
+    label.position.y = game.height;
 
-  game.currentScene = new Scene(layer);
-}
+    var newPos = new vec2(0, 50-game.height);
+    Accelerate action = new Accelerate(new MoveBy(newPos, 2), 2);
+    label.runAction(action + action.reverse());
 
-void testActionBlink() {
-  var layer = new Layer();
-  var label = new Label('Blink for 2 seconds');
+    game.currentScene = new Scene(layer);
+  }),
 
-  label.align = 'center';
-  label.position.x = game.width/2;
-  label.position.y = game.height/2;
 
-  layer.add(label);
+  test('AccelDeccel', () {
+    var layer = new Layer();
+    var label = new Label('Move to top with 2X accel-deccel');
 
-  label.runAction(new Blink(10, 1) + new Blink(10, 1).reverse());
+    layer.add(label);
+    label.position.x = game.width / 2 - label.width / 2;
+    label.position.y = game.height;
 
-  game.currentScene = new Scene(layer);
-}
+    var newPos = new vec2(0, 50-game.height);
+    AccelDeccel action = new AccelDeccel(new MoveBy(newPos, 2), 2);
+    label.runAction(action + action.reverse());
 
-void testActionMoveTo() {
-  var layer = new Layer();
-  var label = new Label('MoveTo 100, 100');
+    game.currentScene = new Scene(layer);
+  }),
 
-  label.position.x = game.width / 2 - label.width / 2;
-  label.position.y = game.height / 2;
+  test('Blink', () {
+    var layer = new Layer();
+    var label = new Label('Blink for 2 seconds');
 
-  layer.add(label);
-  label.runAction(new MoveTo(new vec2(100, 100), 2));
+    label.align = 'center';
+    label.position.x = game.width/2;
+    label.position.y = game.height/2;
 
-  game.currentScene = new Scene(layer);
-}
+    layer.add(label);
 
-void testActionMoveBy() {
-  var layer = new Layer();
-  var label = new Label('MoveBy (100, 100)');
+    label.runAction(new Blink(10, 1) + new Blink(10, 1).reverse());
 
-  layer.add(label);
-  label.position.x = game.width / 2 - label.width / 2;
-  label.position.y = game.height / 2;
+    game.currentScene = new Scene(layer);
+  }),
 
-  var action = new MoveBy(new vec2(100, 100), 1);
 
-  label.runAction(action + action.reverse());
+  test('MoveTo', () {
+    var layer = new Layer();
+    var label = new Label('MoveTo 100, 100');
 
-  game.currentScene = new Scene(layer);
-}
+    label.position.x = game.width / 2 - label.width / 2;
+    label.position.y = game.height / 2;
 
-void testActionRotateTo() {
-  var layer = new Layer();
-  var label1 = new Label('RotateTo 45');
+    layer.add(label);
+    label.runAction(new MoveTo(new vec2(100, 100), 2));
 
-  label1.position.x = 100;
-  label1.position.y = game.height/2;
+    game.currentScene = new Scene(layer);
+  }),
 
-  layer.add(label1);
-  label1.runAction(new RotateTo(45, 2));
 
-  var label2 = new Label('RotateTo 45 reverse');
+  test('MoveBy', () {
+    var layer = new Layer();
+    var label = new Label('MoveBy (100, 100)');
 
-  label2.position.x = game.width - 300;
-  label2.position.y = game.height/2;
+    layer.add(label);
+    label.position.x = game.width / 2 - label.width / 2;
+    label.position.y = game.height / 2;
 
-  layer.add(label2);
-  label2.runAction((new RotateTo(45, 2)).reverse());
+    var action = new MoveBy(new vec2(100, 100), 1);
 
-  game.currentScene = new Scene(layer);
-}
+    label.runAction(action + action.reverse());
 
-void testActionRotateBy() {
-  var layer = new Layer();
-  var label = new Label('RotateBy 90');
+    game.currentScene = new Scene(layer);
+  }),
 
-  layer.add(label);
-  label.position.x = game.width/2;
-  label.position.y = game.height/2;
 
-  var action = new RotateBy(90, 1);
-  label.runAction(action + action.reverse());
+  test('RotateTo', () {
+    var layer = new Layer();
+    var label1 = new Label('RotateTo 45');
 
-  game.currentScene = new Scene(layer);
-}
+    label1.position.x = 100;
+    label1.position.y = game.height/2;
 
-void testActionScaleTo() {
-  var layer = new Layer();
-  var label = new Label('ScaleTo 2, 4');
+    layer.add(label1);
+    label1.runAction(new RotateTo(45, 2));
 
-  label.position.x = game.width/2;
-  label.position.y = game.height/2;
+    var label2 = new Label('RotateTo 45 reverse');
 
-  layer.add(label);
-  label.runAction(new ScaleTo(new vec2(2, 4), 2));
+    label2.position.x = game.width - 300;
+    label2.position.y = game.height/2;
 
-  game.currentScene = new Scene(layer);
-}
+    layer.add(label2);
+    label2.runAction((new RotateTo(45, 2)).reverse());
 
-void testActionScaleBy() {
-  var layer = new Layer();
-  var label = new Label('ScaleBy 1, 2');
+    game.currentScene = new Scene(layer);
+  }),
 
-  label.align = 'center';
-  label.position.x = game.width/2;
-  label.position.y = game.height/2;
 
-  layer.add(label);
+  test('RotateBy', () {
+    var layer = new Layer();
+    var label = new Label('RotateBy 90');
 
-  var action = new ScaleBy(new vec2(1, 2), 1);
-  label.runAction(action + new Delay(0.5) + action.reverse());
+    layer.add(label);
+    label.position.x = game.width/2;
+    label.position.y = game.height/2;
 
-  game.currentScene = new Scene(layer);
-}
+    var action = new RotateBy(90, 1);
+    label.runAction(action + action.reverse());
 
-void testActionFade() {
-  var layer = new Layer();
+    game.currentScene = new Scene(layer);
+  }),
 
-  var label1 = new Label('Fade Out');
-  label1.align = 'center';
-  label1.position.x = game.width/4;
-  label1.position.y = game.height/2;
 
-  layer.add(label1);
-  label1.runAction(new FadeOut(1) + new FadeOut(1).reverse());
+  test('ScaleTo', () {
+    var layer = new Layer();
+    var label = new Label('ScaleTo 2, 4');
 
-  var label2 = new Label('Fade In');
-  label2.position.x = game.width/2;
-  label2.position.y = game.height/2;
-  label2.align = 'center';
-  label2.opacity = 0.0;
+    label.position.x = game.width/2;
+    label.position.y = game.height/2;
 
-  layer.add(label2);
-  label2.runAction(new FadeIn(2) + new FadeIn(1).reverse());
+    layer.add(label);
+    label.runAction(new ScaleTo(new vec2(2, 4), 2));
 
-  var label3 = new Label('Fade To 0.5');
-  label3.position.x = 3 * game.width/4;
-  label3.position.y = game.height/2;
-  label3.align = 'center';
-  label3.opacity = 0.0;
+    game.currentScene = new Scene(layer);
+  }),
 
-  layer.add(label3);
-  label3.runAction(new FadeTo(0.5, 2));
 
-  game.currentScene = new Scene(layer);
-}
+  test('ScaleBy', () {
+    var layer = new Layer();
+    var label = new Label('ScaleBy 1, 2');
 
-void testActionRepeat() {
-  var layer = new Layer();
-  var label = new Label('Repeat 3 (Move + Move)');
+    label.align = 'center';
+    label.position.x = game.width/2;
+    label.position.y = game.height/2;
 
-  layer.add(label);
-  label.position.x = 0;
-  label.position.y = game.height/2;
+    layer.add(label);
 
-  var action = new Repeat(new MoveBy(new vec2(0, 50), 0.2) +
-                          new MoveBy(new vec2(50, 0), 0.2), 3);
+    var action = new ScaleBy(new vec2(1, 2), 1);
+    label.runAction(action + new Delay(0.5) + action.reverse());
 
-  label.runAction(action + action.reverse());
+    game.currentScene = new Scene(layer);
+  }),
 
-  game.currentScene = new Scene(layer);
-}
 
-void testActionSpawn() {
-  var layer = new Layer();
-  var label = new Label('Move | Rotate | Scale');
+  test('FadeOut, FadeIn', () {
+    var layer = new Layer();
 
-  layer.add(label);
-  label.position.x = 0;
-  label.position.y = game.height;
+    var label1 = new Label('Fade Out');
+    label1.align = 'center';
+    label1.position.x = game.width/4;
+    label1.position.y = game.height/2;
 
-  var action = new ActionSpawn([new MoveBy(new vec2(200, -200), 2),
-                                new RotateBy(360, 2),
-                                new ScaleBy(new vec2(0.5, 0.5), 2)]);
+    layer.add(label1);
+    label1.runAction(new FadeOut(1) + new FadeOut(1).reverse());
 
-  label.runAction(action + new Delay(0.5) + action.reverse());
+    var label2 = new Label('Fade In');
+    label2.position.x = game.width/2;
+    label2.position.y = game.height/2;
+    label2.align = 'center';
+    label2.opacity = 0.0;
 
-  game.currentScene = new Scene(layer);
-}
+    layer.add(label2);
+    label2.runAction(new FadeIn(2) + new FadeIn(1).reverse());
 
-void testMultipleActions() {
-  var layer = new Layer();
-  var label = new Label('Move Rotate Scale');
+    var label3 = new Label('Fade To 0.5');
+    label3.position.x = 3 * game.width/4;
+    label3.position.y = game.height/2;
+    label3.align = 'center';
+    label3.opacity = 0.0;
 
-  layer.add(label);
-  label.position.x = 0;
-  label.position.y = game.height;
+    layer.add(label3);
+    label3.runAction(new FadeTo(0.5, 2));
 
-  label.runAction(new MoveTo(new vec2(0, game.height/2), 2));
-  label.runAction(new RotateBy(360, 2));
-  label.runAction(new ScaleBy(new vec2(2, 2), 2));
+    game.currentScene = new Scene(layer);
+  }),
 
-  game.currentScene = new Scene(layer);
-}
 
-void testActionSequence() {
-  var layer = new Layer();
-  var label = new Label('Move + Rotate + Scale');
+  test('Repeat', () {
+    var layer = new Layer();
+    var label = new Label('Repeat 3 (Move + Move)');
 
-  layer.add(label);
-  label.position.x = 0;
-  label.position.y = game.height;
+    layer.add(label);
+    label.position.x = 0;
+    label.position.y = game.height/2;
 
-  var actions = new ActionSequence([new MoveBy(new vec2(0, -100), 1),
-                                    new RotateBy(360, 1),
-                                    new ScaleBy(new vec2(1.5, 1.5), 1)]);
+    var action = new Repeat(new MoveBy(new vec2(0, 50), 0.2) +
+        new MoveBy(new vec2(50, 0), 0.2), 3);
 
-  label.runAction(actions + actions.reverse());
+    label.runAction(action + action.reverse());
 
-  game.currentScene = new Scene(layer);
-}
+    game.currentScene = new Scene(layer);
+  }),
 
-void testActionOperators() {
-  var layer = new Layer();
-  var label1 = new Label('Show + Move + Rotate + Scale');
 
-  layer.add(label1);
-  label1.position.x = 0;
-  label1.position.y = 100;
-  label1.visible = false;
+  test('ActionSpawn', () {
+    var layer = new Layer();
+    var label = new Label('Move | Rotate | Scale');
 
-  label1.runAction(new Show() +
-                   new MoveTo(new vec2(200, 100), 2) +
-                   new RotateBy(360, 2) +
-                   new ScaleBy(new vec2(0.5, 0.5), 2));
+    layer.add(label);
+    label.position.x = 0;
+    label.position.y = game.height;
 
-  var label2 = new Label('Show | Move | Rotate | Scale');
+    var action = new ActionSpawn([new MoveBy(new vec2(200, -200), 2),
+                                  new RotateBy(360, 2),
+                                  new ScaleBy(new vec2(0.5, 0.5), 2)]);
 
-  layer.add(label2);
-  label2.position.x = 0;
-  label2.position.y = 400;
-  label2.visible = false;
+    label.runAction(action + new Delay(0.5) + action.reverse());
 
-  label2.runAction(new Show() |
-                   new MoveTo(new vec2(200, 400), 2) |
-                   new RotateBy(360, 2) |
-                   new ScaleBy(new vec2(0.5, 0.5), 2));
+    game.currentScene = new Scene(layer);
+  }),
 
-  game.currentScene = new Scene(layer);
-}
+
+  test('Multiple Action', () {
+    var layer = new Layer();
+    var label = new Label('Move Rotate Scale');
+
+    layer.add(label);
+    label.position.x = 0;
+    label.position.y = game.height;
+
+    label.runAction(new MoveTo(new vec2(0, game.height/2), 2));
+    label.runAction(new RotateBy(360, 2));
+    label.runAction(new ScaleBy(new vec2(2, 2), 2));
+
+    game.currentScene = new Scene(layer);
+  }),
+
+
+  test('ActionSequece', () {
+    var layer = new Layer();
+    var label = new Label('Move + Rotate + Scale');
+
+    layer.add(label);
+    label.position.x = 0;
+    label.position.y = game.height;
+
+    var actions = new ActionSequence([new MoveBy(new vec2(0, -100), 1),
+                                      new RotateBy(360, 1),
+                                      new ScaleBy(new vec2(1.5, 1.5), 1)]);
+
+    label.runAction(actions + actions.reverse());
+
+    game.currentScene = new Scene(layer);
+  }),
+
+
+  test('Operators', () {
+    var layer = new Layer();
+    var label1 = new Label('Show + Move + Rotate + Scale');
+
+    layer.add(label1);
+    label1.position.x = 0;
+    label1.position.y = 100;
+    label1.visible = false;
+
+    label1.runAction(new Show() +
+        new MoveTo(new vec2(200, 100), 2) +
+        new RotateBy(360, 2) +
+        new ScaleBy(new vec2(0.5, 0.5), 2));
+
+    var label2 = new Label('Show | Move | Rotate | Scale');
+
+    layer.add(label2);
+    label2.position.x = 0;
+    label2.position.y = 400;
+    label2.visible = false;
+
+    label2.runAction(new Show() |
+        new MoveTo(new vec2(200, 400), 2) |
+        new RotateBy(360, 2) |
+        new ScaleBy(new vec2(0.5, 0.5), 2));
+
+    game.currentScene = new Scene(layer);
+  }),
+];
