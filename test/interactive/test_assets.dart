@@ -41,4 +41,21 @@ var assetsTests = [
 
     game.currentScene = new LoadingScene(fakeProgress(), nextScene);
   }),
+
+  test('LoadingScene with Error', () {
+    var layer = new Layer();
+    var label = new Label('New scene');
+    label.position.x = 50;
+    label.position.y = 50;
+    layer.add(label);
+    var nextScene = new Scene(layer);
+
+    fakeProgress() {
+      var controller = new StreamController();
+      controller.addError('Error');
+      return controller.stream;
+    }
+
+    game.currentScene = new LoadingScene(fakeProgress(), nextScene);
+  }),
 ];
