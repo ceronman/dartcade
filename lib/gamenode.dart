@@ -25,6 +25,9 @@ abstract class GameNode {
   List<Action> actions = new List<Action>();
   GameNode parent;
 
+  StreamController<num> onFrameController = new StreamController<num>();
+  Stream<num> get onFrame => onFrameController.stream.asBroadcastStream();
+
   num get width;
   num get height;
 
@@ -102,6 +105,7 @@ abstract class GameNode {
       action.stop();
       actions.removeRange(actions.indexOf(action), 1);
     }
+    onFrameController.add(dt);
   }
 
   add(node) {

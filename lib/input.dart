@@ -124,24 +124,23 @@ class Keys {
 }
 
 class KeyStateHandler {
-  Map<num, bool> pressedKeys;
+  Map<num, bool> pressedKeys = new Map<num, bool>();
 
-  KeyStateHandler() {
-    pressedKeys = new Map<num, bool>();
-
-    document.onKeyDown.listen((KeyboardEvent event) {
-      this.pressedKeys[event.keyCode] = true;
+  KeyStateHandler(onKeyDown, onKeyUp) {
+    onKeyDown.listen((KeyboardEvent event) {
+      pressedKeys[event.keyCode] = true;
     });
 
-    document.onKeyUp.listen((KeyboardEvent event) {
-      this.pressedKeys[event.keyCode] = false;
+    onKeyUp.listen((KeyboardEvent event) {
+      pressedKeys[event.keyCode] = false;
     });
   }
 
   bool operator [](num key) {
-    if (this.pressedKeys.containsKey(key)) {
-      return this.pressedKeys[key];
-    }
-    return false;
+    return pressedKeys.containsKey(key) && pressedKeys[key];
   }
+}
+
+keyIs(key) {
+  return (KeyboardEvent event) => event.keyCode == key;
 }

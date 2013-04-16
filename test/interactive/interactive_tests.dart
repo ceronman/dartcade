@@ -20,6 +20,7 @@ import 'package:dartcocos/cocos.dart';
 
 part 'test_actions.dart';
 part 'test_assets.dart';
+part 'test_input.dart';
 
 typedef void TestFunction();
 
@@ -44,6 +45,7 @@ group(name, tests) {
 final groups = [
   group('Action Tests', actionTests),   // from test_actions.dart
   group('Assets Tests', assetsTests),   // from test_assets.dart
+  group('Input Tests', inputTests),     // from test_input.dart
 ];
 
 showIndex() {

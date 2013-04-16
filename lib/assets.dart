@@ -19,22 +19,22 @@ part of cocos;
 
 class AssetManager {
   Map<String, ImageElement> images = {};
-  
+
   Stream<num> load(List<String> sources) {
     var progress = new StreamController();
-    
+
     if (sources.length == 0) {
       progress.close();
       return progress.stream;
     }
-    
+
     var loadedState = {};
     for (String source in sources) {
       loadedState[source] = false;
     }
-    
+
     for (String source in sources) {
-      images[source] = new ImageElement(); 
+      images[source] = new ImageElement();
       images[source].onLoad.listen((e) {
         loadedState[source] = true;
         var completed = loadedState.values.where((loaded) => loaded).length;
@@ -49,8 +49,8 @@ class AssetManager {
       });
       images[source].src = source;
     }
-    
-    return progress.stream;
+
+    return progress.stream.asBroadcastStream();
   }
 }
 
@@ -64,7 +64,7 @@ class LoadingScene extends Scene {
     this.layer = layer;
     this.add(layer);
     layer.add(label);
-    
+
     progress.listen((p) {
       label.text = 'Loading ${(p * 100).toStringAsFixed(0)}%';
     }, onError: (error) {
@@ -72,6 +72,6 @@ class LoadingScene extends Scene {
     }, onDone: () {
       game.currentScene = nextScene;
     });
-    
+
   }
 }

@@ -20,22 +20,23 @@ class Game {
   CanvasElement canvas;
   num fps;
 
-  Scene _currentScene;
-  Scene get currentScene => _currentScene;
-  void set currentScene(Scene scene) {
-    _currentScene = scene;
-    _currentScene.width = canvas.width;
-    _currentScene.height = canvas.height;
-  }
-  
+  Scene currentScene;
+
   num get width => canvas.width;
   num get height => canvas.height;
+
+  Stream<KeyboardEvent> get onKeyDown => document.onKeyDown;
+  Stream<KeyboardEvent> get onKeyUp => document.onKeyUp;
+  Stream<MouseEvent> get onMouseDown => canvas.onMouseDown;
+  Stream<MouseEvent> get onMouseUp => canvas.onMouseUp;
+  Stream<MouseEvent> get onMouseMove => canvas.onMouseMove;
+  Stream<WheelEvent> get onMouseWheel => canvas.onMouseWheel;
 
   void init(selector, {int width, int height}) {
     width = width != null ? width : 640;
     height = height != null ? height : 480;
     assets = new AssetManager();
-    keyboard = new KeyStateHandler();
+    keyboard = new KeyStateHandler(onKeyDown, onKeyUp);
 
     var gamebox = query(selector);
     canvas = new CanvasElement(width:width, height:height);
@@ -76,7 +77,7 @@ class Game {
 
   void draw(CanvasRenderingContext2D context) {
     context.clearRect(0, 0, canvas.width, canvas.height);
-//    _debugDraw(context);
+    _debugDraw(context);
     currentScene.drawWithChildren(context);
   }
 
@@ -99,18 +100,13 @@ class Game {
       window.requestAnimationFrame(drawFrame);
     }
     window.requestAnimationFrame(drawFrame);
-    
+
     new Timer.periodic(new Duration(seconds:1), (t) {
       fps = frameCount;
       frameCount = 0;
       print('fps: $fps');
     });
-//    document.onKeyDown.listen(keyPress);
-//    document.onMouseDown.listen(mouseDown);
   }
-
-  keyPress(KeyboardEvent event) => currentScene.keyPress(event);
-  mouseDown(MouseEvent event) => currentScene.mouseDown(event);
 }
 
 final Game game = new Game();

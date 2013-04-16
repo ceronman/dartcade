@@ -14,28 +14,7 @@
 
 part of cocos;
 
-class Scene extends GameNode {
-
-  int width;
-  int height;
-
-  Layer layer;
-
-  Scene([Layer layer]): super() {
-    if (layer != null) {
-      this.add(layer);
-    }
-    this.layer = layer;
-  }
-
-  keyPress(KeyboardEvent event) => layer.keyPress(event);
-  mouseDown(MouseEvent event) => layer.mouseDown(event);
-}
-
 class Layer extends GameNode {
   get width => parent.width;
   get height => parent.height;
-
-  keyPress(KeyboardEvent event) {}
-  mouseDown(MouseEvent event) {}
 }
