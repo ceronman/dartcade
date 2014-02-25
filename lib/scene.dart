@@ -31,7 +31,7 @@ class Scene extends GameNode {
   Layer layer;
 
   Scene([Layer layer]): super() {
-    if (?layer) {
+    if (layer != null) {
       this.add(layer);
     }
     this.layer = layer;

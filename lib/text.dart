@@ -28,7 +28,7 @@ class Label extends GameNode {
   String get text => _text;
          set text(String value) {
     var canvas = new CanvasElement(width:0, height:0);
-    var context = canvas.context2d;
+    var context = canvas.context2D;
     _setStyle(context);
     var dimensions = context.measureText(value);
     width = dimensions.width;

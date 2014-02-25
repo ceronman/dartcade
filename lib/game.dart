@@ -38,7 +38,7 @@ class Game {
     assets = new AssetManager();
     keyboard = new KeyStateHandler(onKeyDown, onKeyUp);
 
-    var gamebox = query(selector);
+    var gamebox = querySelector(selector);
     canvas = new CanvasElement(width:width, height:height);
     canvas.style.backgroundColor = 'black';
     gamebox.children.add(canvas);
@@ -82,7 +82,7 @@ class Game {
   }
 
   void run([Scene scene]) {
-    if (?scene) {
+    if (scene != null) {
       currentScene = scene;
     }
       var initTime;
@@ -96,7 +96,7 @@ class Game {
       var dt = (currentTime - initTime) / 1000;
       initTime = currentTime;
       update(dt);
-      draw(canvas.context2d);
+      draw(canvas.context2D);
       window.requestAnimationFrame(drawFrame);
     }
     window.requestAnimationFrame(drawFrame);

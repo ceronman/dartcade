@@ -49,13 +49,13 @@ final groups = [
 ];
 
 showIndex() {
-  query('#test-box').hidden = true;
-  query('#test-list').hidden = false;
-  query('#test-list').children.clear();
+  querySelector('#test-box').hidden = true;
+  querySelector('#test-list').hidden = false;
+  querySelector('#test-list').children.clear();
   for (var testGroup in groups) {
     var header = new HeadingElement.h2();
     header.text = testGroup.name;
-    query('#test-list').children.add(header);
+    querySelector('#test-list').children.add(header);
     var testsUL = new UListElement();
     for (var test in testGroup.tests) {
       var item = new LIElement();
@@ -64,13 +64,13 @@ showIndex() {
       item.children.add(link);
       testsUL.children.add(item);
     }
-    query('#test-list').children.add(testsUL);
+    querySelector('#test-list').children.add(testsUL);
   }
 }
 
 runTest(String testLink) {
-  query('#test-list').hidden = true;
-  query('#test-box').hidden = false;
+  querySelector('#test-list').hidden = true;
+  querySelector('#test-box').hidden = false;
 
   var parts = testLink.split(':');
 
@@ -88,7 +88,7 @@ runTest(String testLink) {
   }
   var groupIndex = groups.indexOf(testGroup);
   var testIndex = testGroup.tests.indexOf(testCase);
-  var prevAnchor = query('#prev-anchor') as AnchorElement;
+  var prevAnchor = querySelector('#prev-anchor') as AnchorElement;
 
   if (testIndex > 0) {
     var prevTest = testGroup.tests[testIndex -1];
@@ -105,7 +105,7 @@ runTest(String testLink) {
     prevAnchor.hidden = true;
   }
 
-  var nextAnchor = query('#next-anchor') as AnchorElement;
+  var nextAnchor = querySelector('#next-anchor') as AnchorElement;
   if (testIndex < testGroup.tests.length - 1) {
     var nextTest = testGroup.tests[testIndex +1];
     nextAnchor.href = '#${testGroup.name}:${nextTest.name}';
@@ -120,7 +120,7 @@ runTest(String testLink) {
     nextAnchor.hidden = true;
   }
 
-  query('#test-title').text = '$groupName > $testName';
+  querySelector('#test-title').text = '$groupName > $testName';
   testCase.testFunction();
 }
 
@@ -140,7 +140,7 @@ main() {
     }
   };
   window.onHashChange.listen(hashChange);
-  query('#current-anchor').onClick.listen((e) {
+  querySelector('#current-anchor').onClick.listen((e) {
     hashChange(e);
     e.preventDefault();
   });
