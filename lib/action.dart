@@ -95,7 +95,7 @@ abstract class IntervalAction extends Action {
 
   step(dt) {
     ellapsedTime = min(ellapsedTime + dt, duration);
-    _interval(ellapsedTime/duration); // FIXME: check duration == 0
+    _interval(ellapsedTime/duration); // TODO: check duration == 0
   }
 
   _interval(num t);
@@ -275,7 +275,7 @@ class RandomDelay extends Delay {
 class Speed extends IntervalAction {
   IntervalAction action;
 
-  Speed(IntervalAction action, num speedFactor) : super(0) { // <-- FIXME
+  Speed(IntervalAction action, num speedFactor) : super(0) { // <-- TODO
     // TODO: check speedFactor == 0;
     this.duration = action.duration / speedFactor;
     this.action = action;
@@ -306,7 +306,7 @@ class Accelerate extends IntervalAction {
   num rate;
 
   Accelerate(IntervalAction action, num this.rate) : super(action.duration) {
-    // FIXME: check zero rate
+    // TODO: check zero rate
     this.action = action;
   }
   Accelerate clone() => new Accelerate(action.clone(), rate);
@@ -345,9 +345,9 @@ class ActionSequence extends Action {
   int _currentAction;
   bool done = false;
 
-  // FIXME: add a type here. Maybe Enumerable?
+  // TODO: add a type here. Maybe Enumerable?
   ActionSequence(actions) {
-    // FIXME: Throw on empty actions
+    // TODO: Throw on empty actions
     _actions = new List.from(actions.map((action) => action.clone()));
   }
   ActionSequence clone() => new ActionSequence(_actions);
@@ -401,9 +401,9 @@ class ActionSpawn extends Action {
 
   bool get done => _actions.length == 0;
 
-  // FIXME: add a type here. Maybe Enumerable?
+  // TODO: add a type here. Maybe Enumerable?
   ActionSpawn(actions) {
-    // FIXME: Throw on empty actions
+    // TODO: Throw on empty actions
     _actions = new List<Action>();
     for (var action in actions) {
       _actions.add(action.clone());
@@ -504,7 +504,7 @@ class Repeat extends Action {
 class Loop extends Action {
   Action action;
   bool done = false;
-  Action _currentAction = null;
+  Action actionCopy = null;
 
   Loop(Action this.action);
   Loop clone() => new Loop(action);
@@ -515,8 +515,8 @@ class Loop extends Action {
   }
 
   void step(num dt) {
-    _currentAction.step(dt);
-    if (_currentAction.done) {
+    actionCopy.step(dt);
+    if (actionCopy.done) {
       _nextAction();
     }
   }
@@ -524,16 +524,16 @@ class Loop extends Action {
   void stop() {}
 
   _nextAction() {
-    if (_currentAction != null) {
-      _currentAction.stop();
+    if (actionCopy != null) {
+      actionCopy.stop();
     }
-    _currentAction = action.clone();
+    actionCopy = action.clone();
 
-    _currentAction.target = target;
-    _currentAction.start();
+    actionCopy.target = target;
+    actionCopy.start();
 
     // this is useful for instant actions
-    if (_currentAction.done) {
+    if (actionCopy.done) {
       _nextAction();
     }
   }

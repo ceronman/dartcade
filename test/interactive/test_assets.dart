@@ -52,7 +52,7 @@ var assetsTests = [
 
     fakeProgress() {
       var controller = new StreamController();
-      controller.addError('Error');
+      controller.addError('This should be shown');
       return controller.stream;
     }
 

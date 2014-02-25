@@ -359,6 +359,7 @@ var actionTests = [
     var label2 = new Label('Show | Move | Rotate | Scale');
 
     layer.add(label2);
+    // TODO: Use cascading for all this kind of calls
     label2.position.x = 0;
     label2.position.y = 400;
     label2.visible = false;
@@ -367,6 +368,41 @@ var actionTests = [
         new MoveTo(new vec2(200, 400), 2) |
         new RotateBy(360, 2) |
         new ScaleBy(new vec2(0.5, 0.5), 2));
+
+    game.currentScene = new Scene(layer);
+  }),
+  
+  test('Call function', () {
+    var layer = new Layer();
+    var label = new Label('Old text');
+    layer.add(label);
+    
+    label
+        ..align = 'center'
+        ..position.x = game.width / 2
+        ..position.y = game.height / 2;
+    
+    var action = new CallFunction(() {
+      label.text = "New text";
+    });
+    
+    label.runAction(new Delay(1) + action);
+    
+    game.currentScene = new Scene(layer);
+  }),
+  
+  test('Loop', () {
+    var layer = new Layer();
+    var label = new Label('Endless Loop');
+    layer.add(label);
+    
+    label
+        ..align = 'center'
+        ..position.x = game.width / 2
+        ..position.y = game.height / 2;
+
+    var action = new Loop(new RotateBy(360, 2));
+    label.runAction(action);
 
     game.currentScene = new Scene(layer);
   }),
