@@ -112,6 +112,12 @@ abstract class GameNode {
     children.add(node);
     node.parent = this;
   }
+  
+  addTo(node) {
+    // TODO: Remove from previous parent;
+    node.add(this);
+    this.parent = node;
+  }
 
   remove(GameNode node) {
     children.removeRange(children.indexOf(node), 1);

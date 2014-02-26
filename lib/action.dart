@@ -14,6 +14,8 @@
 
 part of cocos;
 
+// TODO: create functions for each concrete action
+
 abstract class Action {
   GameNode target;
   bool get done => false;
