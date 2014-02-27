@@ -21,23 +21,17 @@ abstract class Action {
   bool get done => false;
 
   Action();
-
   Action clone();
+  Action reverse() {
+    throw "Reverse not available";
+  }
+  Action operator |(Action action) => new ActionSpawn([this, action]);
+  Action operator +(Action action) => new ActionSequence([this, action]);
+  
   void start();
   void step(num dt);
   void stop();
 
-  reverse() {
-    throw "Reverse not available";
-  }
-
-  Action operator +(Action action) {
-    return new ActionSequence([this, action]);
-  }
-
-  Action operator |(Action action) {
-    return new ActionSpawn([this, action]);
-  }
 }
 
 abstract class InstantAction extends Action {
@@ -51,40 +45,51 @@ class Place extends InstantAction {
   vec2 position;
 
   Place(this.position);
-
   Place clone() => new Place(position);
-  start() => target.position = position;
+  
+  void start() {
+    target.position = position; 
+  }
 }
 
 class CallFunction extends InstantAction {
+  // TODO use a typedef here
   dynamic method;
   vec2 position;
 
   CallFunction(this.method);
-
   CallFunction clone() => new CallFunction(method);
-  start() => method();
+  
+  void start() { 
+    method(); 
+  }
 }
 
 class Hide extends InstantAction {
-
   Hide clone() => new Hide();
   Show reverse() => new Show();
-  start() => target.visible = false;
+  
+  void start() {
+    target.visible = false;
+  }
 }
 
 class Show extends InstantAction {
-
   Show clone() => new Show();
   Hide reverse() => new Hide();
-  start() => target.visible = true;
+  
+  void start() {
+    target.visible = true;
+  }
 }
 
 class ToggleVisibility extends InstantAction {
-
   ToggleVisibility clone() => new ToggleVisibility();
   ToggleVisibility reverse() => new ToggleVisibility();
-  start() => target.visible = !target.visible;
+  
+  void start() {
+    target.visible = !target.visible; 
+  }
 }
 
 abstract class IntervalAction extends Action {
@@ -95,15 +100,16 @@ abstract class IntervalAction extends Action {
 
   IntervalAction(num this.duration);
 
-  step(dt) {
+  void step(dt) {
     ellapsedTime = min(ellapsedTime + dt, duration);
     _interval(ellapsedTime/duration); // TODO: check duration == 0
   }
 
-  _interval(num t);
+  void _interval(num t);
 }
 
 abstract class ChangeAttributeToAction extends IntervalAction {
+  // TODO: Add type annotations
   var startValue;
   var deltaValue;
   var endValue;
@@ -113,17 +119,18 @@ abstract class ChangeAttributeToAction extends IntervalAction {
 
   ChangeAttributeToAction(this.endValue, num duration) : super(duration);
 
-  start() {
+  void start() {
     startValue = _changingValue;
     deltaValue = endValue - startValue;
   }
 
-  stop() {}
+  void stop() {}
 
-  _interval(num t)       => _changingValue = startValue + deltaValue * t;
+  _interval(num t) => _changingValue = startValue + deltaValue * t;
 }
 
 abstract class ChangeAttributeByAction extends IntervalAction {
+  // TODO: Annotate these values
   var startValue;
   var deltaValue;
 
@@ -132,8 +139,12 @@ abstract class ChangeAttributeByAction extends IntervalAction {
 
   ChangeAttributeByAction(this.deltaValue, num duration) : super(duration);
 
-  start() => startValue = _changingValue;
-  stop()  => _changingValue = startValue + deltaValue;
+  void start() {
+    startValue = _changingValue;
+  }
+  void stop()  {
+    _changingValue = startValue + deltaValue;
+  }
 
   _interval(num t) => _changingValue = startValue + deltaValue * t;
 }
@@ -174,9 +185,7 @@ class RotateTo extends ChangeAttributeToAction {
     }
   }
   RotateTo clone() => new RotateTo(endValue, duration);
-  RotateTo reverse() {
-    return new RotateTo(endValue - 360, duration);
-  }
+  RotateTo reverse() => new RotateTo(endValue - 360, duration);
 }
 
 class ScaleTo extends ChangeAttributeToAction {
@@ -236,11 +245,13 @@ class Blink extends IntervalAction {
   Blink clone() => new Blink(1 / _blinkInterval, duration);
   Blink reverse() => clone();
 
-  start() {
+  void start() {
     _initialVisibility = target.visible;
   }
 
-  stop() => target.visible = _initialVisibility;
+  void stop() {
+    target.visible = _initialVisibility;
+  }
 
   _interval(num t) {
     if (t > (_blinkInterval * _blinks)) {
@@ -251,12 +262,11 @@ class Blink extends IntervalAction {
 }
 
 class Delay extends IntervalAction {
-
   Delay(num duration): super(duration);
   Delay clone() => new Delay(duration);
 
-  start() {}
-  stop() {}
+  void start() {}
+  void stop() {}
   _interval(num t) {}
 }
 
@@ -282,22 +292,15 @@ class Speed extends IntervalAction {
     this.duration = action.duration / speedFactor;
     this.action = action;
   }
-  Speed clone() {
-    return new Speed(action.clone(), action.duration/duration);
-  }
-  Speed reverse() {
-    return new Speed(action.reverse(), action.duration/duration);
-  }
+  Speed clone() => new Speed(action.clone(), action.duration/duration);
+  Speed reverse() => new Speed(action.reverse(), action.duration/duration);
 
   void start() {
     action.target = this.target;
     action.start();
   }
 
-  void stop() {
-    action.stop();
-  }
-
+  void stop() => action.stop();
   void _interval(num t) {
     action._interval(t);
   }
@@ -318,10 +321,8 @@ class Accelerate extends IntervalAction {
     action.target = this.target;
     action.start();
   }
-
-  void stop() {
-    action.stop();
-  }
+  
+  void stop() => action.stop();
 
   void _interval(num t) {
     action._interval(pow(t, rate));
@@ -354,12 +355,7 @@ class ActionSequence extends Action {
   }
   ActionSequence clone() => new ActionSequence(_actions);
   ActionSequence reverse() {
-    // TODO: use List.reverse (not yet implemented).
-    var reverseActions = [];
-    for (var i=_actions.length-1; i>=0; i--) {
-      reverseActions.add(_actions[i].reverse());
-    }
-    return new ActionSequence(reverseActions);
+    return new ActionSequence(_actions.reversed.map((a) => a.reverse()));
   }
 
   void start() {
@@ -375,7 +371,7 @@ class ActionSequence extends Action {
 
   void stop() {}
 
-  _nextAction() {
+  void _nextAction() {
     if (_currentAction == null) {
       _currentAction = 0;
     }
@@ -413,12 +409,7 @@ class ActionSpawn extends Action {
   }
   ActionSpawn clone() => new ActionSpawn(_actions);
   ActionSpawn reverse() {
-    // TODO: use List.reverse (not yet implemented).
-    var reverseActions = [];
-    for (var i=_actions.length-1; i>=0; i--) {
-      reverseActions.add(_actions[i].reverse());
-    }
-    return new ActionSpawn(reverseActions);
+    return new ActionSpawn(_actions.reversed.map((a) => a.reverse()));
   }
 
   void start() {
@@ -449,7 +440,7 @@ class ActionSpawn extends Action {
 
   void stop() {}
 
-  _removeActions(actions) {
+  void _removeActions(actions) {
     for (var action in actions) {
       action.stop();
       _actions.removeRange(_actions.indexOf(action), 1);
@@ -469,7 +460,7 @@ class Repeat extends Action {
   Repeat reverse() => new Repeat(action.reverse(), times);
 
   void start() {
-    _nextAction();
+    return _nextAction();
   }
 
   void step(num dt) {
@@ -481,7 +472,7 @@ class Repeat extends Action {
 
   void stop() {}
 
-  _nextAction() {
+  void _nextAction() {
     if (_currentAction != null) {
       _currentAction.stop();
     }
@@ -506,36 +497,34 @@ class Repeat extends Action {
 class Loop extends Action {
   Action action;
   bool done = false;
-  Action actionCopy = null;
+  Action activeAction = null;
 
   Loop(Action this.action);
   Loop clone() => new Loop(action);
   Loop reverse() => new Loop(action.reverse());
 
-  void start() {
-    _nextAction();
-  }
+  void start() => _nextAction();
 
   void step(num dt) {
-    actionCopy.step(dt);
-    if (actionCopy.done) {
+    activeAction.step(dt);
+    if (activeAction.done) {
       _nextAction();
     }
   }
 
   void stop() {}
 
-  _nextAction() {
-    if (actionCopy != null) {
-      actionCopy.stop();
+  void _nextAction() {
+    if (activeAction != null) {
+      activeAction.stop();
     }
-    actionCopy = action.clone();
+    activeAction = action.clone();
 
-    actionCopy.target = target;
-    actionCopy.start();
+    activeAction.target = target;
+    activeAction.start();
 
     // this is useful for instant actions
-    if (actionCopy.done) {
+    if (activeAction.done) {
       _nextAction();
     }
   }
