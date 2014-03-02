@@ -14,7 +14,7 @@
 
 part of cocos;
 
-// TODO: create functions for each concrete action
+// TODO: MAYBE create functions for each concrete action
 
 abstract class Action {
   GameNode target;
@@ -22,6 +22,7 @@ abstract class Action {
 
   Action();
   Action clone();
+  // TODO: change reversed to getter
   Action reverse() {
     throw "Reverse not available";
   }

@@ -76,14 +76,14 @@ var actionTests = [
 
   test('Speed', () {
     var action = new RotateBy(360, 2);
-    // TODO: Is this better?
+    // TODO: MAYBE Use this notation or the one in other tests?
     game.currentScene = new Scene()
         ..add(new Layer()
             ..add(new Label('RotateBy 360 2 seconds 2X speed')
                 ..align = 'center'
                 ..position.x = game.width/2
                 ..position.y = game.height/2
-                ..runAction(action + action.reverse())
+                ..runAction(action + new Speed(action, 2))
              )
         );
   }),
@@ -91,13 +91,13 @@ var actionTests = [
 
   test('Accelerate', () {
     var layer = new Layer();
-    var newPos = new vec2(0, 50-game.height);
+    var newPos = new vec2(0, game.height-50);
     Accelerate action = new Accelerate(new MoveBy(newPos, 2), 2);
-    var label = new Label('Move to top with 2X accel')
+    var label = new Label('Move to bottom with 2X accel')
         ..addTo(layer)
         ..align = 'center'
         ..position.x = game.width/2
-        ..position.y = game.height/2
+        ..position.y = 50
         ..runAction(action + action.reverse());
 
     game.currentScene = new Scene(layer);
@@ -105,14 +105,14 @@ var actionTests = [
 
 
   test('AccelDeccel', () {
-    var newPos = new vec2(0, 50-game.height);
+    var newPos = new vec2(0, game.height-50);
     AccelDeccel action = new AccelDeccel(new MoveBy(newPos, 2), 2);
     var layer = new Layer();
     var label = new Label('Move to top with 2X accel-deccel')
         ..addTo(layer)
         ..align = 'center'
         ..position.x = game.width/2
-        ..position.y = game.height/2
+        ..position.y = 50
         ..runAction(action + action.reverse());
 
     game.currentScene = new Scene(layer);
@@ -135,7 +135,6 @@ var actionTests = [
     var layer = new Layer();
     var label = new Label('MoveTo 100, 100')
         ..addTo(layer)
-        ..align = 'center'
         ..position.x = game.width/2
         ..position.y = game.height/2
         ..runAction(new MoveTo(new vec2(100, 100), 2));
@@ -147,7 +146,7 @@ var actionTests = [
   test('MoveBy', () {
     var action = new MoveBy(new vec2(100, 100), 1);
     var layer = new Layer();
-    var label = new Label('MoveTo 100, 100')
+    var label = new Label('MoveBy 100, 100')
         ..addTo(layer)
         ..align = 'center'
         ..position.x = game.width/2

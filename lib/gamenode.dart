@@ -23,7 +23,18 @@ abstract class GameNode {
   bool visible = true;
   List<GameNode> children = new List<GameNode>();
   List<Action> actions = new List<Action>();
-  GameNode parent;
+  
+  GameNode _parent;
+  GameNode get parent => _parent;
+  void set parent(GameNode value) {
+    if (_parent == value) {
+      return;
+    }
+    if (_parent != null) {
+      _parent.remove(this);
+    }
+    _parent = value;
+  }
 
   StreamController<num> onFrameController = new StreamController<num>();
   Stream<num> get onFrame => onFrameController.stream.asBroadcastStream();
@@ -61,6 +72,7 @@ abstract class GameNode {
   }
 
   drawWithTransform(context) {
+// TODO: refactor this out.
 //      context.save();
 //      context.strokeStyle = "#FF0000";
 //      context.beginPath();
@@ -114,7 +126,6 @@ abstract class GameNode {
   }
   
   addTo(node) {
-    // TODO: Remove from previous parent;
     node.add(this);
     this.parent = node;
   }
