@@ -75,16 +75,17 @@ var actionTests = [
 
 
   test('Speed', () {
-    var action = new Speed(new RotateBy(360, 2), 2);
-    var layer = new Layer();
-    var label = new Label('RotateBy 360 2 seconds 2X speed')
-        ..addTo(layer)
-        ..align = 'center'
-        ..position.x = game.width/2
-        ..position.y = game.height/2
-        ..runAction(action + action.reverse());
-
-    game.currentScene = new Scene(layer);
+    var action = new RotateBy(360, 2);
+    // TODO: Is this better?
+    game.currentScene = new Scene()
+        ..add(new Layer()
+            ..add(new Label('RotateBy 360 2 seconds 2X speed')
+                ..align = 'center'
+                ..position.x = game.width/2
+                ..position.y = game.height/2
+                ..runAction(action + action.reverse())
+             )
+        );
   }),
 
 
@@ -329,18 +330,17 @@ var actionTests = [
   
   
   test('Call function', () {
+    var action = new CallFunction((label) {
+      label.text = "New text";
+    });
     var layer = new Layer();
     var label = new Label('Old text')
         ..addTo(layer)
         ..align = 'center'
         ..position.x = game.width / 2
-        ..position.y = game.height / 2;
+        ..position.y = game.height / 2
+        ..runAction(new Delay(1) + action);
     
-    // TODO: Make CallFunction send the object as argument
-    var action = new CallFunction(() {
-      label.text = "New text";
-    });
-    label.runAction(new Delay(1) + action);
     game.currentScene = new Scene(layer);
   }),
   

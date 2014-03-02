@@ -52,16 +52,18 @@ class Place extends InstantAction {
   }
 }
 
+
+typedef CallFunctionCallback(GameNode node);
+
 class CallFunction extends InstantAction {
-  // TODO use a typedef here
-  dynamic method;
+  CallFunctionCallback method;
   vec2 position;
 
   CallFunction(this.method);
   CallFunction clone() => new CallFunction(method);
   
   void start() { 
-    method(); 
+    method(target); 
   }
 }
 
@@ -93,23 +95,33 @@ class ToggleVisibility extends InstantAction {
 }
 
 abstract class IntervalAction extends Action {
-  num duration;
+  num _duration;
   num ellapsedTime = 0;
-
+  
+  num get duration => _duration;
+  set duration(num value) {
+    // TODO: test this
+    if (value <= 0) {
+      throw "Invalid duration for interval";
+    }
+    _duration = value;      
+  }
+  
   bool get done => ellapsedTime >= duration;
 
-  IntervalAction(num this.duration);
+  IntervalAction(num duration) {
+    this.duration = duration;
+  }
 
   void step(dt) {
     ellapsedTime = min(ellapsedTime + dt, duration);
-    _interval(ellapsedTime/duration); // TODO: check duration == 0
+    _interval(ellapsedTime/duration);
   }
 
   void _interval(num t);
 }
 
 abstract class ChangeAttributeToAction extends IntervalAction {
-  // TODO: Add type annotations
   var startValue;
   var deltaValue;
   var endValue;
@@ -130,7 +142,6 @@ abstract class ChangeAttributeToAction extends IntervalAction {
 }
 
 abstract class ChangeAttributeByAction extends IntervalAction {
-  // TODO: Annotate these values
   var startValue;
   var deltaValue;
 
@@ -287,9 +298,11 @@ class RandomDelay extends Delay {
 class Speed extends IntervalAction {
   IntervalAction action;
 
-  Speed(IntervalAction action, num speedFactor) : super(0) { // <-- TODO
-    // TODO: check speedFactor == 0;
-    this.duration = action.duration / speedFactor;
+  Speed(IntervalAction action, num speedFactor) : super(action.duration) {
+    if (speedFactor <= 0) {
+      throw "Invalid speed factor";
+    }
+    duration = action.duration / speedFactor;
     this.action = action;
   }
   Speed clone() => new Speed(action.clone(), action.duration/duration);
@@ -308,10 +321,17 @@ class Speed extends IntervalAction {
 
 class Accelerate extends IntervalAction {
   IntervalAction action;
-  num rate;
+  num _rate;
+  
+  num get rate => _rate;
+  set rate(num value) {
+    if (value <= 0) {
+      throw "Invalid acceleration rate";
+    }
+  }
 
-  Accelerate(IntervalAction action, num this.rate) : super(action.duration) {
-    // TODO: check zero rate
+  Accelerate(IntervalAction action, num rate) : super(action.duration) {
+    this.rate = rate;
     this.action = action;
   }
   Accelerate clone() => new Accelerate(action.clone(), rate);
