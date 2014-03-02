@@ -22,9 +22,8 @@ abstract class Action {
 
   Action();
   Action clone();
-  // TODO: change reversed to getter
-  Action reverse() {
-    throw "Reverse not available";
+  Action get reversed {
+    throw "Reversed not implemented";
   }
   Action operator |(Action action) => new ActionSpawn([this, action]);
   Action operator +(Action action) => new ActionSequence([this, action]);
@@ -70,7 +69,7 @@ class CallFunction extends InstantAction {
 
 class Hide extends InstantAction {
   Hide clone() => new Hide();
-  Show reverse() => new Show();
+  Show get reversed => new Show();
   
   void start() {
     target.visible = false;
@@ -79,7 +78,7 @@ class Hide extends InstantAction {
 
 class Show extends InstantAction {
   Show clone() => new Show();
-  Hide reverse() => new Hide();
+  Hide get reversed => new Hide();
   
   void start() {
     target.visible = true;
@@ -88,7 +87,7 @@ class Show extends InstantAction {
 
 class ToggleVisibility extends InstantAction {
   ToggleVisibility clone() => new ToggleVisibility();
-  ToggleVisibility reverse() => new ToggleVisibility();
+  ToggleVisibility get reversed => new ToggleVisibility();
   
   void start() {
     target.visible = !target.visible; 
@@ -167,7 +166,7 @@ class MoveBy extends ChangeAttributeByAction {
 
   MoveBy(vec2 deltaPosition, num duration) : super(deltaPosition, duration);
   MoveBy clone() => new MoveBy(deltaValue, duration);
-  MoveBy reverse() => new MoveBy(-deltaValue, duration);
+  MoveBy get reversed => new MoveBy(-deltaValue, duration);
 }
 
 class MoveTo extends ChangeAttributeToAction {
@@ -184,7 +183,7 @@ class RotateBy extends ChangeAttributeByAction {
 
   RotateBy(num deltaRotation, num duration) : super(deltaRotation, duration);
   RotateBy clone() => new RotateBy(deltaValue, duration);
-  RotateBy reverse() => new RotateBy(-deltaValue, duration);
+  RotateBy get reversed => new RotateBy(-deltaValue, duration);
 }
 
 class RotateTo extends ChangeAttributeToAction {
@@ -197,7 +196,7 @@ class RotateTo extends ChangeAttributeToAction {
     }
   }
   RotateTo clone() => new RotateTo(endValue, duration);
-  RotateTo reverse() => new RotateTo(endValue - 360, duration);
+  RotateTo get reversed => new RotateTo(endValue - 360, duration);
 }
 
 class ScaleTo extends ChangeAttributeToAction {
@@ -214,7 +213,7 @@ class ScaleBy extends ChangeAttributeByAction {
 
   ScaleBy(vec2 deltaScale, num duration) : super(deltaScale, duration);
   ScaleBy clone() => new ScaleBy(deltaValue, duration);
-  ScaleBy reverse() {
+  ScaleBy get reversed {
     num x = deltaValue.x == 0 ? 0 : 1 / deltaValue.x;
     num y = deltaValue.y == 0 ? 0 : 1 / deltaValue.y;
     return new ScaleBy(new vec2(x, y), duration);
@@ -237,13 +236,13 @@ class FadeTo extends ChangeAttributeToAction {
 class FadeOut extends FadeTo {
   FadeOut(num duration) : super(0.0, duration);
   FadeOut clone() => new FadeOut(duration);
-  FadeIn reverse() => new FadeIn(duration);
+  FadeIn get reversed => new FadeIn(duration);
 }
 
 class FadeIn extends FadeTo {
   FadeIn(num duration) : super(1.0, duration);
   FadeIn clone() => new FadeIn(duration);
-  FadeOut reverse() => new FadeOut(duration);
+  FadeOut get reversed => new FadeOut(duration);
 }
 
 class Blink extends IntervalAction {
@@ -255,7 +254,7 @@ class Blink extends IntervalAction {
     _blinkInterval = 1 / times;
   }
   Blink clone() => new Blink(1 / _blinkInterval, duration);
-  Blink reverse() => clone();
+  Blink get reversed => clone();
 
   void start() {
     _initialVisibility = target.visible;
@@ -307,7 +306,7 @@ class Speed extends IntervalAction {
     this.action = action;
   }
   Speed clone() => new Speed(action.clone(), action.duration/duration);
-  Speed reverse() => new Speed(action.reverse(), action.duration/duration);
+  Speed get reversed => new Speed(action.reversed, action.duration/duration);
 
   void start() {
     action.target = this.target;
@@ -337,7 +336,7 @@ class Accelerate extends IntervalAction {
     this.action = action;
   }
   Accelerate clone() => new Accelerate(action.clone(), rate);
-  Accelerate reverse() => new Accelerate(action.reverse(), 1/rate);
+  Accelerate get reversed => new Accelerate(action.reversed, 1/rate);
 
   void start() {
     action.target = this.target;
@@ -354,7 +353,7 @@ class Accelerate extends IntervalAction {
 class AccelDeccel extends Accelerate {
   AccelDeccel(IntervalAction action, rate): super(action, rate);
   AccelDeccel clone() => new AccelDeccel(action.clone(), rate);
-  AccelDeccel reverse() => new AccelDeccel(action.reverse(), rate);
+  AccelDeccel get reversed => new AccelDeccel(action.reversed, rate);
 
   void _interval(num t) {
     if (t != 1.0) {
@@ -380,8 +379,8 @@ class ActionSequence extends ActionContainer {
   bool done = false;
   ActionSequence(Iterable<Action> actions) : super(actions);
   ActionSequence clone() => new ActionSequence(_actions);
-  ActionSequence reverse() {
-    return new ActionSequence(_actions.reversed.map((a) => a.reverse()));
+  ActionSequence get reversed {
+    return new ActionSequence(_actions.reversed.map((a) => a.reversed));
   }
 
   void start() {
@@ -425,8 +424,8 @@ class ActionSpawn extends ActionContainer {
 
   ActionSpawn(Iterable<Action> actions) : super(actions);
   ActionSpawn clone() => new ActionSpawn(_actions);
-  ActionSpawn reverse() {
-    return new ActionSpawn(_actions.reversed.map((a) => a.reverse()));
+  ActionSpawn get reversed {
+    return new ActionSpawn(_actions.reversed.map((a) => a.reversed));
   }
 
   void start() {
@@ -474,7 +473,7 @@ class Repeat extends Action {
 
   Repeat(Action this.action, num this.times);
   Repeat clone() => new Repeat(action, times);
-  Repeat reverse() => new Repeat(action.reverse(), times);
+  Repeat get reversed => new Repeat(action.reversed, times);
 
   void start() {
     return _nextAction();
@@ -518,7 +517,7 @@ class Loop extends Action {
 
   Loop(Action this.action);
   Loop clone() => new Loop(action);
-  Loop reverse() => new Loop(action.reverse());
+  Loop get reversed => new Loop(action.reversed);
 
   void start() => _nextAction();
 

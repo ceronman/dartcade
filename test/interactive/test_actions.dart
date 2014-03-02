@@ -37,7 +37,7 @@ var actionTests = [
         ..position.x = game.width/4
         ..position.y = game.height/2
         ..runAction(new Delay(1) + new Show() +
-                    new Delay(1) + new Show().reverse());
+                    new Delay(1) + new Show().reversed);
 
     var label2 = new Label('Hide')
         ..addTo(layer)
@@ -45,7 +45,7 @@ var actionTests = [
         ..position.y = game.height/2
         ..align = 'center'
         ..runAction(new Delay(1) + new Hide() +
-                    new Delay(1) + new Hide().reverse());
+                    new Delay(1) + new Hide().reversed);
 
     var label3 = new Label('ToggleVisibility')
         ..addTo(layer)
@@ -98,7 +98,7 @@ var actionTests = [
         ..align = 'center'
         ..position.x = game.width/2
         ..position.y = 50
-        ..runAction(action + action.reverse());
+        ..runAction(action + action.reversed);
 
     game.currentScene = new Scene(layer);
   }),
@@ -113,7 +113,7 @@ var actionTests = [
         ..align = 'center'
         ..position.x = game.width/2
         ..position.y = 50
-        ..runAction(action + action.reverse());
+        ..runAction(action + action.reversed);
 
     game.currentScene = new Scene(layer);
   }),
@@ -125,7 +125,7 @@ var actionTests = [
         ..align = 'center'
         ..position.x = game.width/2
         ..position.y = game.height/2
-        ..runAction(new Blink(10, 1) + new Blink(10, 1).reverse());
+        ..runAction(new Blink(10, 1) + new Blink(10, 1).reversed);
 
     game.currentScene = new Scene(layer);
   }),
@@ -151,7 +151,7 @@ var actionTests = [
         ..align = 'center'
         ..position.x = game.width/2
         ..position.y = game.height/2
-        ..runAction(action + action.reverse());
+        ..runAction(action + action.reversed);
 
     game.currentScene = new Scene(layer);
   }),
@@ -169,7 +169,7 @@ var actionTests = [
         ..addTo(layer)
         ..position.x = game.width - 300
         ..position.y = game.height/2
-        ..runAction((new RotateTo(45, 2)).reverse());
+        ..runAction((new RotateTo(45, 2)).reversed);
 
     game.currentScene = new Scene(layer);
   }),
@@ -182,7 +182,7 @@ var actionTests = [
         ..addTo(layer)
         ..position.x = game.width/2
         ..position.y = game.height/2
-        ..runAction(action + action.reverse());
+        ..runAction(action + action.reversed);
     
     game.currentScene = new Scene(layer);
   }),
@@ -208,7 +208,7 @@ var actionTests = [
         ..align = 'center'
         ..position.x = game.width/2
         ..position.y = game.height/2
-        ..runAction(action + new Delay(0.5) + action.reverse());
+        ..runAction(action + new Delay(0.5) + action.reversed);
     
     game.currentScene = new Scene(layer);
   }),
@@ -222,7 +222,7 @@ var actionTests = [
         ..align = 'center'
         ..position.x = game.width/4
         ..position.y = game.height/2
-        ..runAction(new FadeOut(1) + new FadeOut(1).reverse());
+        ..runAction(new FadeOut(1) + new FadeOut(1).reversed);
 
     var label2 = new Label('Fade In')
         ..addTo(layer)
@@ -230,7 +230,7 @@ var actionTests = [
         ..position.y = game.height/2
         ..align = 'center'
         ..opacity = 0.0
-        ..runAction(new FadeIn(2) + new FadeIn(1).reverse());
+        ..runAction(new FadeIn(2) + new FadeIn(1).reversed);
 
     var label3 = new Label('Fade To 0.5')
         ..addTo(layer)
@@ -252,7 +252,7 @@ var actionTests = [
         ..addTo(layer)
         ..position.x = 0
         ..position.y = game.height
-        ..runAction(action + action.reverse());
+        ..runAction(action + action.reversed);
     
     game.currentScene = new Scene(layer);
   }),
@@ -267,7 +267,7 @@ var actionTests = [
         ..addTo(layer)
         ..position.x = 0
         ..position.y = game.height
-        ..runAction(action + new Delay(0.5) + action.reverse());
+        ..runAction(action + new Delay(0.5) + action.reversed);
 
     game.currentScene = new Scene(layer);
   }),
@@ -296,7 +296,7 @@ var actionTests = [
         ..addTo(layer)
         ..position.x = 0
         ..position.y = game.height
-        ..runAction(actions + actions.reverse());
+        ..runAction(actions + actions.reversed);
     
     game.currentScene = new Scene(layer);
   }),
