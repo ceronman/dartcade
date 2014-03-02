@@ -298,11 +298,11 @@ class RandomDelay extends Delay {
 class Speed extends IntervalAction {
   IntervalAction action;
 
-  Speed(IntervalAction action, num speedFactor) : super(action.duration) {
-    if (speedFactor <= 0) {
+  Speed(IntervalAction action, num rate) : super(action.duration) {
+    if (rate <= 0) {
       throw "Invalid speed factor";
     }
-    duration = action.duration / speedFactor;
+    duration = action.duration / rate;
     this.action = action;
   }
   Speed clone() => new Speed(action.clone(), action.duration/duration);
@@ -328,6 +328,7 @@ class Accelerate extends IntervalAction {
     if (value <= 0) {
       throw "Invalid acceleration rate";
     }
+    _rate = value;
   }
 
   Accelerate(IntervalAction action, num rate) : super(action.duration) {
@@ -363,16 +364,20 @@ class AccelDeccel extends Accelerate {
   }
 }
 
-class ActionSequence extends Action {
+abstract class ActionContainer extends Action {
   List<Action> _actions;
+  ActionContainer(Iterable<Action> actions) {
+    if (actions == null || actions.isEmpty ) {
+      throw "Invalid list of actions";
+    }
+    _actions = actions.map((action) => action.clone()).toList();
+  }
+}
+
+class ActionSequence extends ActionContainer {
   int _currentAction;
   bool done = false;
-
-  // TODO: add a type here. Maybe Enumerable?
-  ActionSequence(actions) {
-    // TODO: Throw on empty actions
-    _actions = new List.from(actions.map((action) => action.clone()));
-  }
+  ActionSequence(Iterable<Action> actions) : super(actions);
   ActionSequence clone() => new ActionSequence(_actions);
   ActionSequence reverse() {
     return new ActionSequence(_actions.reversed.map((a) => a.reverse()));
@@ -414,19 +419,10 @@ class ActionSequence extends Action {
   }
 }
 
-class ActionSpawn extends Action {
-  List<Action> _actions;
-
+class ActionSpawn extends ActionContainer {
   bool get done => _actions.length == 0;
 
-  // TODO: add a type here. Maybe Enumerable?
-  ActionSpawn(actions) {
-    // TODO: Throw on empty actions
-    _actions = new List<Action>();
-    for (var action in actions) {
-      _actions.add(action.clone());
-    }
-  }
+  ActionSpawn(Iterable<Action> actions) : super(actions);
   ActionSpawn clone() => new ActionSpawn(_actions);
   ActionSpawn reverse() {
     return new ActionSpawn(_actions.reversed.map((a) => a.reverse()));
