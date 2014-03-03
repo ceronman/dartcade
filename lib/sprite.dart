@@ -1,4 +1,4 @@
-// Copyright 2012 Manuel Cerón <ceronman@gmail.com>
+// Copyright 2014 Manuel Cerón <ceronman@gmail.com>
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@ class Sprite extends GameNode {
   get width => image.width;
   get height => image.height;
 
+  // TODO Move this to Game Node?
   Rectangle get rect {
     return new Rectangle(position.x - width * positionAnchor.x,
                          position.y - height * positionAnchor.y,
@@ -27,6 +28,7 @@ class Sprite extends GameNode {
                          position.y + height * positionAnchor.y);
   }
 
+  // TODO: Move this to GameNode and annotate.
   kill() {
     parent.remove(this);
   }
