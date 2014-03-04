@@ -14,6 +14,8 @@
 
 part of cocos;
 
+const DEBUG = false;
+
 class Game {
   AssetManager assets;
   KeyStateHandler keyboard;
@@ -77,16 +79,18 @@ class Game {
 
   void draw(CanvasRenderingContext2D context) {
     context.clearRect(0, 0, canvas.width, canvas.height);
-    _debugDraw(context);
+    if (DEBUG) _debugDraw(context);
     currentScene.drawWithChildren(context);
   }
 
   void run([Scene scene]) {
-    if (scene != null) {
-      currentScene = scene;
+    if (scene == null) {
+      scene = new Scene();
     }
-      var initTime;
-      var frameCount = 0;
+    currentScene = scene;
+    
+    var initTime;
+    var frameCount = 0;
 
     drawFrame(num currentTime) {
       if (initTime == null) {
@@ -104,7 +108,7 @@ class Game {
     new Timer.periodic(new Duration(seconds:1), (t) {
       fps = frameCount;
       frameCount = 0;
-      print('fps: $fps');
+      if (DEBUG) print('fps: $fps');
     });
   }
 }
