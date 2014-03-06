@@ -15,6 +15,7 @@
 part of cocos;
 
 abstract class GameNode {
+  vec2 position = new vec2(0, 0);
   vec2 positionAnchor = new vec2(0.5, 0.5);
   vec2 rotationAnchor = new vec2(0.5, 0.5);
   vec2 scale = new vec2(1, 1);
@@ -42,17 +43,7 @@ abstract class GameNode {
   num get width;
   num get height;
 
-  vec2 _position = new vec2(0, 0);
-  vec2 get position => _position;
-  void set position(p) {
-    if (p is List) {
-      _position = new vec2(p[0], p[1]);
-    } else {
-      _position = p;
-    }
-  }
-
-  transform(CanvasRenderingContext2D context) {
+  void transform(CanvasRenderingContext2D context) {
     context.globalAlpha = opacity;
     context.translate(position.x, position.y);
 
@@ -71,22 +62,14 @@ abstract class GameNode {
     context.translate(-positionAnchor.x * width, -positionAnchor.y * height);
   }
 
-  drawWithTransform(context) {
-// TODO: refactor this out.
-//      context.save();
-//      context.strokeStyle = "#FF0000";
-//      context.beginPath();
-//      context.rect(position.x, position.y, width, height);
-//      context.stroke();
-//      context.restore();
-
+  void drawWithTransform(context) {
       context.save();
       transform(context);
       draw(context);
       context.restore();
   }
 
-  drawWithChildren(context) {
+  void drawWithChildren(context) {
     if (visible) {
       for (var child in children) {
         child.drawWithChildren(context);
@@ -95,10 +78,9 @@ abstract class GameNode {
     }
   }
 
-  draw(context) {
-  }
+  void draw(context) {}
 
-  update(dt) {
+  void update(dt) {
     for (var child in children) {
       child.update(dt);
     }
@@ -120,28 +102,32 @@ abstract class GameNode {
     onFrameController.add(dt);
   }
 
-  add(node) {
+  void add(node) {
     children.add(node);
     node.parent = this;
   }
   
-  addTo(node) {
+  void addTo(node) {
     node.add(this);
     this.parent = node;
   }
 
-  remove(GameNode node) {
+  void remove(GameNode node) {
     children.removeRange(children.indexOf(node), 1);
     node.parent = null;
   }
+  
+  void removeFrom() {
+    parent = null;
+  }
 
-  runAction(Action action) {
+  void runAction(Action action) {
     action.target = this;
     actions.add(action);
     action.start();
   }
 
-  stopActions() {
+  void stopActions() {
     for (var action in new List.from(actions)) {
       action.stop();
       actions.removeRange(actions.indexOf(action), 1);
