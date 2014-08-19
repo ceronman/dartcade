@@ -52,6 +52,7 @@ showIndex() {
   querySelector('#test-box').hidden = true;
   querySelector('#test-list').hidden = false;
   querySelector('#test-list').children.clear();
+  querySelector('#test-title').text = '';
   for (var testGroup in groups) {
     var header = new HeadingElement.h2();
     header.text = testGroup.name;
