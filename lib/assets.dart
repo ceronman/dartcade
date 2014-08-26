@@ -14,8 +14,65 @@
 
 part of cocos;
 
-//StreamController _progressController = new StreamController();
-//Stream get onLoading => _progressController.stream;
+abstract class Asset {
+  String location;
+  Object element;
+  bool loaded = false;
+
+  Asset(this.location);
+  Stream<bool> load();
+}
+
+class ImageAsset extends Asset{
+  ImageAsset(String location) : super(location);
+  Stream<bool> load() {
+    var image = new ImageElement();
+    var transformer = new StreamTransformer.fromHandlers(handleData:(e, sink) {
+      loaded = true;
+      sink.add(true);
+    });
+    var result = image.onLoad.transform(transformer);
+    image.src = location;
+    element = image;
+    return result;
+  }
+}
+
+class AssetLoaderNg {
+  Map<String, Asset> assets = {};
+
+  void add(String name, Asset asset) {
+    if (assets.containsKey(name)) {
+      throw new ArgumentError("Asset $name already exists.");
+    }
+    assets[name] = asset;
+  }
+
+  Stream<num> load() {
+    var progress = new StreamController();
+    var toLoad = assets.values.where((a) => !a.loaded).toList();
+
+    if (toLoad.length == 0) {
+      progress.addError("Nothing to load");
+      progress.close();
+      return progress.stream.asBroadcastStream();
+    }
+
+    for (var asset in toLoad) {
+      asset.load().listen((loaded) {
+        var completed = toLoad.where((a) => a.loaded).length;
+        var total = toLoad.length;
+        progress.add(completed / total);
+        if (completed == total) {
+          progress.close();
+        }
+      }, onError: (error) => progress.addError(error));
+    }
+    return progress.stream.asBroadcastStream();
+  }
+
+  Object operator [](String name) => assets[name].element;
+}
 
 class AssetManager {
   Map<String, ImageElement> images = {};
