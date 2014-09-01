@@ -36,6 +36,7 @@ class vec2 {
     if (other is vec2) {
       return new vec2(x * other.x, y * other.y);
     }
+    throw new ArgumentError('Invalid operand for vec2');
   }
 
   vec2 operator -() {
