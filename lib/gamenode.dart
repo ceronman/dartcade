@@ -24,7 +24,7 @@ abstract class GameNode {
   bool visible = true;
   List<GameNode> children = new List<GameNode>();
   List<Action> actions = new List<Action>();
-  
+
   GameNode _parent;
   GameNode get parent => _parent;
   void set parent(GameNode value) {
@@ -40,8 +40,25 @@ abstract class GameNode {
   StreamController<num> onFrameController = new StreamController<num>();
   Stream<num> get onFrame => onFrameController.stream.asBroadcastStream();
 
+
   num get width;
   num get height;
+
+  num get x => position.x;
+  num get y => position.y;
+
+  set x(num value) => position.x = value;
+  set y(num value) => position.y = value;
+
+  num get left => position.x - width * positionAnchor.x;
+  num get top => position.y - height * positionAnchor.y;
+  num get right => position.x + width * positionAnchor.x;
+  num get bottom => position.y + height * positionAnchor.y;
+
+  set left(num value) => position.x = value + width * positionAnchor.x;
+  set top(num value) => position.y = value + height * positionAnchor.y;
+  set right(num value) => position.x = value - width * positionAnchor.x;
+  set bottom(num value) => position.y = value - height * positionAnchor.y;
 
   void transform(CanvasRenderingContext2D context) {
     context.globalAlpha = opacity;
@@ -106,7 +123,7 @@ abstract class GameNode {
     children.add(node);
     node.parent = this;
   }
-  
+
   void addTo(node) {
     node.add(this);
     this.parent = node;
@@ -116,7 +133,7 @@ abstract class GameNode {
     children.removeRange(children.indexOf(node), 1);
     node.parent = null;
   }
-  
+
   void removeFrom() {
     parent = null;
   }

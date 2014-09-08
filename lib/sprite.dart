@@ -20,14 +20,6 @@ class Sprite extends GameNode {
   get width => image.width;
   get height => image.height;
 
-  // TODO Move this to Game Node?
-  Rectangle get rect {
-    return new Rectangle(position.x - width * positionAnchor.x,
-                         position.y - height * positionAnchor.y,
-                         position.x + width * positionAnchor.x,
-                         position.y + height * positionAnchor.y);
-  }
-
   // TODO: Move this to GameNode and annotate.
   kill() {
     parent.remove(this);

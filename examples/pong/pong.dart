@@ -29,16 +29,28 @@ main() {
 
     scene.onFrame.listen((dt) {
       if (game.keyboard[Keys.A]) {
-        paddle1.position.y -= PADDLE_SPEED;
+        paddle1.y -= PADDLE_SPEED;
+        if (paddle1.top < 0) {
+          paddle1.top = 0;
+        }
       }
       if (game.keyboard[Keys.Z]) {
         paddle1.position.y += PADDLE_SPEED;
+        if (paddle1.bottom > 400) {
+          paddle1.bottom = 400;
+        }
       }
       if (game.keyboard[Keys.UP]) {
         paddle2.position.y -= PADDLE_SPEED;
+        if (paddle2.top < 0) {
+          paddle2.top = 0;
+        }
       }
       if (game.keyboard[Keys.DOWN]) {
         paddle2.position.y += PADDLE_SPEED;
+        if (paddle2.bottom > 400) {
+          paddle2.bottom = 400;
+        }
       }
 
       ball.position += ball_speed;
