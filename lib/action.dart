@@ -27,7 +27,7 @@ abstract class Action {
   }
   Action operator |(Action action) => new ActionSpawn([this, action]);
   Action operator +(Action action) => new ActionSequence([this, action]);
-  
+
   void start();
   void step(num dt);
   void stop();
@@ -46,9 +46,9 @@ class Place extends InstantAction {
 
   Place(this.position);
   Place clone() => new Place(position);
-  
+
   void start() {
-    target.position = position; 
+    target.position = position;
   }
 }
 
@@ -61,16 +61,16 @@ class CallFunction extends InstantAction {
 
   CallFunction(this.method);
   CallFunction clone() => new CallFunction(method);
-  
-  void start() { 
-    method(target); 
+
+  void start() {
+    method(target);
   }
 }
 
 class Hide extends InstantAction {
   Hide clone() => new Hide();
   Show get reversed => new Show();
-  
+
   void start() {
     target.visible = false;
   }
@@ -79,7 +79,7 @@ class Hide extends InstantAction {
 class Show extends InstantAction {
   Show clone() => new Show();
   Hide get reversed => new Hide();
-  
+
   void start() {
     target.visible = true;
   }
@@ -88,25 +88,25 @@ class Show extends InstantAction {
 class ToggleVisibility extends InstantAction {
   ToggleVisibility clone() => new ToggleVisibility();
   ToggleVisibility get reversed => new ToggleVisibility();
-  
+
   void start() {
-    target.visible = !target.visible; 
+    target.visible = !target.visible;
   }
 }
 
 abstract class IntervalAction extends Action {
   num _duration;
   num ellapsedTime = 0;
-  
+
   num get duration => _duration;
   set duration(num value) {
     // TODO: test this
     if (value <= 0) {
       throw "Invalid duration for interval";
     }
-    _duration = value;      
+    _duration = value;
   }
-  
+
   bool get done => ellapsedTime >= duration;
 
   IntervalAction(num duration) {
@@ -322,7 +322,7 @@ class Speed extends IntervalAction {
 class Accelerate extends IntervalAction {
   IntervalAction action;
   num _rate;
-  
+
   num get rate => _rate;
   set rate(num value) {
     if (value <= 0) {
@@ -342,7 +342,7 @@ class Accelerate extends IntervalAction {
     action.target = this.target;
     action.start();
   }
-  
+
   void stop() => action.stop();
 
   void _interval(num t) {
@@ -544,4 +544,11 @@ class Loop extends Action {
       _nextAction();
     }
   }
+}
+
+abstract class InputAction extends Action {
+  bool get done => false;
+
+  void start() {}
+  void stop() {}
 }

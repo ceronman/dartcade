@@ -1,4 +1,4 @@
-// Copyright 2012 Manuel Cerón <ceronman@gmail.com>
+// Copyright 2014 Manuel Cerón <ceronman@gmail.com>
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,20 +12,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-library cocos;
+part of cocos;
 
-import 'dart:html';
-import 'dart:math';
-import 'dart:async';
+class PhysicsComponent {
+  GameNode node;
 
-part 'action.dart';
-part 'game.dart';
-part 'gamenode.dart';
-part 'physics.dart';
-part 'input.dart';
-part 'layer.dart';
-part 'math.dart';
-part 'assets.dart';
-part 'scene.dart';
-part 'sprite.dart';
-part 'text.dart';
+  vec2 get position => node.position;
+  vec2 speed;
+  vec2 acceleration;
+
+  PhysicsComponent(this.node);
+
+  void update() {
+    node.position += speed;
+    speed += acceleration;
+  }
+}
