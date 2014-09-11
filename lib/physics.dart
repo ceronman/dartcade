@@ -18,13 +18,13 @@ class PhysicsComponent {
   GameNode node;
 
   vec2 get position => node.position;
-  vec2 speed;
-  vec2 acceleration;
+  vec2 speed = new vec2(0, 0);
+  vec2 acceleration = new vec2(0, 0);
 
   PhysicsComponent(this.node);
 
-  void update() {
-    node.position += speed;
-    speed += acceleration;
+  void update(num dt) {
+    node.position += speed * dt;
+    speed += acceleration * dt;
   }
 }

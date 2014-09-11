@@ -546,9 +546,24 @@ class Loop extends Action {
   }
 }
 
-abstract class InputAction extends Action {
+class ArcadeKeyboardController extends Action {
   bool get done => false;
+  KeyStateHandler keys;
+  num speed_up = -100;
+  num speed_down = 100;
+  num speed_left = -100;
+  num speed_right = 100;
+
+  ArcadeKeyboardController clone() => new ArcadeKeyboardController(keys);
+  ArcadeKeyboardController(this.keys);
 
   void start() {}
   void stop() {}
+  void step(num dt) {
+    target.physics.speed.x = game.keyboard[Keys.LEFT]   ? speed_left :
+                             game.keyboard[Keys.RIGHT] ? speed_right : 0;
+    target.physics.speed.y = game.keyboard[Keys.UP]   ? speed_up :
+                                 game.keyboard[Keys.DOWN] ? speed_down : 0;
+
+  }
 }

@@ -27,6 +27,9 @@ class Sprite extends GameNode {
 
   Sprite(ImageElement this.image, {pos}): super() {
     position = pos != null ? pos : position;
+
+    // TODO: This should go in GameNode!!!!
+    physics = new PhysicsComponent(this);
   }
 
   void draw(CanvasRenderingContext2D context) {

@@ -124,6 +124,8 @@ abstract class GameNode {
       child.update(dt);
     }
 
+    if (physics != null) physics.update(dt);
+
     var doneActions = [];
     for (var action in actions) {
       if (!action.done) {

@@ -125,8 +125,10 @@ class Keys {
 
 class KeyStateHandler {
   Map<num, bool> pressedKeys = new Map<num, bool>();
+  Stream<KeyboardEvent> onKeyDown;
+  Stream<KeyboardEvent> onKeyUp;
 
-  KeyStateHandler(onKeyDown, onKeyUp) {
+  KeyStateHandler(this.onKeyDown, this.onKeyUp) {
     onKeyDown.listen((KeyboardEvent event) {
       pressedKeys[event.keyCode] = true;
     });
@@ -139,8 +141,4 @@ class KeyStateHandler {
   bool operator [](num key) {
     return pressedKeys.containsKey(key) && pressedKeys[key];
   }
-}
-
-keyIs(key) {
-  return (KeyboardEvent event) => event.keyCode == key;
 }
