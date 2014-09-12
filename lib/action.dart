@@ -14,8 +14,6 @@
 
 part of cocos;
 
-// TODO: MAYBE create functions for each concrete action
-
 abstract class Action {
   GameNode target;
   bool get done => false;
@@ -549,21 +547,35 @@ class Loop extends Action {
 class ArcadeKeyboardController extends Action {
   bool get done => false;
   KeyStateHandler keys;
-  num speed_up = -100;
-  num speed_down = 100;
-  num speed_left = -100;
-  num speed_right = 100;
+  num speedUp = -100;
+  num speedDown = 100;
+  num speedLeft = -100;
+  num speedRight = 100;
 
-  ArcadeKeyboardController clone() => new ArcadeKeyboardController(keys);
+  int keyUp = -1;
+  int keyDown = -1;
+  int keyLeft = -1;
+  int keyRight = -1;
+
+  ArcadeKeyboardController clone() {
+    return new ArcadeKeyboardController(keys)
+        ..speedRight = speedRight
+        ..speedDown = speedDown
+        ..speedLeft = speedLeft
+        ..speedUp = speedUp
+        ..keyUp = keyUp
+        ..keyDown = keyDown
+        ..keyLeft = keyLeft
+        ..keyRight = keyRight;
+  }
   ArcadeKeyboardController(this.keys);
 
   void start() {}
   void stop() {}
   void step(num dt) {
-    target.physics.speed.x = game.keyboard[Keys.LEFT]   ? speed_left :
-                             game.keyboard[Keys.RIGHT] ? speed_right : 0;
-    target.physics.speed.y = game.keyboard[Keys.UP]   ? speed_up :
-                                 game.keyboard[Keys.DOWN] ? speed_down : 0;
-
+    target.physics.speed.x = game.keyboard[keyLeft]  ? speedLeft :
+                             game.keyboard[keyRight] ? speedRight : 0;
+    target.physics.speed.y = game.keyboard[keyUp]   ? speedUp :
+                             game.keyboard[keyDown] ? speedDown : 0;
   }
 }

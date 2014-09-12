@@ -21,7 +21,7 @@ class PhysicsComponent {
   vec2 speed = new vec2(0, 0);
   vec2 acceleration = new vec2(0, 0);
 
-  PhysicsComponent(this.node);
+  PhysicsComponent();
 
   void update(num dt) {
     node.position += speed * dt;

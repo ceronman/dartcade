@@ -20,16 +20,8 @@ class Sprite extends GameNode {
   get width => image.width;
   get height => image.height;
 
-  // TODO: Move this to GameNode and annotate.
-  kill() {
-    parent.remove(this);
-  }
-
   Sprite(ImageElement this.image, {pos}): super() {
     position = pos != null ? pos : position;
-
-    // TODO: This should go in GameNode!!!!
-    physics = new PhysicsComponent(this);
   }
 
   void draw(CanvasRenderingContext2D context) {

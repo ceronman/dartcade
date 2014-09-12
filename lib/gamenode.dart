@@ -46,7 +46,12 @@ abstract class GameNode {
     parent = null;
   }
 
-  PhysicsComponent physics;
+  PhysicsComponent _physics;
+  PhysicsComponent get physics => _physics;
+  set physics(PhysicsComponent value) {
+    _physics = value
+      ..node = this;
+  }
 
   vec2 position = new vec2(0, 0);
   vec2 positionAnchor = new vec2(0.5, 0.5);
