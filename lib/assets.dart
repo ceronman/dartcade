@@ -23,11 +23,11 @@ abstract class Asset {
   Stream<bool> load();
 }
 
-class ImageAsset extends Asset{
+class ImageAsset extends Asset {
   ImageAsset(String location) : super(location);
   Stream<bool> load() {
     var image = new ImageElement();
-    var transformer = new StreamTransformer.fromHandlers(handleData:(e, sink) {
+    var transformer = new StreamTransformer.fromHandlers(handleData: (e, sink) {
       loaded = true;
       sink.add(true);
     });
@@ -100,8 +100,7 @@ class AssetManager {
         if (completed == total) {
           progress.close();
         }
-      },
-      onError: (error) {
+      }, onError: (error) {
         progress.addError(error);
       });
       images[source].src = source;
@@ -112,12 +111,12 @@ class AssetManager {
 }
 
 class LoadingScene extends Scene {
-  LoadingScene(Stream<num> progress, Scene nextScene): super(null) {
+  LoadingScene(Stream<num> progress, Scene nextScene) : super(null) {
     var layer = new Layer();
     var label = new Label('Loading...');
     label.align = 'center';
-    label.position.x = game.width/2;
-    label.position.y = game.height/2;
+    label.position.x = game.width / 2;
+    label.position.y = game.height / 2;
     this.layer = layer;
     this.add(layer);
     layer.add(label);

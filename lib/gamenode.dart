@@ -49,8 +49,7 @@ abstract class GameNode {
   PhysicsComponent _physics;
   PhysicsComponent get physics => _physics;
   set physics(PhysicsComponent value) {
-    _physics = value
-      ..node = this;
+    _physics = value..node = this;
   }
 
   vec2 position = new vec2(0, 0);
@@ -99,7 +98,7 @@ abstract class GameNode {
       var axis_x = (rotationAnchor.x - positionAnchor.x) * width;
       var axis_y = (rotationAnchor.y - positionAnchor.y) * height;
       context.translate(axis_x, axis_y);
-      context.rotate(rotation * PI/180);
+      context.rotate(rotation * PI / 180);
       context.translate(-axis_x, -axis_y);
     }
 
@@ -107,10 +106,10 @@ abstract class GameNode {
   }
 
   void drawWithTransform(context) {
-      context.save();
-      transform(context);
-      draw(context);
-      context.restore();
+    context.save();
+    transform(context);
+    draw(context);
+    context.restore();
   }
 
   void drawWithChildren(context) {
@@ -135,8 +134,7 @@ abstract class GameNode {
     for (var action in actions) {
       if (!action.done) {
         action.step(dt);
-      }
-      else {
+      } else {
         doneActions.add(action);
       }
     }

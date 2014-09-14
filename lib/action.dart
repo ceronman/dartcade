@@ -113,7 +113,7 @@ abstract class IntervalAction extends Action {
 
   void step(dt) {
     ellapsedTime = min(ellapsedTime + dt, duration);
-    _interval(ellapsedTime/duration);
+    _interval(ellapsedTime / duration);
   }
 
   void _interval(num t);
@@ -151,7 +151,7 @@ abstract class ChangeAttributeByAction extends IntervalAction {
   void start() {
     startValue = _changingValue;
   }
-  void stop()  {
+  void stop() {
     _changingValue = startValue + deltaValue;
   }
 
@@ -159,7 +159,7 @@ abstract class ChangeAttributeByAction extends IntervalAction {
 }
 
 class MoveBy extends ChangeAttributeByAction {
-  get _changingValue        => target.position;
+  get _changingValue => target.position;
   set _changingValue(value) => target.position = value;
 
   MoveBy(vec2 deltaPosition, num duration) : super(deltaPosition, duration);
@@ -168,7 +168,7 @@ class MoveBy extends ChangeAttributeByAction {
 }
 
 class MoveTo extends ChangeAttributeToAction {
-  get _changingValue        => target.position;
+  get _changingValue => target.position;
   set _changingValue(value) => target.position = value;
 
   MoveTo(vec2 endPosition, num duration) : super(endPosition, duration);
@@ -176,7 +176,7 @@ class MoveTo extends ChangeAttributeToAction {
 }
 
 class RotateBy extends ChangeAttributeByAction {
-  get _changingValue        => target.rotation;
+  get _changingValue => target.rotation;
   set _changingValue(value) => target.rotation = value;
 
   RotateBy(num deltaRotation, num duration) : super(deltaRotation, duration);
@@ -185,7 +185,7 @@ class RotateBy extends ChangeAttributeByAction {
 }
 
 class RotateTo extends ChangeAttributeToAction {
-  get _changingValue        => target.rotation;
+  get _changingValue => target.rotation;
   set _changingValue(value) => target.rotation = value;
 
   RotateTo(num endRotation, num duration) : super(endRotation, duration) {
@@ -198,7 +198,7 @@ class RotateTo extends ChangeAttributeToAction {
 }
 
 class ScaleTo extends ChangeAttributeToAction {
-  get _changingValue        => target.scale;
+  get _changingValue => target.scale;
   set _changingValue(value) => target.scale = value;
 
   ScaleTo(vec2 endScale, num duration) : super(endScale, duration);
@@ -206,7 +206,7 @@ class ScaleTo extends ChangeAttributeToAction {
 }
 
 class ScaleBy extends ChangeAttributeByAction {
-  get _changingValue        => target.scale;
+  get _changingValue => target.scale;
   set _changingValue(value) => target.scale = value;
 
   ScaleBy(vec2 deltaScale, num duration) : super(deltaScale, duration);
@@ -224,7 +224,7 @@ class ScaleBy extends ChangeAttributeByAction {
 }
 
 class FadeTo extends ChangeAttributeToAction {
-  get _changingValue        => target.opacity;
+  get _changingValue => target.opacity;
   set _changingValue(value) => target.opacity = value;
 
   FadeTo(num endOpacity, num duration) : super(endOpacity, duration);
@@ -271,7 +271,7 @@ class Blink extends IntervalAction {
 }
 
 class Delay extends IntervalAction {
-  Delay(num duration): super(duration);
+  Delay(num duration) : super(duration);
   Delay clone() => new Delay(duration);
 
   void start() {}
@@ -283,8 +283,8 @@ class RandomDelay extends Delay {
   num min;
   num max;
 
-  RandomDelay(num min, num max):
-    super(min + new Random().nextDouble() * (max-min)) {
+  RandomDelay(num min, num max) : super(
+      min + new Random().nextDouble() * (max - min)) {
 
     this.min = min;
     this.max = max;
@@ -303,8 +303,8 @@ class Speed extends IntervalAction {
     duration = action.duration / rate;
     this.action = action;
   }
-  Speed clone() => new Speed(action.clone(), action.duration/duration);
-  Speed get reversed => new Speed(action.reversed, action.duration/duration);
+  Speed clone() => new Speed(action.clone(), action.duration / duration);
+  Speed get reversed => new Speed(action.reversed, action.duration / duration);
 
   void start() {
     action.target = this.target;
@@ -334,7 +334,7 @@ class Accelerate extends IntervalAction {
     this.action = action;
   }
   Accelerate clone() => new Accelerate(action.clone(), rate);
-  Accelerate get reversed => new Accelerate(action.reversed, 1/rate);
+  Accelerate get reversed => new Accelerate(action.reversed, 1 / rate);
 
   void start() {
     action.target = this.target;
@@ -349,14 +349,14 @@ class Accelerate extends IntervalAction {
 }
 
 class AccelDeccel extends Accelerate {
-  AccelDeccel(IntervalAction action, rate): super(action, rate);
+  AccelDeccel(IntervalAction action, rate) : super(action, rate);
   AccelDeccel clone() => new AccelDeccel(action.clone(), rate);
   AccelDeccel get reversed => new AccelDeccel(action.reversed, rate);
 
   void _interval(num t) {
     if (t != 1.0) {
       var ft = (t - 0.5) * 12;
-      t = 1.0 / ( 1.0 + exp(-ft) );
+      t = 1.0 / (1.0 + exp(-ft));
     }
     action._interval(t);
   }
@@ -365,7 +365,7 @@ class AccelDeccel extends Accelerate {
 abstract class ActionContainer extends Action {
   List<Action> _actions;
   ActionContainer(Iterable<Action> actions) {
-    if (actions == null || actions.isEmpty ) {
+    if (actions == null || actions.isEmpty) {
       throw "Invalid list of actions";
     }
     _actions = actions.map((action) => action.clone()).toList();
@@ -397,8 +397,7 @@ class ActionSequence extends ActionContainer {
   void _nextAction() {
     if (_currentAction == null) {
       _currentAction = 0;
-    }
-    else {
+    } else {
       _actions[_currentAction].stop();
       _currentAction++;
     }
@@ -410,8 +409,7 @@ class ActionSequence extends ActionContainer {
       if (_actions[_currentAction].done) {
         _nextAction();
       }
-    }
-    else {
+    } else {
       done = true;
     }
   }
@@ -444,8 +442,7 @@ class ActionSpawn extends ActionContainer {
     for (var action in _actions) {
       if (!action.done) {
         action.step(dt);
-      }
-      else {
+      } else {
         doneActions.add(action);
       }
     }
@@ -501,8 +498,7 @@ class Repeat extends Action {
       if (_currentAction.done) {
         _nextAction();
       }
-    }
-    else {
+    } else {
       done = true;
     }
   }
@@ -573,9 +569,11 @@ class ArcadeKeyboardController extends Action {
   void start() {}
   void stop() {}
   void step(num dt) {
-    target.physics.speed.x = game.keyboard[keyLeft]  ? speedLeft :
-                             game.keyboard[keyRight] ? speedRight : 0;
-    target.physics.speed.y = game.keyboard[keyUp]   ? speedUp :
-                             game.keyboard[keyDown] ? speedDown : 0;
+    target.physics.speed.x = game.keyboard[keyLeft] ?
+        speedLeft :
+        game.keyboard[keyRight] ? speedRight : 0;
+    target.physics.speed.y = game.keyboard[keyUp] ?
+        speedUp :
+        game.keyboard[keyDown] ? speedDown : 0;
   }
 }

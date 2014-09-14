@@ -82,7 +82,9 @@ class Rectangle {
   num get bottom => y1 + height;
 
   bool collide(Rectangle other) {
-    return (other.left > left && other.left < right
-            && other.top > top && other.top < bottom);
+    return (other.left > left &&
+        other.left < right &&
+        other.top > top &&
+        other.top < bottom);
   }
 }

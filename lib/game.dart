@@ -41,7 +41,7 @@ class Game {
     keyboard = new KeyStateHandler(onKeyDown, onKeyUp);
 
     var gamebox = querySelector(selector);
-    canvas = new CanvasElement(width:width, height:height);
+    canvas = new CanvasElement(width: width, height: height);
     canvas.style.backgroundColor = 'black';
     gamebox.children.add(canvas);
   }
@@ -62,13 +62,13 @@ class Game {
     var i = 0;
 
     context.beginPath();
-    for (var row=1; row<rows; row++) {
+    for (var row = 1; row < rows; row++) {
       i = row * size;
       context.moveTo(0, i);
       context.lineTo(canvas.width, i);
     }
 
-    for (var col=1; col<cols; col++) {
+    for (var col = 1; col < cols; col++) {
       i = col * size;
       context.moveTo(i, 0);
       context.lineTo(i, canvas.height);
@@ -88,7 +88,7 @@ class Game {
       scene = new Scene();
     }
     currentScene = scene;
-    
+
     var initTime;
     var frameCount = 0;
 
@@ -105,7 +105,7 @@ class Game {
     }
     window.requestAnimationFrame(drawFrame);
 
-    new Timer.periodic(new Duration(seconds:1), (t) {
+    new Timer.periodic(new Duration(seconds: 1), (t) {
       fps = frameCount;
       frameCount = 0;
       if (DEBUG) print('fps: $fps');

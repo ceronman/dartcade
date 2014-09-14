@@ -26,8 +26,8 @@ class Label extends GameNode {
 
   String _text;
   String get text => _text;
-         set text(String value) {
-    var canvas = new CanvasElement(width:0, height:0);
+  set text(String value) {
+    var canvas = new CanvasElement(width: 0, height: 0);
     var context = canvas.context2D;
     _setStyle(context);
     var dimensions = context.measureText(value);
@@ -39,8 +39,7 @@ class Label extends GameNode {
     _text = value;
   }
 
-  Label(text, {position, font, color, align, baseline}):
-      super() {
+  Label(text, {position, font, color, align, baseline}) : super() {
     positionAnchor = new vec2(0, 0);
     this.position = position != null ? position : this.position;
     this.font = font != null ? font : '20pt Serif';
