@@ -24,8 +24,8 @@ class Game {
 
   Scene currentScene;
 
-  num get width => canvas.width;
-  num get height => canvas.height;
+  double get width => canvas.width.toDouble();
+  double get height => canvas.height.toDouble();
 
   Stream<KeyboardEvent> get onKeyDown => document.onKeyDown;
   Stream<KeyboardEvent> get onKeyUp => document.onKeyUp;

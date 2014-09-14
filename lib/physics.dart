@@ -17,9 +17,9 @@ part of cocos;
 class PhysicsComponent {
   GameNode node;
 
-  vec2 get position => node.position;
-  vec2 speed = new vec2(0, 0);
-  vec2 acceleration = new vec2(0, 0);
+  Vector2 get position => node.position;
+  Vector2 speed = new Vector2.zero();
+  Vector2 acceleration = new Vector2.zero();
 
   PhysicsComponent();
 

@@ -40,7 +40,7 @@ abstract class InstantAction extends Action {
 }
 
 class Place extends InstantAction {
-  vec2 position;
+  Vector2 position;
 
   Place(this.position);
   Place clone() => new Place(position);
@@ -55,7 +55,7 @@ typedef CallFunctionCallback(GameNode node);
 
 class CallFunction extends InstantAction {
   CallFunctionCallback method;
-  vec2 position;
+  Vector2 position;
 
   CallFunction(this.method);
   CallFunction clone() => new CallFunction(method);
@@ -162,7 +162,7 @@ class MoveBy extends ChangeAttributeByAction {
   get _changingValue => target.position;
   set _changingValue(value) => target.position = value;
 
-  MoveBy(vec2 deltaPosition, num duration) : super(deltaPosition, duration);
+  MoveBy(Vector2 deltaPosition, num duration) : super(deltaPosition, duration);
   MoveBy clone() => new MoveBy(deltaValue, duration);
   MoveBy get reversed => new MoveBy(-deltaValue, duration);
 }
@@ -171,7 +171,7 @@ class MoveTo extends ChangeAttributeToAction {
   get _changingValue => target.position;
   set _changingValue(value) => target.position = value;
 
-  MoveTo(vec2 endPosition, num duration) : super(endPosition, duration);
+  MoveTo(Vector2 endPosition, num duration) : super(endPosition, duration);
   MoveTo clone() => new MoveTo(endValue, duration);
 }
 
@@ -201,7 +201,7 @@ class ScaleTo extends ChangeAttributeToAction {
   get _changingValue => target.scale;
   set _changingValue(value) => target.scale = value;
 
-  ScaleTo(vec2 endScale, num duration) : super(endScale, duration);
+  ScaleTo(Vector2 endScale, num duration) : super(endScale, duration);
   ScaleTo clone() => new ScaleTo(endValue, duration);
 }
 
@@ -209,17 +209,19 @@ class ScaleBy extends ChangeAttributeByAction {
   get _changingValue => target.scale;
   set _changingValue(value) => target.scale = value;
 
-  ScaleBy(vec2 deltaScale, num duration) : super(deltaScale, duration);
+  ScaleBy(Vector2 deltaScale, num duration) : super(deltaScale, duration);
   ScaleBy clone() => new ScaleBy(deltaValue, duration);
   ScaleBy get reversed {
     num x = deltaValue.x == 0 ? 0 : 1 / deltaValue.x;
     num y = deltaValue.y == 0 ? 0 : 1 / deltaValue.y;
-    return new ScaleBy(new vec2(x, y), duration);
+    return new ScaleBy(new Vector2(x, y), duration);
   }
 
   void start() {
     super.start();
-    deltaValue = startValue * deltaValue - startValue;
+    // TODO: this looks bad!
+    deltaValue.x = startValue.x * deltaValue.x - startValue.x;
+    deltaValue.y = startValue.y * deltaValue.y - startValue.y;
   }
 }
 
@@ -543,10 +545,10 @@ class Loop extends Action {
 class ArcadeKeyboardController extends Action {
   bool get done => false;
   KeyStateHandler keys;
-  num speedUp = -100;
-  num speedDown = 100;
-  num speedLeft = -100;
-  num speedRight = 100;
+  num speedUp = -100.0;
+  num speedDown = 100.0;
+  num speedLeft = -100.0;
+  num speedRight = 100.0;
 
   int keyUp = -1;
   int keyDown = -1;
@@ -571,9 +573,9 @@ class ArcadeKeyboardController extends Action {
   void step(num dt) {
     target.physics.speed.x = game.keyboard[keyLeft] ?
         speedLeft :
-        game.keyboard[keyRight] ? speedRight : 0;
+        game.keyboard[keyRight] ? speedRight : 0.0;
     target.physics.speed.y = game.keyboard[keyUp] ?
         speedUp :
-        game.keyboard[keyDown] ? speedDown : 0;
+        game.keyboard[keyDown] ? speedDown : 0.0;
   }
 }

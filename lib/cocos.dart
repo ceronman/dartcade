@@ -17,6 +17,9 @@ library cocos;
 import 'dart:html';
 import 'dart:math';
 import 'dart:async';
+import 'package:vector_math/vector_math.dart';
+
+export 'package:vector_math/vector_math.dart' show Vector2;
 
 part 'action.dart';
 part 'game.dart';

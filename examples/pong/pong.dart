@@ -12,54 +12,54 @@ main() {
     var layer = new Layer();
     var paddle1 = new Sprite(loader['paddle'])
         ..addTo(layer)
-        ..runAction(new Place(new vec2(40, 400 / 2)))
+        ..runAction(new Place(new Vector2(40.0, 400 / 2)))
         ..physics = new PhysicsComponent();
 
     var paddle2 = new Sprite(loader['paddle'])
         ..addTo(layer)
-        ..runAction(new Place(new vec2(800 - 40, 400 / 2)))
+        ..runAction(new Place(new Vector2(800.0 - 40, 400 / 2)))
         ..physics = new PhysicsComponent();
 
     var controller1 = new ArcadeKeyboardController(game.keyboard)
         ..keyUp = Keys.A
         ..keyDown = Keys.Z
-        ..speedUp = -400
-        ..speedDown = 400;
+        ..speedUp = -400.0
+        ..speedDown = 400.0;
     paddle1.runAction(controller1);
 
     var controller2 = new ArcadeKeyboardController(game.keyboard)
         ..keyUp = Keys.UP
         ..keyDown = Keys.DOWN
-        ..speedUp = -400
-        ..speedDown = 400;
+        ..speedUp = -400.0
+        ..speedDown = 400.0;
     paddle2.runAction(controller2);
 
     var ball = new Sprite(loader['ball'])
         ..addTo(layer)
-        ..runAction(new Place(new vec2(800 / 2, 400 / 2)))
+        ..runAction(new Place(new Vector2(800 / 2, 400 / 2)))
         ..physics = new PhysicsComponent();
-    ball.physics.speed = new vec2(400, 400);
+    ball.physics.speed = new Vector2(400.0, 400.0);
 
     var scene = new Scene(layer);
 
     scene.onFrame.listen((dt) {
-      if (ball.position.x < 0) {
-        ball.position.x = 0;
+      if (ball.position.x < 0.0) {
+        ball.position.x = 0.0;
         ball.physics.speed.x *= -1;
       }
 
-      if (ball.position.x > 800) {
-        ball.position.x = 800;
-        ball.physics.speed.x *= -1;
+      if (ball.position.x > 800.0) {
+        ball.position.x = 800.0;
+        ball.physics.speed.x *= -1.0;
       }
 
-      if (ball.position.y < 0) {
-        ball.position.y = 0;
+      if (ball.position.y < 0.0) {
+        ball.position.y = 0.0;
         ball.physics.speed.y *= -1;
       }
 
-      if (ball.position.y > 400) {
-        ball.position.y = 400;
+      if (ball.position.y > 400.0) {
+        ball.position.y = 400.0;
         ball.physics.speed.y *= -1;
       }
 

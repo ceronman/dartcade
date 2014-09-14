@@ -17,8 +17,8 @@ part of dartcocos_test;
 var assetsTests = [test('LoadingScene', () {
     var layer = new Layer();
     var label = new Label('New scene');
-    label.position.x = 50;
-    label.position.y = 50;
+    label.position.x = 50.0;
+    label.position.y = 50.0;
     layer.add(label);
     var nextScene = new Scene(layer);
 
@@ -41,8 +41,8 @@ var assetsTests = [test('LoadingScene', () {
   }), test('LoadingScene with Error', () {
     var layer = new Layer();
     var label = new Label('New scene');
-    label.position.x = 50;
-    label.position.y = 50;
+    label.position.x = 50.0;
+    label.position.y = 50.0;
     layer.add(label);
     var nextScene = new Scene(layer);
 

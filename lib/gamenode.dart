@@ -52,26 +52,26 @@ abstract class GameNode {
     _physics = value..node = this;
   }
 
-  vec2 position = new vec2(0, 0);
-  vec2 positionAnchor = new vec2(0.5, 0.5);
-  num get width;
-  num get height;
+  Vector2 position = new Vector2.zero();
+  Vector2 positionAnchor = new Vector2(0.5, 0.5);
+  double get width;
+  double get height;
 
-  num get x => position.x;
-  num get y => position.y;
+  double get x => position.x;
+  double get y => position.y;
 
-  set x(num value) => position.x = value;
-  set y(num value) => position.y = value;
+  set x(double value) => position.x = value;
+  set y(double value) => position.y = value;
 
-  num get left => position.x - width * positionAnchor.x;
-  num get top => position.y - height * positionAnchor.y;
-  num get right => position.x + width * positionAnchor.x;
-  num get bottom => position.y + height * positionAnchor.y;
+  double get left => position.x - width * positionAnchor.x;
+  double get top => position.y - height * positionAnchor.y;
+  double get right => position.x + width * positionAnchor.x;
+  double get bottom => position.y + height * positionAnchor.y;
 
-  num rotation = 0;
-  vec2 rotationAnchor = new vec2(0.5, 0.5);
-  vec2 scale = new vec2(1, 1);
-  num opacity = 1.0;
+  double rotation = 0.0;
+  Vector2 rotationAnchor = new Vector2(0.5, 0.5);
+  Vector2 scale = new Vector2(1.0, 1.0);
+  double opacity = 1.0;
   bool visible = true;
   List<GameNode> children = new List<GameNode>();
   List<Action> actions = new List<Action>();
