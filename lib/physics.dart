@@ -16,15 +16,65 @@ part of cocos;
 
 class PhysicsComponent {
   GameNode node;
+  World world;
 
   Vector2 get position => node.position;
   Vector2 speed = new Vector2.zero();
   Vector2 acceleration = new Vector2.zero();
+  Vector2 bounce =  new Vector2.zero();
 
-  PhysicsComponent();
+  bool collideWorld = true;
+
+  PhysicsComponent(this.world);
 
   void update(num dt) {
-    node.position += speed * dt;
-    speed += acceleration * dt;
+    // Don't use operators directly on the vector classes to avoid memory
+    // allocation by creating new instances.
+    node.position.x += speed.x * dt;
+    node.position.y += speed.y * dt;
+    speed.x += acceleration.x * dt;
+    speed.y += acceleration.y * dt;
+
+    if (collideWorld){
+      _correctForWoldCollision();
+    }
+  }
+
+  void _correctForWoldCollision() {
+    if (position.x < world.left) {
+      position.x = world.left;
+      speed.x *= -bounce.x;
+    }
+
+    if (position.x > world.right) {
+      position.x = world.right;
+      speed.x *= -bounce.x;
+    }
+
+    if (position.y < world.top) {
+      position.y = world.top;
+      speed.y *= -bounce.y;
+    }
+
+    if (position.y > world.bottom) {
+      position.y = world.bottom;
+      speed.y *= -bounce.y;
+    }
+  }
+}
+
+class World {
+  Vector2 position;
+  Vector2 size;
+
+  // TODO: Duplicated functionality with GameNode
+  double get left => position.x;
+  double get top => position.y;
+  double get right => position.x + size.x;
+  double get bottom => position.y + size.y;
+
+  World(x, y, width, height) {
+    position = new Vector2(x, y);
+    size = new Vector2(width, height);
   }
 }

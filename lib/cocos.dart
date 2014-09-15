@@ -27,7 +27,6 @@ part 'gamenode.dart';
 part 'physics.dart';
 part 'input.dart';
 part 'layer.dart';
-part 'math.dart';
 part 'assets.dart';
 part 'scene.dart';
 part 'sprite.dart';
