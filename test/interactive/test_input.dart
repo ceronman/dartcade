@@ -37,7 +37,7 @@ var inputTests = [test('KeyStateHandler', () {
         label.position.y += 1;
       }
     });
-    game.currentScene = scene;
+    game.scene = scene;
   }), test('game onKeyDown and onKeyUp', () {
     var layer = new Layer();
     var label = new Label('Press any key');
@@ -49,7 +49,7 @@ var inputTests = [test('KeyStateHandler', () {
     game.onKeyDown.listen((e) => label.text = 'Pressed ${e.keyCode}');
     game.onKeyUp.listen((e) => label.text = 'Press any key');
 
-    game.currentScene = new Scene(layer);
+    game.scene = new Scene(layer);
     ;
   })];
 

@@ -21,7 +21,7 @@ var actionTests = [test('Place', () {
     var label = new Label('Place 200, 200')
         ..addTo(layer)
         ..runAction(new Place(new Vector2(200.0, 200.0)));
-    game.currentScene = new Scene(layer);
+    game.scene = new Scene(layer);
   }), test('Show, Hide, ToggleVisibility', () {
     var layer = new Layer();
 
@@ -50,7 +50,7 @@ var actionTests = [test('Place', () {
         ..runAction(
             new Delay(1) + new ToggleVisibility() + new Delay(1) + new ToggleVisibility());
 
-    game.currentScene = new Scene(layer);
+    game.scene = new Scene(layer);
   }), test('Delay', () {
     var actions = [
         new MoveTo(new Vector2(0.0, game.height / 2), 1),
@@ -63,11 +63,11 @@ var actionTests = [test('Place', () {
         ..position.y = game.height
         ..runAction(new ActionSequence(actions));
 
-    game.currentScene = new Scene(layer);
+    game.scene = new Scene(layer);
   }), test('Speed', () {
     var action = new RotateBy(360, 2);
     // TODO: MAYBE Use this notation or the one in other tests?
-    game.currentScene = new Scene()..add(
+    game.scene = new Scene()..add(
         new Layer()..add(new Label('RotateBy 360 2 seconds 2X speed')
                 ..align = 'center'
                 ..position.x = game.width / 2
@@ -84,7 +84,7 @@ var actionTests = [test('Place', () {
         ..position.y = 50.0
         ..runAction(action + action.reversed);
 
-    game.currentScene = new Scene(layer);
+    game.scene = new Scene(layer);
   }), test('AccelDeccel', () {
     var newPos = new Vector2(0.0, game.height - 50);
     AccelDeccel action = new AccelDeccel(new MoveBy(newPos, 2), 2);
@@ -96,7 +96,7 @@ var actionTests = [test('Place', () {
         ..position.y = 50.0
         ..runAction(action + action.reversed);
 
-    game.currentScene = new Scene(layer);
+    game.scene = new Scene(layer);
   }), test('Blink', () {
     var layer = new Layer();
     var label = new Label('Blink for 2 seconds')
@@ -106,7 +106,7 @@ var actionTests = [test('Place', () {
         ..position.y = game.height / 2
         ..runAction(new Blink(10, 1) + new Blink(10, 1).reversed);
 
-    game.currentScene = new Scene(layer);
+    game.scene = new Scene(layer);
   }), test('MoveTo', () {
     var layer = new Layer();
     var label = new Label('MoveTo 100, 100')
@@ -115,7 +115,7 @@ var actionTests = [test('Place', () {
         ..position.y = game.height / 2
         ..runAction(new MoveTo(new Vector2(100.0, 100.0), 2));
 
-    game.currentScene = new Scene(layer);
+    game.scene = new Scene(layer);
   }), test('MoveBy', () {
     var action = new MoveBy(new Vector2(100.0, 100.0), 1);
     var layer = new Layer();
@@ -126,7 +126,7 @@ var actionTests = [test('Place', () {
         ..position.y = game.height / 2
         ..runAction(action + action.reversed);
 
-    game.currentScene = new Scene(layer);
+    game.scene = new Scene(layer);
   }), test('RotateTo', () {
     var layer = new Layer();
     var label1 = new Label('RotateTo 45')
@@ -141,7 +141,7 @@ var actionTests = [test('Place', () {
         ..position.y = game.height / 2
         ..runAction((new RotateTo(45, 2)).reversed);
 
-    game.currentScene = new Scene(layer);
+    game.scene = new Scene(layer);
   }), test('RotateBy', () {
     var layer = new Layer();
     var action = new RotateBy(90, 1);
@@ -151,7 +151,7 @@ var actionTests = [test('Place', () {
         ..position.y = game.height / 2
         ..runAction(action + action.reversed);
 
-    game.currentScene = new Scene(layer);
+    game.scene = new Scene(layer);
   }), test('ScaleTo', () {
     var layer = new Layer();
     var label = new Label('ScaleTo 2, 4')
@@ -160,7 +160,7 @@ var actionTests = [test('Place', () {
         ..runAction(new ScaleTo(new Vector2(2.0, 4.0), 2));
     layer.add(label);
 
-    game.currentScene = new Scene(layer);
+    game.scene = new Scene(layer);
   }), test('ScaleBy', () {
     var action = new ScaleBy(new Vector2(1.0, 2.0), 1);
     var layer = new Layer();
@@ -171,7 +171,7 @@ var actionTests = [test('Place', () {
         ..position.y = game.height / 2
         ..runAction(action + new Delay(0.5) + action.reversed);
 
-    game.currentScene = new Scene(layer);
+    game.scene = new Scene(layer);
   }), test('FadeOut, FadeIn', () {
     var layer = new Layer();
 
@@ -198,7 +198,7 @@ var actionTests = [test('Place', () {
         ..opacity = 0.0
         ..runAction(new FadeTo(0.5, 2));
 
-    game.currentScene = new Scene(layer);
+    game.scene = new Scene(layer);
   }), test('Repeat', () {
     var action =
         new Repeat(
@@ -211,7 +211,7 @@ var actionTests = [test('Place', () {
         ..position.y = game.height
         ..runAction(action + action.reversed);
 
-    game.currentScene = new Scene(layer);
+    game.scene = new Scene(layer);
   }), test('ActionSpawn', () {
     var action =
         new ActionSpawn(
@@ -226,7 +226,7 @@ var actionTests = [test('Place', () {
         ..position.y = game.height
         ..runAction(action + new Delay(0.5) + action.reversed);
 
-    game.currentScene = new Scene(layer);
+    game.scene = new Scene(layer);
   }), test('Multiple Action', () {
     var layer = new Layer();
     var label = new Label('Move Rotate Scale')
@@ -237,7 +237,7 @@ var actionTests = [test('Place', () {
         ..runAction(new RotateBy(360, 2))
         ..runAction(new ScaleBy(new Vector2(2.0, 2.0), 2));
 
-    game.currentScene = new Scene(layer);
+    game.scene = new Scene(layer);
   }), test('ActionSequece', () {
     var actions =
         new ActionSequence(
@@ -252,7 +252,7 @@ var actionTests = [test('Place', () {
         ..position.y = game.height
         ..runAction(actions + actions.reversed);
 
-    game.currentScene = new Scene(layer);
+    game.scene = new Scene(layer);
   }), test('Operators', () {
     var layer = new Layer();
     var label1 = new Label('Show + Move + Rotate + Scale')
@@ -277,7 +277,7 @@ var actionTests = [test('Place', () {
                 new RotateBy(360, 2) |
                 new ScaleBy(new Vector2(0.5, 0.5), 2));
 
-    game.currentScene = new Scene(layer);
+    game.scene = new Scene(layer);
   }), test('Call function', () {
     var action = new CallFunction((label) {
       label.text = "New text";
@@ -290,7 +290,7 @@ var actionTests = [test('Place', () {
         ..position.y = game.height / 2
         ..runAction(new Delay(1) + action);
 
-    game.currentScene = new Scene(layer);
+    game.scene = new Scene(layer);
   }), test('Loop', () {
     var layer = new Layer();
     var label = new Label('Endless Loop')
@@ -300,5 +300,5 @@ var actionTests = [test('Place', () {
         ..position.y = game.height / 2
         ..runAction(new Loop(new RotateBy(360, 2)));
 
-    game.currentScene = new Scene(layer);
+    game.scene = new Scene(layer);
   }),];

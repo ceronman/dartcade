@@ -127,7 +127,7 @@ runTest(String testLink) {
 
 main() {
   game.init('#gamebox');
-  game.run(new Scene());
+  game.run();
 
   hashChange(e) {
     var hash = window.location.hash;

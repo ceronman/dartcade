@@ -19,7 +19,7 @@ class Scene extends GameNode {
   double get width => game.width;
   double get height => game.height;
 
-  _active(event) => game.currentScene = this;
+  _active(event) => game.scene = this;
 
   Stream<KeyboardEvent> get onKeyDown => game.onKeyDown.where(_active);
   Stream<KeyboardEvent> get onKeyUp => game.onKeyDown.where(_active);

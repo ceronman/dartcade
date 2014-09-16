@@ -23,30 +23,26 @@ main() {
         ..speedUp = -400.0
         ..speedDown = 400.0;
 
-    var layer = new Layer();
-
     var paddle1 = new Sprite(loader['paddle'])
-        ..addTo(layer)
+        ..addTo(game.scene)
         ..runAction(new Place(new Vector2(40.0, 400 / 2)))
         ..physics = new PhysicsComponent(world)
         ..runAction(controller1);
 
     var paddle2 = new Sprite(loader['paddle'])
-        ..addTo(layer)
+        ..addTo(game.scene)
         ..runAction(new Place(new Vector2(800.0 - 40, 400 / 2)))
         ..physics = new PhysicsComponent(world)
         ..runAction(controller2);
 
     var ball = new Sprite(loader['ball'])
-        ..addTo(layer)
+        ..addTo(game.scene)
         ..runAction(new Place(new Vector2(800 / 2, 400 / 2)))
         ..physics = new PhysicsComponent(world)
         ..physics.speed = new Vector2(400.0, 400.0)
         ..physics.bounce = new Vector2(1.0, 1.0);
 
-    var scene = new Scene(layer);
-
-    game.run(scene);
+    game.run();
 
   });
 }

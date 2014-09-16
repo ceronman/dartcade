@@ -126,7 +126,7 @@ class LoadingScene extends Scene {
     }, onError: (error) {
       label.text = 'error $error';
     }, onDone: () {
-      game.currentScene = nextScene;
+      game.scene = nextScene;
     });
 
   }

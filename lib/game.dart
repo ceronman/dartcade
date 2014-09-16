@@ -14,15 +14,13 @@
 
 part of cocos;
 
-const DEBUG = false;
-
 class Game {
   AssetManager assets;
   KeyStateHandler keyboard;
   CanvasElement canvas;
   num fps;
 
-  Scene currentScene;
+  Scene scene = new Scene();
 
   double get width => canvas.width.toDouble();
   double get height => canvas.height.toDouble();
@@ -34,7 +32,7 @@ class Game {
   Stream<MouseEvent> get onMouseMove => canvas.onMouseMove;
   Stream<WheelEvent> get onMouseWheel => canvas.onMouseWheel;
 
-  void init(selector, {int width, int height}) {
+  void init(String selector, {int width, int height}) {
     width = width != null ? width : 640;
     height = height != null ? height : 480;
     assets = new AssetManager();
@@ -47,49 +45,16 @@ class Game {
   }
 
   void update(num dt) {
-    currentScene.update(dt);
-  }
-
-  void _debugDraw(CanvasRenderingContext2D context) {
-    context.save();
-    context.translate(0.5, 0.5);
-    var size = 20;
-    var color = "#333333";
-    var rows = canvas.height / size;
-    var cols = canvas.width / size;
-    context.strokeStyle = color;
-
-    var i = 0;
-
-    context.beginPath();
-    for (var row = 1; row < rows; row++) {
-      i = row * size;
-      context.moveTo(0, i);
-      context.lineTo(canvas.width, i);
-    }
-
-    for (var col = 1; col < cols; col++) {
-      i = col * size;
-      context.moveTo(i, 0);
-      context.lineTo(i, canvas.height);
-    }
-    context.stroke();
-    context.restore();
+    scene.update(dt);
   }
 
   void draw(CanvasRenderingContext2D context) {
     context.clearRect(0, 0, canvas.width, canvas.height);
-    if (DEBUG) _debugDraw(context);
-    currentScene.drawWithChildren(context);
+    scene.drawWithChildren(context);
   }
 
-  void run([Scene scene]) {
-    if (scene == null) {
-      scene = new Scene();
-    }
-    currentScene = scene;
-
-    var initTime;
+  void run() {
+    var initTime = 0;
     var frameCount = 0;
 
     drawFrame(num currentTime) {
@@ -108,7 +73,6 @@ class Game {
     new Timer.periodic(new Duration(seconds: 1), (t) {
       fps = frameCount;
       frameCount = 0;
-      if (DEBUG) print('fps: $fps');
     });
   }
 }

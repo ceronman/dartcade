@@ -37,7 +37,7 @@ var assetsTests = [test('LoadingScene', () {
       return controller.stream;
     }
 
-    game.currentScene = new LoadingScene(fakeProgress(), nextScene);
+    game.scene = new LoadingScene(fakeProgress(), nextScene);
   }), test('LoadingScene with Error', () {
     var layer = new Layer();
     var label = new Label('New scene');
@@ -52,5 +52,5 @@ var assetsTests = [test('LoadingScene', () {
       return controller.stream;
     }
 
-    game.currentScene = new LoadingScene(fakeProgress(), nextScene);
+    game.scene = new LoadingScene(fakeProgress(), nextScene);
   }),];
