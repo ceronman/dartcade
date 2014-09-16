@@ -125,15 +125,15 @@ class Keys {
 
 class KeyStateHandler {
   Map<num, bool> pressedKeys = new Map<num, bool>();
-  Stream<KeyboardEvent> onKeyDown;
-  Stream<KeyboardEvent> onKeyUp;
+  Stream<html.KeyboardEvent> onKeyDown;
+  Stream<html.KeyboardEvent> onKeyUp;
 
   KeyStateHandler(this.onKeyDown, this.onKeyUp) {
-    onKeyDown.listen((KeyboardEvent event) {
+    onKeyDown.listen((html.KeyboardEvent event) {
       pressedKeys[event.keyCode] = true;
     });
 
-    onKeyUp.listen((KeyboardEvent event) {
+    onKeyUp.listen((html.KeyboardEvent event) {
       pressedKeys[event.keyCode] = false;
     });
   }

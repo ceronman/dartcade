@@ -14,7 +14,7 @@
 
 library cocos;
 
-import 'dart:html';
+import 'dart:html' as html;
 import 'dart:math';
 import 'dart:async';
 import 'package:vector_math/vector_math.dart';

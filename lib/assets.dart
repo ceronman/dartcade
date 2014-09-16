@@ -26,7 +26,7 @@ abstract class Asset {
 class ImageAsset extends Asset {
   ImageAsset(String location) : super(location);
   Stream<bool> load() {
-    var image = new ImageElement();
+    var image = new html.ImageElement();
     var transformer = new StreamTransformer.fromHandlers(handleData: (e, sink) {
       loaded = true;
       sink.add(true);
@@ -75,7 +75,7 @@ class AssetLoaderNg {
 }
 
 class AssetManager {
-  Map<String, ImageElement> images = {};
+  Map<String, html.ImageElement> images = {};
 
   Stream<num> load(List<String> sources) {
     var progress = new StreamController();
@@ -91,7 +91,7 @@ class AssetManager {
     }
 
     for (String source in sources) {
-      images[source] = new ImageElement();
+      images[source] = new html.ImageElement();
       images[source].onLoad.listen((e) {
         loadedState[source] = true;
         var completed = loadedState.values.where((loaded) => loaded).length;

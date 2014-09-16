@@ -17,7 +17,9 @@ part of cocos;
 class Game {
   AssetManager assets;
   KeyStateHandler keyboard;
-  CanvasElement canvas;
+
+  // TODO: This should be abstracted
+  html.CanvasElement canvas;
   num fps;
 
   Scene scene = new Scene();
@@ -25,12 +27,12 @@ class Game {
   double get width => canvas.width.toDouble();
   double get height => canvas.height.toDouble();
 
-  Stream<KeyboardEvent> get onKeyDown => document.onKeyDown;
-  Stream<KeyboardEvent> get onKeyUp => document.onKeyUp;
-  Stream<MouseEvent> get onMouseDown => canvas.onMouseDown;
-  Stream<MouseEvent> get onMouseUp => canvas.onMouseUp;
-  Stream<MouseEvent> get onMouseMove => canvas.onMouseMove;
-  Stream<WheelEvent> get onMouseWheel => canvas.onMouseWheel;
+  Stream<html.KeyboardEvent> get onKeyDown => html.document.onKeyDown;
+  Stream<html.KeyboardEvent> get onKeyUp => html.document.onKeyUp;
+  Stream<html.MouseEvent> get onMouseDown => canvas.onMouseDown;
+  Stream<html.MouseEvent> get onMouseUp => canvas.onMouseUp;
+  Stream<html.MouseEvent> get onMouseMove => canvas.onMouseMove;
+  Stream<html.WheelEvent> get onMouseWheel => canvas.onMouseWheel;
 
   void init(String selector, {int width, int height}) {
     width = width != null ? width : 640;
@@ -38,8 +40,8 @@ class Game {
     assets = new AssetManager();
     keyboard = new KeyStateHandler(onKeyDown, onKeyUp);
 
-    var gamebox = querySelector(selector);
-    canvas = new CanvasElement(width: width, height: height);
+    var gamebox = html.querySelector(selector);
+    canvas = new html.CanvasElement(width: width, height: height);
     canvas.style.backgroundColor = 'black';
     gamebox.children.add(canvas);
   }
@@ -48,7 +50,7 @@ class Game {
     scene.update(dt);
   }
 
-  void draw(CanvasRenderingContext2D context) {
+  void draw(html.CanvasRenderingContext2D context) {
     context.clearRect(0, 0, canvas.width, canvas.height);
     scene.drawWithChildren(context);
   }
@@ -66,9 +68,9 @@ class Game {
       initTime = currentTime;
       update(dt);
       draw(canvas.context2D);
-      window.requestAnimationFrame(drawFrame);
+      html.window.requestAnimationFrame(drawFrame);
     }
-    window.requestAnimationFrame(drawFrame);
+    html.window.requestAnimationFrame(drawFrame);
 
     new Timer.periodic(new Duration(seconds: 1), (t) {
       fps = frameCount;

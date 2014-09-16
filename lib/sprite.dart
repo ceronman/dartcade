@@ -15,16 +15,16 @@
 part of cocos;
 
 class Sprite extends GameNode {
-  ImageElement image;
+  html.ImageElement image;
 
   get width => image.width;
   get height => image.height;
 
-  Sprite(ImageElement this.image, {pos}) : super() {
+  Sprite(html.ImageElement this.image, {pos}) : super() {
     position = pos != null ? pos : position;
   }
 
-  void draw(CanvasRenderingContext2D context) {
+  void draw(html.CanvasRenderingContext2D context) {
     context.drawImage(image, 0, 0);
   }
 }

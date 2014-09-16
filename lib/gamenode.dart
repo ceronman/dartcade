@@ -84,7 +84,7 @@ abstract class GameNode {
   set right(num value) => position.x = value - width * positionAnchor.x;
   set bottom(num value) => position.y = value - height * positionAnchor.y;
 
-  void transform(CanvasRenderingContext2D context) {
+  void transform(html.CanvasRenderingContext2D context) {
     context.globalAlpha = opacity;
     context.translate(position.x, position.y);
 
@@ -103,14 +103,14 @@ abstract class GameNode {
     context.translate(-positionAnchor.x * width, -positionAnchor.y * height);
   }
 
-  void drawWithTransform(CanvasRenderingContext2D context) {
+  void drawWithTransform(html.CanvasRenderingContext2D context) {
     context.save();
     transform(context);
     draw(context);
     context.restore();
   }
 
-  void drawWithChildren(CanvasRenderingContext2D context) {
+  void drawWithChildren(html.CanvasRenderingContext2D context) {
     if (visible) {
       for (var child in children) {
         child.drawWithChildren(context);
@@ -119,7 +119,7 @@ abstract class GameNode {
     }
   }
 
-  void draw(CanvasRenderingContext2D context) {}
+  void draw(html.CanvasRenderingContext2D context) {}
 
   void update(num dt) {
     for (var child in children) {
