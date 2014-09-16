@@ -27,12 +27,12 @@ abstract class GameNode {
     }
     _parent = value;
   }
-  void add(node) {
+  void add(GameNode node) {
     children.add(node);
     node.parent = this;
   }
 
-  void addTo(node) {
+  void addTo(GameNode node) {
     node.add(this);
     this.parent = node;
   }
@@ -76,10 +76,8 @@ abstract class GameNode {
   List<GameNode> children = new List<GameNode>();
   List<Action> actions = new List<Action>();
 
-
   StreamController<num> onFrameController = new StreamController<num>();
   Stream<num> get onFrame => onFrameController.stream.asBroadcastStream();
-
 
   set left(num value) => position.x = value + width * positionAnchor.x;
   set top(num value) => position.y = value + height * positionAnchor.y;
@@ -105,14 +103,14 @@ abstract class GameNode {
     context.translate(-positionAnchor.x * width, -positionAnchor.y * height);
   }
 
-  void drawWithTransform(context) {
+  void drawWithTransform(CanvasRenderingContext2D context) {
     context.save();
     transform(context);
     draw(context);
     context.restore();
   }
 
-  void drawWithChildren(context) {
+  void drawWithChildren(CanvasRenderingContext2D context) {
     if (visible) {
       for (var child in children) {
         child.drawWithChildren(context);
@@ -121,9 +119,9 @@ abstract class GameNode {
     }
   }
 
-  void draw(context) {}
+  void draw(CanvasRenderingContext2D context) {}
 
-  void update(dt) {
+  void update(num dt) {
     for (var child in children) {
       child.update(dt);
     }
@@ -139,7 +137,7 @@ abstract class GameNode {
       }
     }
 
-    for (var action in doneActions) {
+    for (Action action in doneActions) {
       action.stop();
       actions.removeRange(actions.indexOf(action), 1);
     }
@@ -154,7 +152,7 @@ abstract class GameNode {
   }
 
   void stopActions() {
-    for (var action in new List.from(actions)) {
+    for (Action action in new List.from(actions)) {
       action.stop();
       actions.removeRange(actions.indexOf(action), 1);
     }

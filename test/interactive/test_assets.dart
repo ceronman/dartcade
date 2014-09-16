@@ -15,12 +15,11 @@
 part of dartcocos_test;
 
 var assetsTests = [test('LoadingScene', () {
-    var layer = new Layer();
-    var label = new Label('New scene');
-    label.position.x = 50.0;
-    label.position.y = 50.0;
-    layer.add(label);
-    var nextScene = new Scene(layer);
+    var next = new Scene();
+    var label = new Label('New scene')
+        ..position.x = 50.0
+        ..position.y = 50.0
+        ..addTo(next);
 
     fakeProgress() {
       var controller = new StreamController();
@@ -36,15 +35,13 @@ var assetsTests = [test('LoadingScene', () {
       });
       return controller.stream;
     }
-
-    game.scene = new LoadingScene(fakeProgress(), nextScene);
+    game.scene = new LoadingScene(fakeProgress(), next);
   }), test('LoadingScene with Error', () {
-    var layer = new Layer();
-    var label = new Label('New scene');
-    label.position.x = 50.0;
-    label.position.y = 50.0;
-    layer.add(label);
-    var nextScene = new Scene(layer);
+    var next = new Scene();
+    var label = new Label('New scene')
+        ..position.x = 50.0
+        ..position.y = 50.0
+        ..addTo(next);
 
     fakeProgress() {
       var controller = new StreamController();
@@ -52,5 +49,5 @@ var assetsTests = [test('LoadingScene', () {
       return controller.stream;
     }
 
-    game.scene = new LoadingScene(fakeProgress(), nextScene);
+    game.scene = new LoadingScene(fakeProgress(), next);
   }),];

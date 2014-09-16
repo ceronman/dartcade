@@ -73,7 +73,7 @@ class World {
   double get right => position.x + size.x;
   double get bottom => position.y + size.y;
 
-  World(x, y, width, height) {
+  World(double x, double y, double width, double height) {
     position = new Vector2(x, y);
     size = new Vector2(width, height);
   }

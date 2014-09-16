@@ -122,6 +122,7 @@ runTest(String testLink) {
   }
 
   querySelector('#test-title').text = '$groupName > $testName';
+  game.scene = new Scene();
   testCase.testFunction();
 }
 

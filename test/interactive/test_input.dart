@@ -15,15 +15,13 @@
 part of dartcocos_test;
 
 var inputTests = [test('KeyStateHandler', () {
-    var layer = new Layer();
-    var label = new Label('Use Arrow Keys');
-    label.position.x = game.width / 2;
-    label.position.y = game.height / 2;
-    label.align = 'center';
-    layer.add(label);
+    var label = new Label('Use Arrow Keys')
+        ..position.x = game.width / 2
+        ..position.y = game.height / 2
+        ..align = 'center'
+        ..addTo(game.scene);
 
-    var scene = new Scene(layer);
-    scene.onFrame.listen((dt) {
+    game.scene.onFrame.listen((dt) {
       if (game.keyboard[Keys.LEFT]) {
         label.position.x -= 1;
       }
@@ -37,19 +35,13 @@ var inputTests = [test('KeyStateHandler', () {
         label.position.y += 1;
       }
     });
-    game.scene = scene;
   }), test('game onKeyDown and onKeyUp', () {
-    var layer = new Layer();
-    var label = new Label('Press any key');
-    label.position.x = game.width / 2;
-    label.position.y = game.width / 2;
-    label.align = 'center';
-    layer.add(label);
+    var label = new Label('Press any key')
+        ..position.x = game.width / 2
+        ..position.y = game.width / 2
+        ..align = 'center'
+        ..addTo(game.scene);
 
     game.onKeyDown.listen((e) => label.text = 'Pressed ${e.keyCode}');
     game.onKeyUp.listen((e) => label.text = 'Press any key');
-
-    game.scene = new Scene(layer);
-    ;
   })];
-

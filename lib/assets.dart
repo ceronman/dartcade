@@ -111,15 +111,12 @@ class AssetManager {
 }
 
 class LoadingScene extends Scene {
-  LoadingScene(Stream<num> progress, Scene nextScene) : super(null) {
-    var layer = new Layer();
+  LoadingScene(Stream<num> progress, Scene nextScene) {
     var label = new Label('Loading...');
     label.align = 'center';
     label.position.x = game.width / 2;
     label.position.y = game.height / 2;
-    this.layer = layer;
-    this.add(layer);
-    layer.add(label);
+    this.add(label);
 
     progress.listen((p) {
       label.text = 'Loading ${(p * 100).toStringAsFixed(0)}%';
@@ -128,6 +125,5 @@ class LoadingScene extends Scene {
     }, onDone: () {
       game.scene = nextScene;
     });
-
   }
 }

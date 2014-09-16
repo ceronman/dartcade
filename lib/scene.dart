@@ -19,21 +19,13 @@ class Scene extends GameNode {
   double get width => game.width;
   double get height => game.height;
 
-  _active(event) => game.scene = this;
+  _active(event) => game.scene == this;
 
+  // TODO: These don't seem to work properly.
   Stream<KeyboardEvent> get onKeyDown => game.onKeyDown.where(_active);
   Stream<KeyboardEvent> get onKeyUp => game.onKeyDown.where(_active);
   Stream<MouseEvent> get onMouseDown => game.onMouseDown.where(_active);
   Stream<MouseEvent> get onMouseUp => game.onMouseUp.where(_active);
   Stream<MouseEvent> get onMouseMove => game.onMouseMove.where(_active);
   Stream<WheelEvent> get onMouseWheel => game.onMouseWheel.where(_active);
-
-  Layer layer;
-
-  Scene([Layer layer]) : super() {
-    if (layer != null) {
-      this.add(layer);
-    }
-    this.layer = layer;
-  }
 }
