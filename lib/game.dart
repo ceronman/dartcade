@@ -22,7 +22,7 @@ class Game {
   html.CanvasElement canvas;
   num fps;
 
-  Scene scene = new Scene();
+  Scene scene;
 
   double get width => canvas.width.toDouble();
   double get height => canvas.height.toDouble();
@@ -34,11 +34,13 @@ class Game {
   Stream<html.MouseEvent> get onMouseMove => canvas.onMouseMove;
   Stream<html.WheelEvent> get onMouseWheel => canvas.onMouseWheel;
 
-  void init(String selector, {int width, int height}) {
+  Game(String selector, {int width, int height}) {
     width = width != null ? width : 640;
     height = height != null ? height : 480;
     assets = new AssetManager();
     keyboard = new KeyStateHandler(onKeyDown, onKeyUp);
+    scene = new Scene();
+    scene.game = this;
 
     var gamebox = html.querySelector(selector);
     canvas = new html.CanvasElement(width: width, height: height);
@@ -78,5 +80,3 @@ class Game {
     });
   }
 }
-
-final Game game = new Game();

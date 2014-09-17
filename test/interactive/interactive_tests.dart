@@ -126,8 +126,10 @@ runTest(String testLink) {
   testCase.testFunction();
 }
 
+var game;
+
 main() {
-  game.init('#gamebox');
+  game = new Game('#gamebox');
   game.run();
 
   hashChange(e) {

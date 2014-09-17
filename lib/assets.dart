@@ -38,6 +38,7 @@ class ImageAsset extends Asset {
   }
 }
 
+// TODO: Handle more informatio at loading: loaded object.
 class AssetLoaderNg {
   Map<String, Asset> assets = {};
 

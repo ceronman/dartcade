@@ -16,8 +16,12 @@ part of cocos;
 
 class Scene extends GameNode {
 
+  Game game;
+
   double get width => game.width;
   double get height => game.height;
+
+  Scene();
 
   _active(event) => game.scene == this;
 

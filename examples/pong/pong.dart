@@ -1,7 +1,7 @@
 import 'package:dartcocos/cocos.dart';
 
 main() {
-  game.init('#gamebox', width: 800, height: 400);
+  var game = new Game('#gamebox', width: 800, height: 400);
 
   var loader = new AssetLoaderNg();
   loader.add('paddle', new ImageAsset('paddle.png'));
@@ -43,6 +43,5 @@ main() {
         ..physics.bounce = new Vector2(1.0, 1.0);
 
     game.run();
-
   });
 }
