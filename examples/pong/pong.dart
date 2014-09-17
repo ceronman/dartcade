@@ -3,7 +3,7 @@ import 'package:dartcocos/cocos.dart';
 main() {
   var game = new Game('#gamebox', width: 800, height: 400);
 
-  var loader = new AssetLoaderNg();
+  var loader = new AssetLoader();
   loader.add('paddle', new ImageAsset('paddle.png'));
   loader.add('ball', new ImageAsset('ball.png'));
 
@@ -41,7 +41,7 @@ main() {
         ..physics = new PhysicsComponent(world)
         ..physics.speed = new Vector2(400.0, 400.0)
         ..physics.bounce = new Vector2(1.0, 1.0);
-
-    game.run();
   });
+
+  game.run();
 }

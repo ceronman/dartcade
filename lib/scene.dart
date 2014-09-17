@@ -22,14 +22,4 @@ class Scene extends GameNode {
   double get height => game.height;
 
   Scene();
-
-  _active(event) => game.scene == this;
-
-  // TODO: These don't seem to work properly.
-  Stream<html.KeyboardEvent> get onKeyDown => game.onKeyDown.where(_active);
-  Stream<html.KeyboardEvent> get onKeyUp => game.onKeyDown.where(_active);
-  Stream<html.MouseEvent> get onMouseDown => game.onMouseDown.where(_active);
-  Stream<html.MouseEvent> get onMouseUp => game.onMouseUp.where(_active);
-  Stream<html.MouseEvent> get onMouseMove => game.onMouseMove.where(_active);
-  Stream<html.WheelEvent> get onMouseWheel => game.onMouseWheel.where(_active);
 }

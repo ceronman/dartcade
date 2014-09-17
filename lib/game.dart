@@ -15,14 +15,19 @@
 part of cocos;
 
 class Game {
-  AssetManager assets;
+  AssetLoader assets;
   KeyStateHandler keyboard;
 
   // TODO: This should be abstracted
   html.CanvasElement canvas;
   num fps;
 
-  Scene scene;
+  Scene _scene;
+  Scene get scene => _scene;
+  set scene(Scene value) {
+    _scene = value;
+    _scene.game = this;
+  }
 
   double get width => canvas.width.toDouble();
   double get height => canvas.height.toDouble();
@@ -37,10 +42,9 @@ class Game {
   Game(String selector, {int width, int height}) {
     width = width != null ? width : 640;
     height = height != null ? height : 480;
-    assets = new AssetManager();
+    assets = new AssetLoader();
     keyboard = new KeyStateHandler(onKeyDown, onKeyUp);
     scene = new Scene();
-    scene.game = this;
 
     var gamebox = html.querySelector(selector);
     canvas = new html.CanvasElement(width: width, height: height);

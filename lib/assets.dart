@@ -39,7 +39,7 @@ class ImageAsset extends Asset {
 }
 
 // TODO: Handle more informatio at loading: loaded object.
-class AssetLoaderNg {
+class AssetLoader {
   Map<String, Asset> assets = {};
 
   void add(String name, Asset asset) {
@@ -73,42 +73,6 @@ class AssetLoaderNg {
   }
 
   Object operator [](String name) => assets[name].element;
-}
-
-class AssetManager {
-  Map<String, html.ImageElement> images = {};
-
-  Stream<num> load(List<String> sources) {
-    var progress = new StreamController();
-
-    if (sources.length == 0) {
-      progress.close();
-      return progress.stream;
-    }
-
-    var loadedState = {};
-    for (String source in sources) {
-      loadedState[source] = false;
-    }
-
-    for (String source in sources) {
-      images[source] = new html.ImageElement();
-      images[source].onLoad.listen((e) {
-        loadedState[source] = true;
-        var completed = loadedState.values.where((loaded) => loaded).length;
-        var total = loadedState.values.length;
-        progress.add(completed / total);
-        if (completed == total) {
-          progress.close();
-        }
-      }, onError: (error) {
-        progress.addError(error);
-      });
-      images[source].src = source;
-    }
-
-    return progress.stream.asBroadcastStream();
-  }
 }
 
 class LoadingScene extends Scene {
