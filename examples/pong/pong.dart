@@ -41,7 +41,9 @@ main() {
         ..runAction(new Place(new Vector2(800 / 2, 400 / 2)))
         ..physics = new Body(world)
         ..physics.speed = new Vector2(400.0, 400.0)
-        ..physics.bounce = new Vector2(1.0, 1.0);
+        ..physics.restitution = new Vector2(1.0, 1.0);
+
+    world.collide(ball).listen((e) => e.body1.physics.bounce(e.side2));
   });
 
   game.run();

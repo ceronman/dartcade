@@ -34,6 +34,8 @@ class CollisionEvent {
 abstract class Collision {
   StreamController<CollisionEvent> onCollisionController =
       new StreamController<CollisionEvent>();
+  Stream<CollisionEvent> get onCollision =>
+      onCollisionController.stream.asBroadcastStream();
 
   void check();
 }
@@ -47,32 +49,19 @@ class OuterBoxCollision extends Collision {
   void check() {
     if (inner.left < outer.left) {
       onCollisionController.add(
-          new CollisionEvent(inner, Side.LEFT, outer, Side.LEFT));
+          new CollisionEvent(inner, Side.LEFT, null, Side.LEFT));
     }
     if (inner.right > outer.right) {
       onCollisionController.add(
-          new CollisionEvent(inner, Side.RIGHT, outer, Side.RIGHT));
+          new CollisionEvent(inner, Side.RIGHT, null, Side.RIGHT));
+    }
+    if (inner.top < outer.top) {
+      onCollisionController.add(
+          new CollisionEvent(inner, Side.TOP, null, Side.TOP));
     }
     if (inner.bottom > outer.bottom) {
       onCollisionController.add(
-          new CollisionEvent(inner, Side.BOTTOM, outer, Side.BOTTOM));
-    }
-    if (inner.top > outer.top) {
-      onCollisionController.add(
-          new CollisionEvent(inner, Side.TOP, outer, Side.TOP));
-    }
-  }
-}
-
-class CollisionHandlers {
-  static void bounce(CollisionEvent event) {
-    var body1 = event.body1.physics;
-    var body2 = event.body2.physics;
-    if (event.side2 == Side.TOP || event.side2 == Side.BOTTOM) {
-      body1.speed.y = body1.speed.y * -body1.bounce.y;
-    }
-    if (event.side2 == Side.LEFT || event.side2 == Side.RIGHT) {
-      body1.speed.x = body1.speed.x * -body1.bounce.y;
+          new CollisionEvent(inner, Side.BOTTOM, null, Side.BOTTOM));
     }
   }
 }

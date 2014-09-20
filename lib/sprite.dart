@@ -17,8 +17,8 @@ part of cocos;
 class Sprite extends GameNode {
   html.ImageElement image;
 
-  get width => image.width;
-  get height => image.height;
+  get width => image.width.toDouble();
+  get height => image.height.toDouble();
 
   Sprite(html.ImageElement this.image, {pos}) : super() {
     position = pos != null ? pos : position;
