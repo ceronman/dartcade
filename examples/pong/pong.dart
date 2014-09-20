@@ -8,6 +8,7 @@ main() {
   loader.add('ball', new ImageAsset('ball.png'));
 
   var world = new World(0.0, 0.0, game.width, game.height);
+  game.scene.onFrame.listen(world.update);
 
   loader.load().last.then((p) {
 
@@ -26,19 +27,19 @@ main() {
     var paddle1 = new Sprite(loader['paddle'])
         ..addTo(game.scene)
         ..runAction(new Place(new Vector2(40.0, 400 / 2)))
-        ..physics = new PhysicsComponent(world)
+        ..physics = new Body(world)
         ..runAction(controller1);
 
     var paddle2 = new Sprite(loader['paddle'])
         ..addTo(game.scene)
         ..runAction(new Place(new Vector2(800.0 - 40, 400 / 2)))
-        ..physics = new PhysicsComponent(world)
+        ..physics = new Body(world)
         ..runAction(controller2);
 
     var ball = new Sprite(loader['ball'])
         ..addTo(game.scene)
         ..runAction(new Place(new Vector2(800 / 2, 400 / 2)))
-        ..physics = new PhysicsComponent(world)
+        ..physics = new Body(world)
         ..physics.speed = new Vector2(400.0, 400.0)
         ..physics.bounce = new Vector2(1.0, 1.0);
   });

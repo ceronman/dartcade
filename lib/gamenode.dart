@@ -14,7 +14,7 @@
 
 part of cocos;
 
-abstract class GameNode {
+abstract class GameNode extends Object with BoundingBox {
 
   GameNode _parent;
   GameNode get parent => _parent;
@@ -46,27 +46,22 @@ abstract class GameNode {
     parent = null;
   }
 
-  PhysicsComponent _physics;
-  PhysicsComponent get physics => _physics;
-  set physics(PhysicsComponent value) {
+  Body _physics;
+  Body get physics => _physics;
+  set physics(Body value) {
     _physics = value..node = this;
   }
 
   Vector2 position = new Vector2.zero();
   Vector2 positionAnchor = new Vector2(0.5, 0.5);
+
   double get width;
   double get height;
 
-  double get x => position.x;
-  double get y => position.y;
+  Vector2 get size => new Vector2(width, height);
 
   set x(double value) => position.x = value;
   set y(double value) => position.y = value;
-
-  double get left => position.x - width * positionAnchor.x;
-  double get top => position.y - height * positionAnchor.y;
-  double get right => position.x + width * positionAnchor.x;
-  double get bottom => position.y + height * positionAnchor.y;
 
   double rotation = 0.0;
   Vector2 rotationAnchor = new Vector2(0.5, 0.5);
@@ -125,7 +120,7 @@ abstract class GameNode {
     for (var child in children) {
       child.update(dt);
     }
-
+    // find a better way of handling updates
     if (physics != null) physics.update(dt);
 
     var doneActions = [];

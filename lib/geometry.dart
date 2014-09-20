@@ -1,4 +1,4 @@
-// Copyright 2012 Manuel Cerón <ceronman@gmail.com>
+// Copyright 2014 Manuel Cerón <ceronman@gmail.com>
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,24 +12,22 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-library cocos;
+part of cocos;
 
-import 'dart:html' as html;
-import 'dart:math';
-import 'dart:async';
-import 'package:vector_math/vector_math.dart';
+abstract class BoundingBox {
 
-export 'package:vector_math/vector_math.dart' show Vector2;
+  Vector2 get position;
+  Vector2 get size;
 
-part 'action.dart';
-part 'assets.dart';
-part 'collision.dart';
-part 'game.dart';
-part 'gamenode.dart';
-part 'geometry.dart';
-part 'input.dart';
-part 'layer.dart';
-part 'physics.dart';
-part 'scene.dart';
-part 'sprite.dart';
-part 'text.dart';
+  double get x => position.x;
+  double get y => position.y;
+  double get width => size.x;
+  double get height => size.y;
+
+  double get left => position.x;
+  double get top => position.y;
+  double get right => position.x + size.x;
+  double get bottom => position.y + size.y;
+
+  Vector2 get center => new Vector2(x + width/2, y + height/2);
+}

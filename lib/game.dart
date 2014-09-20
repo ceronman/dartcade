@@ -52,6 +52,7 @@ class Game {
     gamebox.children.add(canvas);
   }
 
+  // TODO: change this to double.
   void update(num dt) {
     scene.update(dt);
   }
