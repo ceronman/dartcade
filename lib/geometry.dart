@@ -16,18 +16,18 @@ part of cocos;
 
 abstract class Box {
 
-  Vector2 get position;
-  Vector2 get size;
+  Vector2 get min;
+  Vector2 get max;
 
-  double get x => position.x;
-  double get y => position.y;
-  double get width => size.x;
-  double get height => size.y;
+  double get x => min.x;
+  double get y => min.y;
+  double get width => max.x - min.x;
+  double get height => max.y - min.y;
 
-  double get left => position.x;
-  double get top => position.y;
-  double get right => position.x + size.x;
-  double get bottom => position.y + size.y;
+  double get left => min.x;
+  double get top => min.y;
+  double get right => max.x;
+  double get bottom => max.y;
 
-  Vector2 get center => new Vector2(x + width/2, y + height/2);
+  Vector2 get center => min.clone().add(max).scale(0.5);
 }

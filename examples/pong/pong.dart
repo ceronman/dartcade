@@ -40,10 +40,29 @@ main() {
         ..addTo(game.scene)
         ..runAction(new Place(new Vector2(800 / 2, 400 / 2)))
         ..physics = new Body(world)
-        ..physics.speed = new Vector2(400.0, 400.0)
+        ..physics.speed = new Vector2(400.0, -400.0)
         ..physics.restitution = new Vector2(1.0, 1.0);
 
-    world.collide(ball).listen((e) => e.body1.physics.bounce(e.side2));
+    world.collide(ball).listen((e) {
+      var side = e.side1;
+      var body = e.body1 as GameNode;
+      if (side == Side.LEFT) {
+        body.left = e.body2.left;
+        body.physics.speed.x *= -body.physics.restitution.x;
+      }
+      else if (side == Side.RIGHT) {
+        body.right = e.body2.right;
+        body.physics.speed.x *= -body.physics.restitution.x;
+      }
+      else if (side == Side.TOP) {
+        body.top = e.body2.top;
+        body.physics.speed.y *= -body.physics.restitution.y;
+      }
+      else if (side == Side.BOTTOM) {
+        body.bottom = e.body2.bottom;
+        body.physics.speed.y *= -body.physics.restitution.y;
+      }
+    });
   });
 
   game.run();

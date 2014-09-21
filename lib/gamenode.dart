@@ -45,6 +45,7 @@ abstract class GameNode extends Object with Box {
   void removeFromParent() {
     parent = null;
   }
+  List<GameNode> children = new List<GameNode>();
 
   Body _physics;
   Body get physics => _physics;
@@ -52,38 +53,42 @@ abstract class GameNode extends Object with Box {
     _physics = value..node = this;
   }
 
-  Vector2 position = new Vector2.zero();
-  Vector2 positionAnchor = new Vector2(0.5, 0.5);
+  StreamController<num> onFrameController = new StreamController<num>();
+  Stream<num> get onFrame => onFrameController.stream.asBroadcastStream();
 
+  // TODO: Should this be part of box?
   double get width;
   double get height;
-
-  Vector2 get size => new Vector2(width, height);
-
   set x(double value) => position.x = value;
   set y(double value) => position.y = value;
+  set left(num value) => position.x = value + width * positionAnchor.x;
+  set right(num value) => position.x = value - width * positionAnchor.x;
+  set top(num value) => position.y = value + height * positionAnchor.y;
+  set bottom(num value) => position.y = value - height * positionAnchor.y;
 
+  Vector2 get min =>
+      new Vector2(
+          position.x - width * positionAnchor.x,
+          position.y - height * positionAnchor.y);
+
+  Vector2 get max =>
+        new Vector2(
+            position.x + width * positionAnchor.x,
+            position.y + height * positionAnchor.y);
+
+  Vector2 position = new Vector2.zero();
+  Vector2 positionAnchor = new Vector2(0.5, 0.5);
   double rotation = 0.0;
   Vector2 rotationAnchor = new Vector2(0.5, 0.5);
   Vector2 scale = new Vector2(1.0, 1.0);
   double opacity = 1.0;
   bool visible = true;
-  List<GameNode> children = new List<GameNode>();
-  List<Action> actions = new List<Action>();
-
-  StreamController<num> onFrameController = new StreamController<num>();
-  Stream<num> get onFrame => onFrameController.stream.asBroadcastStream();
-
-  set left(num value) => position.x = value + width * positionAnchor.x;
-  set top(num value) => position.y = value + height * positionAnchor.y;
-  set right(num value) => position.x = value - width * positionAnchor.x;
-  set bottom(num value) => position.y = value - height * positionAnchor.y;
 
   void transform(html.CanvasRenderingContext2D context) {
     context.globalAlpha = opacity;
     context.translate(position.x, position.y);
 
-    if (scale.x != 1 || scale.y != 1) {
+    if (scale.x != 1.0 || scale.y != 1.0) {
       context.scale(scale.x, scale.y);
     }
 
@@ -139,6 +144,7 @@ abstract class GameNode extends Object with Box {
     onFrameController.add(dt);
   }
 
+  List<Action> actions = new List<Action>();
 
   void runAction(Action action) {
     action.target = this;

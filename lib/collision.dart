@@ -23,9 +23,9 @@ class Side {
 }
 
 class CollisionEvent {
-  GameNode body1;
+  Box body1;
   int side1;
-  GameNode body2;
+  Box body2;
   int side2;
 
   CollisionEvent(this.body1, this.side1, this.body2, this.side2);
@@ -49,19 +49,19 @@ class OuterBoxCollision extends Collision {
   void check() {
     if (inner.left < outer.left) {
       onCollisionController.add(
-          new CollisionEvent(inner, Side.LEFT, null, Side.LEFT));
+          new CollisionEvent(inner, Side.LEFT, outer, Side.LEFT));
     }
     if (inner.right > outer.right) {
       onCollisionController.add(
-          new CollisionEvent(inner, Side.RIGHT, null, Side.RIGHT));
+          new CollisionEvent(inner, Side.RIGHT, outer, Side.RIGHT));
     }
     if (inner.top < outer.top) {
       onCollisionController.add(
-          new CollisionEvent(inner, Side.TOP, null, Side.TOP));
+          new CollisionEvent(inner, Side.TOP, outer, Side.TOP));
     }
     if (inner.bottom > outer.bottom) {
       onCollisionController.add(
-          new CollisionEvent(inner, Side.BOTTOM, null, Side.BOTTOM));
+          new CollisionEvent(inner, Side.BOTTOM, outer, Side.BOTTOM));
     }
   }
 }
