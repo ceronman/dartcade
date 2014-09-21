@@ -25,15 +25,6 @@ class Body {
 
   Body(this.world);
 
-  bounce(int side) {
-    if (side == Side.LEFT || side == Side.RIGHT) {
-      speed.x *= -restitution.x;
-    }
-    if (side == Side.TOP || side == Side.BOTTOM) {
-      speed.y *= -restitution.y;
-    }
-  }
-
   void update(num dt) {
     // Don't use operators directly on the vector classes to avoid memory
     // allocation by creating new instances.
@@ -45,14 +36,14 @@ class Body {
 }
 
 class World extends Object with Box {
-  Vector2 position;
-  Vector2 size;
+  Vector2 min;
+  Vector2 max;
 
   List<Collision> _collisions = new List<Collision>();
 
   World(double x, double y, double width, double height) {
-    position = new Vector2(x, y);
-    size = new Vector2(width, height);
+    min = new Vector2(x, y);
+    max = new Vector2(x + width, y + height);
   }
 
   Stream<CollisionEvent> collide(GameNode node1, [GameNode node2]) {
