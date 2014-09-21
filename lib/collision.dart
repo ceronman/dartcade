@@ -41,8 +41,8 @@ abstract class Collision {
 }
 
 class OuterBoxCollision extends Collision {
-  BoundingBox outer;
-  BoundingBox inner;
+  Box outer;
+  Box inner;
 
   OuterBoxCollision(this.inner, this.outer);
 

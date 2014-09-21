@@ -44,7 +44,7 @@ class Body {
   }
 }
 
-class World extends Object with BoundingBox {
+class World extends Object with Box {
   Vector2 position;
   Vector2 size;
 

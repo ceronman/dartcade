@@ -14,7 +14,7 @@
 
 part of cocos;
 
-abstract class BoundingBox {
+abstract class Box {
 
   Vector2 get position;
   Vector2 get size;

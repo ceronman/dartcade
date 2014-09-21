@@ -14,7 +14,7 @@
 
 part of cocos;
 
-abstract class GameNode extends Object with BoundingBox {
+abstract class GameNode extends Object with Box {
 
   GameNode _parent;
   GameNode get parent => _parent;
