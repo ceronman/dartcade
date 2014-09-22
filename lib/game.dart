@@ -52,8 +52,7 @@ class Game {
     gamebox.children.add(canvas);
   }
 
-  // TODO: change this to double.
-  void update(num dt) {
+  void update(double dt) {
     scene.update(dt);
   }
 
@@ -71,7 +70,7 @@ class Game {
         initTime = currentTime;
       }
       frameCount++;
-      var dt = (currentTime - initTime) / 1000;
+      double dt = (currentTime - initTime) / 1000.0;
       initTime = currentTime;
       update(dt);
       draw(canvas.context2D);

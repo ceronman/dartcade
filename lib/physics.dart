@@ -25,7 +25,7 @@ class Body {
 
   Body(this.world);
 
-  void update(num dt) {
+  void update(double dt) {
     // Don't use operators directly on the vector classes to avoid memory
     // allocation by creating new instances.
     node.position.x += speed.x * dt;
@@ -55,7 +55,7 @@ class World extends Object with Box {
     return null;
   }
 
-  void update(num dt) {
+  void update(double dt) {
     for (var collision in _collisions) {
       collision.check();
     }

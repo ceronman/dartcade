@@ -121,7 +121,7 @@ abstract class GameNode extends Object with Box {
 
   void draw(html.CanvasRenderingContext2D context) {}
 
-  void update(num dt) {
+  void update(double dt) {
     for (var child in children) {
       child.update(dt);
     }
