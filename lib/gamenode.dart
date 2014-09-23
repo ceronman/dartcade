@@ -59,12 +59,6 @@ abstract class GameNode extends Object with Box {
   // TODO: Should this be part of box?
   double get width;
   double get height;
-  set x(double value) => position.x = value;
-  set y(double value) => position.y = value;
-  set left(num value) => position.x = value + width * positionAnchor.x;
-  set right(num value) => position.x = value - width * positionAnchor.x;
-  set top(num value) => position.y = value + height * positionAnchor.y;
-  set bottom(num value) => position.y = value - height * positionAnchor.y;
 
   Vector2 get min =>
       new Vector2(
@@ -72,9 +66,21 @@ abstract class GameNode extends Object with Box {
           position.y - height * positionAnchor.y);
 
   Vector2 get max =>
-        new Vector2(
-            position.x + width * positionAnchor.x,
-            position.y + height * positionAnchor.y);
+      new Vector2(
+          position.x + width * positionAnchor.x,
+          position.y + height * positionAnchor.y);
+
+  set min(Vector2 value) {
+    position = new Vector2(
+        value.x + width * positionAnchor.x,
+        value.y + height * positionAnchor.y);
+  }
+
+  set max(Vector2 value) {
+    position = new Vector2(
+        value.x - width * positionAnchor.x,
+        value.y - height * positionAnchor.y);
+  }
 
   Vector2 position = new Vector2.zero();
   Vector2 positionAnchor = new Vector2(0.5, 0.5);
