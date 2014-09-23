@@ -19,6 +19,9 @@ abstract class Box {
   Vector2 get min;
   Vector2 get max;
 
+  set min(Vector2 value);
+  set max(Vector2 value);
+
   double get x => min.x;
   double get y => min.y;
   double get width => max.x - min.x;
@@ -30,4 +33,11 @@ abstract class Box {
   double get bottom => max.y;
 
   Vector2 get center => min.clone().add(max).scale(0.5);
+
+  set x(double value) => min = new Vector2(value, min.y);
+  set y(double value) => min = new Vector2(min.x, value);
+  set left(num value) => min = new Vector2(value, min.y);
+  set right(num value) => max = new Vector2(value, max.y);
+  set top(num value) => min = new Vector2(min.x, value);
+  set bottom(num value) => max = new Vector2(max.x, value);
 }
