@@ -40,4 +40,25 @@ abstract class Box {
   set right(num value) => max = new Vector2(value, max.y);
   set top(num value) => min = new Vector2(min.x, value);
   set bottom(num value) => max = new Vector2(max.x, value);
+
+  bool intersectsWith(Box other) {
+    return min.x <= other.max.x &&
+        min.y <= other.max.y &&
+        max.x >= other.min.x &&
+        max.y >= other.min.y;
+  }
+
+  bool containsPoint(Vector2 other) {
+    return min.x < other.x &&
+        min.y < other.y &&
+        max.x > other.x &&
+        max.y > other.y;
+  }
+
+  bool containsBox(Box other) {
+    return min.x < other.min.x &&
+        min.y < other.min.y &&
+        max.y > other.max.y &&
+        max.x > other.max.x;
+  }
 }
