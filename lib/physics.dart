@@ -14,41 +14,68 @@
 
 part of cocos;
 
-class Body {
+class Body implements Collidable {
   GameNode node;
   World world;
 
-  Vector2 get position => node.position;
+  Aabb2 hitbox = new Aabb2();
+
+  Vector2 position = new Vector2.zero();
   Vector2 speed = new Vector2.zero();
   Vector2 acceleration = new Vector2.zero();
   Vector2 restitution = new Vector2.zero();
 
+  double get left => hitbox.min.x;
+  double get right => hitbox.max.x;
+  double get top => hitbox.min.y;
+  double get bottom => hitbox.max.y;
+
+  set left(double value) {
+    position.x = value;
+    _updateHitBox();
+  }
+  set right(double value) {
+    position.x = value - (hitbox.max.x - hitbox.min.x);
+    _updateHitBox();
+  }
+  set top(double value) {
+    position.y = value;
+    _updateHitBox();
+  }
+  set bottom(double value) {
+    position.y = value - (hitbox.max.y - hitbox.min.y);
+    _updateHitBox();
+  }
+
   Body(this.world);
 
   void update(double dt) {
-    // Don't use operators directly on the vector classes to avoid memory
-    // allocation by creating new instances.
-    node.position.x += speed.x * dt;
-    node.position.y += speed.y * dt;
-    speed.x += acceleration.x * dt;
-    speed.y += acceleration.y * dt;
+    position.setValues(position.x + speed.x * dt, position.y + speed.y * dt);
+    speed.setValues(acceleration.x * dt, acceleration.y * dt);
+    print('$position $speed');
+//    _updateHitBox();
+//    node.position.setFrom(position);
+  }
+
+  void _updateHitBox() {
+    hitbox.min.setValues(position.x, position.y);
+    hitbox.max.setValues(position.x + node.width, position.y + node.height);
   }
 }
 
-class World extends Object with Box {
-  Vector2 min;
-  Vector2 max;
+class World implements Collidable {
+  Aabb2 hitbox = new Aabb2();
 
   List<Collision> _collisions = new List<Collision>();
 
   World(double x, double y, double width, double height) {
-    min = new Vector2(x, y);
-    max = new Vector2(x + width, y + height);
+    hitbox.min.setValues(x, y);
+    hitbox.max.setValues(x + width, y + height);
   }
 
   Stream<CollisionEvent> collide(GameNode node1, [GameNode node2]) {
     if (node2 == null) {
-      var collision = new OuterBoxCollision(node1, this);
+      var collision = new OuterBoxCollision(node1.body, this);
       _collisions.add(collision);
       return collision.onCollision;
     }

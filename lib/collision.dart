@@ -14,6 +14,10 @@
 
 part of cocos;
 
+abstract class Collidable {
+  Aabb2 get hitbox;
+}
+
 class Side {
   static const int TOP = 1;
   static const int BOTTOM = 2;
@@ -23,9 +27,9 @@ class Side {
 }
 
 class CollisionEvent {
-  Box body1;
+  Collidable body1;
   int side1;
-  Box body2;
+  Collidable body2;
   int side2;
 
   CollisionEvent(this.body1, this.side1, this.body2, this.side2);
@@ -41,25 +45,25 @@ abstract class Collision {
 }
 
 class OuterBoxCollision extends Collision {
-  Box outer;
-  Box inner;
+  Collidable outer;
+  Collidable inner;
 
   OuterBoxCollision(this.inner, this.outer);
 
   void check() {
-    if (inner.left < outer.left) {
+    if (inner.hitbox.min.x < outer.hitbox.min.x) {
       onCollisionController.add(
-          new CollisionEvent(inner, Side.LEFT, outer, Side.LEFT));
+          new CollisionEvent(inner, Side.LEFT, null, Side.LEFT));
     }
-    if (inner.right > outer.right) {
+    if (inner.hitbox.max.x > outer.hitbox.max.x) {
       onCollisionController.add(
-          new CollisionEvent(inner, Side.RIGHT, outer, Side.RIGHT));
+          new CollisionEvent(inner, Side.RIGHT, null, Side.RIGHT));
     }
-    if (inner.top < outer.top) {
+    if (inner.hitbox.min.y < outer.hitbox.min.y) {
       onCollisionController.add(
-          new CollisionEvent(inner, Side.TOP, outer, Side.TOP));
+          new CollisionEvent(inner, Side.TOP, null, Side.TOP));
     }
-    if (inner.bottom > outer.bottom) {
+    if (inner.hitbox.max.y > outer.hitbox.max.y) {
       onCollisionController.add(
           new CollisionEvent(inner, Side.BOTTOM, outer, Side.BOTTOM));
     }

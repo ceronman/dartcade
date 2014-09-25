@@ -27,42 +27,42 @@ main() {
     var paddle1 = new Sprite(loader['paddle'])
         ..addTo(game.scene)
         ..runAction(new Place(new Vector2(40.0, 400 / 2)))
-        ..physics = new Body(world)
+        ..body = new Body(world)
         ..runAction(controller1);
 
     var paddle2 = new Sprite(loader['paddle'])
         ..addTo(game.scene)
         ..runAction(new Place(new Vector2(800.0 - 40, 400 / 2)))
-        ..physics = new Body(world)
+        ..body = new Body(world)
         ..runAction(controller2);
 
     var ball = new Sprite(loader['ball'])
         ..addTo(game.scene)
         ..runAction(new Place(new Vector2(800 / 2, 400 / 2)))
-        ..physics = new Body(world)
-        ..physics.speed = new Vector2(-400.0, -400.0)
-        ..physics.restitution = new Vector2(1.0, 1.0);
+        ..body = new Body(world)
+        ..body.speed = new Vector2(-400.0, -400.0)
+        ..body.restitution = new Vector2(1.0, 1.0);
 
-    world.collide(ball).listen((e) {
-      var side = e.side1;
-      var body = e.body1 as GameNode;
-      if (side == Side.LEFT) {
-        body.left = e.body2.left;
-        body.physics.speed.x *= -body.physics.restitution.x;
-      }
-      else if (side == Side.RIGHT) {
-        body.right = e.body2.right;
-        body.physics.speed.x *= -body.physics.restitution.x;
-      }
-      else if (side == Side.TOP) {
-        body.top = e.body2.top;
-        body.physics.speed.y *= -body.physics.restitution.y;
-      }
-      else if (side == Side.BOTTOM) {
-        body.bottom = e.body2.bottom;
-        body.physics.speed.y *= -body.physics.restitution.y;
-      }
-    });
+//    world.collide(ball).listen((e) {
+//      var ball = e.body1;
+//      var world = e.body2;
+//      if (e.side1 == Side.LEFT) {
+//        ball.left = world.hitbox.min.x;
+//        ball.speed.x *= -ball.restitution.x;
+//      }
+//      else if (e.side1 == Side.RIGHT) {
+//        ball.right = world.hitbox.max.x;
+//        ball.speed.x *= -ball.restitution.x;
+//      }
+//      else if (e.side1 == Side.TOP) {
+//        ball.top = world.hitbox.min.y;
+//        ball.speed.y *= -ball.restitution.y;
+//      }
+//      else if (e.side1 == Side.BOTTOM) {
+//        ball.bottom = world.hitbox.max.y;
+//        ball.speed.y *= -ball.restitution.y;
+//      }
+//    });
   });
 
   game.run();

@@ -571,10 +571,10 @@ class ArcadeKeyboardController extends Action {
   void start() {}
   void stop() {}
   void step(num dt) {
-    target.physics.speed.x = keys[keyLeft] ?
+    target.body.speed.x = keys[keyLeft] ?
         speedLeft :
         keys[keyRight] ? speedRight : 0.0;
-    target.physics.speed.y = keys[keyUp] ?
+    target.body.speed.y = keys[keyUp] ?
         speedUp :
         keys[keyDown] ? speedDown : 0.0;
   }

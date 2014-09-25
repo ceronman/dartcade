@@ -14,7 +14,7 @@
 
 part of cocos;
 
-abstract class GameNode extends Object with Box {
+abstract class GameNode {
 
   GameNode _parent;
   GameNode get parent => _parent;
@@ -47,10 +47,11 @@ abstract class GameNode extends Object with Box {
   }
   List<GameNode> children = new List<GameNode>();
 
-  Body _physics;
-  Body get physics => _physics;
-  set physics(Body value) {
-    _physics = value..node = this;
+  Body _body;
+  Body get body => _body;
+  set body(Body value) {
+    _body = value..node = this;
+    _body.position.setFrom(position);
   }
 
   StreamController<num> onFrameController = new StreamController<num>();
@@ -132,7 +133,7 @@ abstract class GameNode extends Object with Box {
       child.update(dt);
     }
     // find a better way of handling updates
-    if (physics != null) physics.update(dt);
+    if (body != null) body.update(dt);
 
     var doneActions = [];
     for (var action in actions) {
