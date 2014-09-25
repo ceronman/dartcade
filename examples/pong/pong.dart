@@ -1,5 +1,7 @@
 import 'package:dartcocos/cocos.dart';
 
+// TODO: Find where are all those list allocations coming from.
+
 main() {
   var game = new Game('#gamebox', width: 800, height: 400);
 
@@ -43,6 +45,7 @@ main() {
         ..body.speed = new Vector2(-400.0, -400.0)
         ..body.restitution = new Vector2(1.0, 1.0);
 
+    // TODO: Separate this into a reusable collider.
     world.collide(ball).listen((e) {
       var ball = e.body1;
       var world = e.body2;

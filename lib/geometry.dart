@@ -14,6 +14,8 @@
 
 part of cocos;
 
+
+// TODO: This is apparently not necesary anymore.
 abstract class Box {
 
   Vector2 get min;
