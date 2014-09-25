@@ -53,15 +53,15 @@ class OuterBoxCollision extends Collision {
   void check() {
     if (inner.hitbox.min.x < outer.hitbox.min.x) {
       onCollisionController.add(
-          new CollisionEvent(inner, Side.LEFT, null, Side.LEFT));
+          new CollisionEvent(inner, Side.LEFT, outer, Side.LEFT));
     }
     if (inner.hitbox.max.x > outer.hitbox.max.x) {
       onCollisionController.add(
-          new CollisionEvent(inner, Side.RIGHT, null, Side.RIGHT));
+          new CollisionEvent(inner, Side.RIGHT, outer, Side.RIGHT));
     }
     if (inner.hitbox.min.y < outer.hitbox.min.y) {
       onCollisionController.add(
-          new CollisionEvent(inner, Side.TOP, null, Side.TOP));
+          new CollisionEvent(inner, Side.TOP, outer, Side.TOP));
     }
     if (inner.hitbox.max.y > outer.hitbox.max.y) {
       onCollisionController.add(

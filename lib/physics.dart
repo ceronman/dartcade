@@ -50,11 +50,12 @@ class Body implements Collidable {
   Body(this.world);
 
   void update(double dt) {
-    position.setValues(position.x + speed.x * dt, position.y + speed.y * dt);
-    speed.setValues(acceleration.x * dt, acceleration.y * dt);
-    print('$position $speed');
-//    _updateHitBox();
-//    node.position.setFrom(position);
+    position.x += speed.x * dt;
+    position.y += speed.y * dt;
+    speed.x += acceleration.x * dt;
+    speed.y += acceleration.y * dt;
+    _updateHitBox();
+    node.position.setFrom(position);
   }
 
   void _updateHitBox() {
