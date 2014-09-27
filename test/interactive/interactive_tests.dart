@@ -36,6 +36,7 @@ class InteractiveTest {
 inspectTests() {
   var mirror = currentMirrorSystem();
   var library = mirror.findLibrary(new Symbol('dartcocos_test'));
+  var locations = {};
   for (var declaration in library.declarations.values) {
     if (declaration is MethodMirror) {
       var testFunction = declaration as MethodMirror;
@@ -45,9 +46,13 @@ inspectTests() {
           return x.reflectee is InteractiveTest;
         });
         var testInfo = annotation.reflectee as InteractiveTest;
+        locations[testInfo] = testFunction.location.line;
         InteractiveTest.groups.putIfAbsent(testInfo.group, () => []);
         InteractiveTest.groups[testInfo.group].add(testInfo);
         InteractiveTest.functions[testInfo] = testFunction;
+        InteractiveTest.groups[testInfo.group].sort((a, b) {
+          return locations[a].compareTo(locations[b]);
+        });
       } on StateError catch (e) {
         continue;
       }
