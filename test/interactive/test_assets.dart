@@ -1,4 +1,4 @@
-// Copyright 2012, 2013 Manuel Cerón <ceronman@gmail.com>
+// Copyright 2014 Manuel Cerón <ceronman@gmail.com>
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -14,40 +14,44 @@
 
 part of dartcocos_test;
 
-var assetsTests = [test('LoadingScene', () {
-    var next = new Scene();
-    var label = new Label('New scene')
-        ..position.x = 50.0
-        ..position.y = 50.0
-        ..addTo(next);
+@InteractiveTest('LoadingScene', group: 'Assets')
+testLoading(Game game) {
+  var next = new Scene();
+  var label = new Label('New scene')
+      ..position.x = 50.0
+      ..position.y = 50.0
+      ..addTo(next);
 
-    fakeProgress() {
-      var controller = new StreamController();
-      num progress = 0;
+  fakeProgress() {
+    var controller = new StreamController();
+    num progress = 0;
 
-      new Timer.periodic(new Duration(milliseconds: 100), (timer) {
-        progress += 0.1;
-        controller.add(progress);
-        if (progress >= 1) {
-          controller.close();
-          timer.cancel();
-        }
-      });
-      return controller.stream;
-    }
-    game.scene = new LoadingScene(fakeProgress(), next);
-  }), test('LoadingScene with Error', () {
-    var next = new Scene();
-    var label = new Label('New scene')
-        ..position.x = 50.0
-        ..position.y = 50.0
-        ..addTo(next);
+    new Timer.periodic(new Duration(milliseconds: 100), (timer) {
+      progress += 0.1;
+      controller.add(progress);
+      if (progress >= 1) {
+        controller.close();
+        timer.cancel();
+      }
+    });
+    return controller.stream;
+  }
+  game.scene = new LoadingScene(fakeProgress(), next);
+}
 
-    fakeProgress() {
-      var controller = new StreamController();
-      controller.addError('This should be shown');
-      return controller.stream;
-    }
+@InteractiveTest('LoadingScene with Error', group: 'Assets')
+testLoadingWithError() {
+  var next = new Scene();
+  var label = new Label('New scene')
+      ..position.x = 50.0
+      ..position.y = 50.0
+      ..addTo(next);
 
-    game.scene = new LoadingScene(fakeProgress(), next);
-  }),];
+  fakeProgress() {
+    var controller = new StreamController();
+    controller.addError('This should be shown');
+    return controller.stream;
+  }
+
+  game.scene = new LoadingScene(fakeProgress(), next);
+}

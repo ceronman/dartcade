@@ -1,4 +1,4 @@
-// Copyright 2012 Manuel Cerón <ceronman@gmail.com>
+// Copyright 2014 Manuel Cerón <ceronman@gmail.com>
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -16,51 +16,59 @@ library dartcocos_test;
 
 import 'dart:async';
 import 'dart:html';
+import 'dart:mirrors';
 import 'package:dartcocos/cocos.dart';
 
 part 'test_actions.dart';
 part 'test_assets.dart';
 part 'test_input.dart';
 
-typedef void TestFunction();
-
 class InteractiveTest {
-  String name;
-  TestFunction testFunction;
-  InteractiveTest(this.name, this.testFunction);
-}
-test(String name, TestFunction testFunction) {
-  return new InteractiveTest(name, testFunction);
+  static final groups = {};
+  static final functions = {};
+  final String group;
+  final String name;
+  const InteractiveTest(this.name, {this.group});
+
+  function() => groups[group][name];
 }
 
-class InteractiveTestGroup {
-  String name;
-  List<InteractiveTest> tests;
-  InteractiveTestGroup(this.name, this.tests);
+inspectTests() {
+  var mirror = currentMirrorSystem();
+  var library = mirror.findLibrary(new Symbol('dartcocos_test'));
+  for (var declaration in library.declarations.values) {
+    if (declaration is MethodMirror) {
+      var testFunction = declaration as MethodMirror;
+      var metadata = testFunction.metadata;
+      try {
+        var annotation = metadata.firstWhere((x) {
+          return x.reflectee is InteractiveTest;
+        });
+        var testInfo = annotation.reflectee as InteractiveTest;
+        InteractiveTest.groups.putIfAbsent(testInfo.group, () => []);
+        InteractiveTest.groups[testInfo.group].add(testInfo);
+        InteractiveTest.functions[testInfo] = testFunction;
+      } on StateError catch (e) {
+        continue;
+      }
+    }
+  }
 }
-group(name, tests) {
-  return new InteractiveTestGroup(name, tests);
-}
-
-final groups = [
-  group('Action Tests', actionTests),   // from test_actions.dart
-  group('Assets Tests', assetsTests),   // from test_assets.dart
-  group('Input Tests', inputTests),     // from test_input.dart
-];
 
 showIndex() {
   querySelector('#test-box').hidden = true;
   querySelector('#test-list').hidden = false;
   querySelector('#test-list').children.clear();
   querySelector('#test-title').text = '';
-  for (var testGroup in groups) {
+  for (var testGroup in InteractiveTest.groups.keys) {
+    var tests = InteractiveTest.groups[testGroup];
     var header = new HeadingElement.h2();
-    header.text = testGroup.name;
+    header.text = testGroup;
     querySelector('#test-list').children.add(header);
     var testsUL = new UListElement();
-    for (var test in testGroup.tests) {
+    for (var test in tests) {
       var item = new LIElement();
-      var link = new AnchorElement(href:'#${testGroup.name}:${test.name}');
+      var link = new AnchorElement(href: '#${testGroup}:${test.name}');
       link.text = test.name;
       item.children.add(link);
       testsUL.children.add(item);
@@ -80,44 +88,40 @@ runTest(String testLink) {
   var testGroup;
   var testCase;
   try {
-    testGroup = groups.firstWhere((g) => g.name == groupName);
-    testCase = testGroup.tests.firstWhere((t) => t.name == testName);
-  }
-  on StateError catch(e) {
+    testGroup = InteractiveTest.groups[groupName];
+    testCase = testGroup.firstWhere((t) => t.name == testName);
+  } on StateError catch (e) {
     window.alert("Test does not exist");
     return;
   }
-  var groupIndex = groups.indexOf(testGroup);
+  var groupIndex = InteractiveTest.groups.indexOf(testGroup);
   var testIndex = testGroup.tests.indexOf(testCase);
   var prevAnchor = querySelector('#prev-anchor') as AnchorElement;
 
   if (testIndex > 0) {
-    var prevTest = testGroup.tests[testIndex -1];
+    var prevTest = testGroup.tests[testIndex - 1];
     prevAnchor.href = '#${testGroup.name}:${prevTest.name}';
     prevAnchor.hidden = false;
-  }
-  else if (groupIndex > 0) {
-    var prevGroup = groups[groupIndex-1];
+  } else if (groupIndex > 0) {
+    var prevGroup = InteractiveTest.groups[groupIndex - 1];
     var prevTest = prevGroup.tests.last;
     prevAnchor.href = '#${prevGroup.name}:${prevTest.name}';
     prevAnchor.hidden = false;
-  }
-  else {
+  } else {
     prevAnchor.hidden = true;
   }
 
   var nextAnchor = querySelector('#next-anchor') as AnchorElement;
   if (testIndex < testGroup.tests.length - 1) {
-    var nextTest = testGroup.tests[testIndex +1];
+    var nextTest = testGroup.tests[testIndex + 1];
     nextAnchor.href = '#${testGroup.name}:${nextTest.name}';
     nextAnchor.hidden = false;
-  } else if (groupIndex < groups.length - 1) {
-    var nextGroup = groups[groupIndex + 1];
+  } else if (groupIndex < InteractiveTest.groups.length - 1) {
+    var nextGroup = InteractiveTest.groups[groupIndex + 1];
     var nextTest = nextGroup.tests.first;
     nextAnchor.href = '#${nextGroup.name}:${nextTest.name}';
     nextAnchor.hidden = false;
-  }
-  else {
+  } else {
     nextAnchor.hidden = true;
   }
 
@@ -129,25 +133,26 @@ runTest(String testLink) {
 var game;
 
 main() {
-  game = new Game('#gamebox');
-  game.run();
-
-  hashChange(e) {
-    var hash = window.location.hash;
-    var testLink = hash.isEmpty ? '' : hash.substring(1);
-
-    if (testLink.isEmpty) {
-      showIndex();
-    }
-    else {
-      runTest(testLink);
-    }
-  };
-  window.onHashChange.listen(hashChange);
-  querySelector('#current-anchor').onClick.listen((e) {
-    hashChange(e);
-    e.preventDefault();
-  });
+  inspectTests();
+//  game = new Game('#gamebox');
+//  game.run();
+//
+//  hashChange(e) {
+//    var hash = window.location.hash;
+//    var testLink = hash.isEmpty ? '' : hash.substring(1);
+//
+//    if (testLink.isEmpty) {
+//      showIndex();
+//    }
+//    else {
+//      runTest(testLink);
+//    }
+//  };
+//  window.onHashChange.listen(hashChange);
+//  querySelector('#current-anchor').onClick.listen((e) {
+//    hashChange(e);
+//    e.preventDefault();
+//  });
 
   showIndex();
 }

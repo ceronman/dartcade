@@ -570,6 +570,8 @@ class ArcadeKeyboardController extends Action {
 
   void start() {}
   void stop() {}
+
+  // TODO: Fix both keys at the same time.
   void step(num dt) {
     target.body.speed.x = keys[keyLeft] ?
         speedLeft :

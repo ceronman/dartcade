@@ -14,34 +14,38 @@
 
 part of dartcocos_test;
 
-var inputTests = [test('KeyStateHandler', () {
-    var label = new Label('Use Arrow Keys')
-        ..position.x = game.width / 2
-        ..position.y = game.height / 2
-        ..align = 'center'
-        ..addTo(game.scene);
+@InteractiveTest('KeyStateHandler', group: 'Input')
+testKeyStateHandler(Game game) {
+  var label = new Label('Use Arrow Keys')
+      ..position.x = game.width / 2
+      ..position.y = game.height / 2
+      ..align = 'center'
+      ..addTo(game.scene);
 
-    game.scene.onFrame.listen((dt) {
-      if (game.keyboard[Keys.LEFT]) {
-        label.position.x -= 1;
-      }
-      if (game.keyboard[Keys.RIGHT]) {
-        label.position.x += 1;
-      }
-      if (game.keyboard[Keys.UP]) {
-        label.position.y -= 1;
-      }
-      if (game.keyboard[Keys.DOWN]) {
-        label.position.y += 1;
-      }
-    });
-  }), test('game onKeyDown and onKeyUp', () {
-    var label = new Label('Press any key')
-        ..position.x = game.width / 2
-        ..position.y = game.width / 2
-        ..align = 'center'
-        ..addTo(game.scene);
+  game.scene.onFrame.listen((dt) {
+    if (game.keyboard[Keys.LEFT]) {
+      label.position.x -= 1;
+    }
+    if (game.keyboard[Keys.RIGHT]) {
+      label.position.x += 1;
+    }
+    if (game.keyboard[Keys.UP]) {
+      label.position.y -= 1;
+    }
+    if (game.keyboard[Keys.DOWN]) {
+      label.position.y += 1;
+    }
+  });
+}
 
-    game.onKeyDown.listen((e) => label.text = 'Pressed ${e.keyCode}');
-    game.onKeyUp.listen((e) => label.text = 'Press any key');
-  })];
+@InteractiveTest('onKeyDown and onKeyUp', group: 'Input')
+testKeyEvents(Game game) {
+  var label = new Label('Press any key')
+      ..position.x = game.width / 2
+      ..position.y = game.width / 2
+      ..align = 'center'
+      ..addTo(game.scene);
+
+  game.onKeyDown.listen((e) => label.text = 'Pressed ${e.keyCode}');
+  game.onKeyUp.listen((e) => label.text = 'Press any key');
+}
