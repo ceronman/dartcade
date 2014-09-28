@@ -1,4 +1,6 @@
 *.js
+*.sublime-project
+*.sublime-workspace
 .project
 .children
 pubspec.lock

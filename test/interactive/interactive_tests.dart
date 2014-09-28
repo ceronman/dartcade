@@ -22,6 +22,7 @@ import 'package:dartcocos/cocos.dart';
 part 'test_actions.dart';
 part 'test_assets.dart';
 part 'test_input.dart';
+part 'test_collision.dart';
 
 class InteractiveTest {
   final String group;
