@@ -40,7 +40,7 @@ testLoading(Game game) {
 }
 
 @InteractiveTest('LoadingScene with Error', group: 'Assets')
-testLoadingWithError() {
+testLoadingWithError(Game game) {
   var next = new Scene();
   var label = new Label('New scene')
       ..position.x = 50.0

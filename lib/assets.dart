@@ -76,6 +76,8 @@ class AssetLoader {
 }
 
 class LoadingScene extends Scene {
+  // TODO: This fails because we don't have a game yet.
+  // TODO: Scene needs a start, step, end system.
   LoadingScene(Stream<num> progress, Scene nextScene) {
     var label = new Label('Loading...');
     label.align = 'center';

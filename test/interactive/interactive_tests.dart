@@ -24,56 +24,66 @@ part 'test_assets.dart';
 part 'test_input.dart';
 
 class InteractiveTest {
-  static final groups = {};
-  static final functions = {};
   final String group;
   final String name;
   const InteractiveTest(this.name, {this.group});
+}
 
-  function() => groups[group][name];
+typedef TestFunction(Game game);
+
+class TestCase {
+  String name;
+  TestFunction function;
+  TestCase(this.name, this.function);
+}
+
+class TestGroup {
+  String name;
+  List<TestCase> tests;
+  TestGroup(this.name, this.tests);
 }
 
 inspectTests() {
-  var mirror = currentMirrorSystem();
-  var library = mirror.findLibrary(new Symbol('dartcocos_test'));
   var locations = {};
+  var testsByGroup = {};
+  var library = currentMirrorSystem().findLibrary(new Symbol('dartcocos_test'));
   for (var declaration in library.declarations.values) {
     if (declaration is MethodMirror) {
       var testFunction = declaration as MethodMirror;
       var metadata = testFunction.metadata;
-      try {
-        var annotation = metadata.firstWhere((x) {
-          return x.reflectee is InteractiveTest;
-        });
+      var annotations = metadata.where((a) => a.reflectee is InteractiveTest);
+      if (annotations.isNotEmpty) {
+        var annotation = annotations.first;
         var testInfo = annotation.reflectee as InteractiveTest;
-        locations[testInfo] = testFunction.location.line;
-        InteractiveTest.groups.putIfAbsent(testInfo.group, () => []);
-        InteractiveTest.groups[testInfo.group].add(testInfo);
-        InteractiveTest.functions[testInfo] = testFunction;
-        InteractiveTest.groups[testInfo.group].sort((a, b) {
-          return locations[a].compareTo(locations[b]);
+        var testCase = new TestCase(testInfo.name, (Game game) {
+          library.invoke(testFunction.simpleName, [game]);
         });
-      } on StateError catch (e) {
-        continue;
+        locations[testCase] = testFunction.location.line;
+        testsByGroup.putIfAbsent(testInfo.group, () => []);
+        testsByGroup[testInfo.group].add(testCase);
       }
     }
   }
+  return testsByGroup.keys.map((name) {
+    var group = new TestGroup(name, testsByGroup[name]);
+    group.tests.sort((a, b) => locations[a].compareTo(locations[b]));
+    return group;
+  }).toList();
 }
 
-showIndex() {
+showIndex(groups) {
   querySelector('#test-box').hidden = true;
   querySelector('#test-list').hidden = false;
   querySelector('#test-list').children.clear();
   querySelector('#test-title').text = '';
-  for (var testGroup in InteractiveTest.groups.keys) {
-    var tests = InteractiveTest.groups[testGroup];
-    var header = new HeadingElement.h2();
-    header.text = testGroup;
+  for (var group in groups) {
+    var header = new HeadingElement.h2()
+      ..text = group.name;
     querySelector('#test-list').children.add(header);
     var testsUL = new UListElement();
-    for (var test in tests) {
+    for (var test in group.tests) {
       var item = new LIElement();
-      var link = new AnchorElement(href: '#${testGroup}:${test.name}');
+      var link = new AnchorElement(href: '#${group.name}:${test.name}');
       link.text = test.name;
       item.children.add(link);
       testsUL.children.add(item);
@@ -82,7 +92,7 @@ showIndex() {
   }
 }
 
-runTest(String testLink) {
+runTest(game, groups, testLink) {
   querySelector('#test-list').hidden = true;
   querySelector('#test-box').hidden = false;
 
@@ -93,13 +103,13 @@ runTest(String testLink) {
   var testGroup;
   var testCase;
   try {
-    testGroup = InteractiveTest.groups[groupName];
-    testCase = testGroup.firstWhere((t) => t.name == testName);
+    testGroup = groups.firstWhere((g) => g.name == groupName);
+    testCase = testGroup.tests.firstWhere((t) => t.name == testName);
   } on StateError catch (e) {
-    window.alert("Test does not exist");
+    window.alert("ERROR: Test does not exist");
     return;
   }
-  var groupIndex = InteractiveTest.groups.indexOf(testGroup);
+  var groupIndex = groups.indexOf(testGroup);
   var testIndex = testGroup.tests.indexOf(testCase);
   var prevAnchor = querySelector('#prev-anchor') as AnchorElement;
 
@@ -108,7 +118,7 @@ runTest(String testLink) {
     prevAnchor.href = '#${testGroup.name}:${prevTest.name}';
     prevAnchor.hidden = false;
   } else if (groupIndex > 0) {
-    var prevGroup = InteractiveTest.groups[groupIndex - 1];
+    var prevGroup = groups[groupIndex - 1];
     var prevTest = prevGroup.tests.last;
     prevAnchor.href = '#${prevGroup.name}:${prevTest.name}';
     prevAnchor.hidden = false;
@@ -121,8 +131,8 @@ runTest(String testLink) {
     var nextTest = testGroup.tests[testIndex + 1];
     nextAnchor.href = '#${testGroup.name}:${nextTest.name}';
     nextAnchor.hidden = false;
-  } else if (groupIndex < InteractiveTest.groups.length - 1) {
-    var nextGroup = InteractiveTest.groups[groupIndex + 1];
+  } else if (groupIndex < groups.length - 1) {
+    var nextGroup = groups[groupIndex + 1];
     var nextTest = nextGroup.tests.first;
     nextAnchor.href = '#${nextGroup.name}:${nextTest.name}';
     nextAnchor.hidden = false;
@@ -132,32 +142,31 @@ runTest(String testLink) {
 
   querySelector('#test-title').text = '$groupName > $testName';
   game.scene = new Scene();
-  testCase.testFunction();
+  testCase.function(game);
 }
 
-var game;
-
 main() {
-  inspectTests();
-//  game = new Game('#gamebox');
-//  game.run();
-//
-//  hashChange(e) {
-//    var hash = window.location.hash;
-//    var testLink = hash.isEmpty ? '' : hash.substring(1);
-//
-//    if (testLink.isEmpty) {
-//      showIndex();
-//    }
-//    else {
-//      runTest(testLink);
-//    }
-//  };
-//  window.onHashChange.listen(hashChange);
-//  querySelector('#current-anchor').onClick.listen((e) {
-//    hashChange(e);
-//    e.preventDefault();
-//  });
+  var groups = inspectTests();
 
-  showIndex();
+  var game = new Game('#gamebox');
+  game.run();
+
+  hashChange(e) {
+    var hash = window.location.hash;
+    var testLink = hash.isEmpty ? '' : hash.substring(1);
+
+    if (testLink.isEmpty) {
+      showIndex(groups);
+    }
+    else {
+      runTest(game, groups, testLink);
+    }
+  };
+  window.onHashChange.listen(hashChange);
+  querySelector('#current-anchor').onClick.listen((e) {
+    hashChange(e);
+    e.preventDefault();
+  });
+
+  showIndex(groups);
 }
