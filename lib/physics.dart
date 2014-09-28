@@ -14,6 +14,7 @@
 
 part of cocos;
 
+// TODO: Add a debug draw for hit boxes.
 class Body implements Collidable {
   GameNode node;
   World world;

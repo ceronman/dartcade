@@ -14,8 +14,11 @@
 
 part of dartcocos_test;
 
+//TODO: collision hitbox doesn't seem to work properly.
 @InteractiveTest('Collide world', group: 'Collision')
 testOuterBoxCollision(Game game) {
+
+  // TODO: create a better interface for the asset loader
   var loader = new AssetLoader();
   loader.add('ship', new ImageAsset('images/ship1.png'));
   loader.load().last.then((p) {
