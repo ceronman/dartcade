@@ -18,22 +18,13 @@ abstract class Collidable {
   Aabb2 get hitbox;
 }
 
-// TODO: Explore change this for hte concept of normal.
-class Side {
-  static const int TOP = 1;
-  static const int BOTTOM = 2;
-  static const int LEFT = 4;
-  static const int RIGHT = 8;
-  static const int ALL = 15;
-}
-
 class CollisionEvent {
   Collidable body1;
-  int side1;
+  Vector2 normal1;
   Collidable body2;
-  int side2;
+  Vector2 normal2;
 
-  CollisionEvent(this.body1, this.side1, this.body2, this.side2);
+  CollisionEvent(this.body1, this.normal1, this.body2, this.normal2);
 }
 
 abstract class Collision {
@@ -55,19 +46,35 @@ class OuterBoxCollision extends Collision {
   void check() {
     if (inner.hitbox.min.x < outer.hitbox.min.x) {
       onCollisionController.add(
-          new CollisionEvent(inner, Side.LEFT, outer, Side.LEFT));
+          new CollisionEvent(
+              inner,
+              new Vector2(-1.0, 0.0),
+              outer,
+              new Vector2(1.0, 0.0)));
     }
     if (inner.hitbox.max.x > outer.hitbox.max.x) {
       onCollisionController.add(
-          new CollisionEvent(inner, Side.RIGHT, outer, Side.RIGHT));
+          new CollisionEvent(
+              inner,
+              new Vector2(1.0, 0.0),
+              outer,
+              new Vector2(-1.0, 0.0)));
     }
     if (inner.hitbox.min.y < outer.hitbox.min.y) {
       onCollisionController.add(
-          new CollisionEvent(inner, Side.TOP, outer, Side.TOP));
+          new CollisionEvent(
+              inner,
+              new Vector2(0.0, -1.0),
+              outer,
+              new Vector2(0.0, 1.0)));
     }
     if (inner.hitbox.max.y > outer.hitbox.max.y) {
       onCollisionController.add(
-          new CollisionEvent(inner, Side.BOTTOM, outer, Side.BOTTOM));
+          new CollisionEvent(
+              inner,
+              new Vector2(0.0, 1.0),
+              outer,
+              new Vector2(0.0, -1.0)));
     }
   }
 }
@@ -134,22 +141,22 @@ class SweptBoxCollision extends Collision {
 
       return null;
     } else {
-      int side;
       if (_entryTime.x > _entryTime.y) {
         if (_entryDistance.x < 0.0) {
-          side = Side.RIGHT;
+//          side = Side.RIGHT;
         } else {
-          side = Side.LEFT;
+//          side = Side.LEFT;
         }
       } else {
         if (_entryDistance.y < 0.0) {
-          side = Side.BOTTOM;
+//          side = Side.BOTTOM;
         } else {
-          side = Side.TOP;
+//          side = Side.TOP;
         }
       }
       onCollisionController.add(
-          new CollisionEvent(body1, side, body2, Side.BOTTOM));
+          new CollisionEvent(
+              body1, new Vector2.zero(), body2, new Vector2.zero()));
     }
   }
 }

@@ -34,24 +34,9 @@ testOuterBoxCollision(Game game) {
     game.scene.onFrame.listen(world.update);
 
     world.collide(sprite).listen((e) {
-       var sprite = e.body1;
+       var sprite = e.body1 as Body; // TODO: better not to have to use this.
        var world = e.body2;
-       if (e.side1 == Side.LEFT) {
-         sprite.left = world.hitbox.min.x;
-         sprite.speed.x *= -sprite.restitution.x;
-       }
-       else if (e.side1 == Side.RIGHT) {
-         sprite.right = world.hitbox.max.x;
-         sprite.speed.x *= -sprite.restitution.x;
-       }
-       else if (e.side1 == Side.TOP) {
-         sprite.top = world.hitbox.min.y;
-         sprite.speed.y *= -sprite.restitution.y;
-       }
-       else if (e.side1 == Side.BOTTOM) {
-         sprite.bottom = world.hitbox.max.y;
-         sprite.speed.y *= -sprite.restitution.y;
-       }
+       sprite.speed.reflect(e.normal2);
      });
   });
 }

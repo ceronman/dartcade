@@ -49,22 +49,7 @@ main() {
     world.collide(ball).listen((e) {
       var ball = e.body1;
       var world = e.body2;
-      if (e.side1 == Side.LEFT) {
-        ball.left = world.hitbox.min.x;
-        ball.speed.x *= -ball.restitution.x;
-      }
-      else if (e.side1 == Side.RIGHT) {
-        ball.right = world.hitbox.max.x;
-        ball.speed.x *= -ball.restitution.x;
-      }
-      else if (e.side1 == Side.TOP) {
-        ball.top = world.hitbox.min.y;
-        ball.speed.y *= -ball.restitution.y;
-      }
-      else if (e.side1 == Side.BOTTOM) {
-        ball.bottom = world.hitbox.max.y;
-        ball.speed.y *= -ball.restitution.y;
-      }
+      ball.speed.reflect(e.normal2); // TODO: proper respose by repositioning.
     });
   });
 
