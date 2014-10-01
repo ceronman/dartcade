@@ -60,13 +60,21 @@ class Body implements Collidable {
   }
 
   void _updateHitBox() {
-    hitbox.min.setValues(position.x, position.y);
-    hitbox.max.setValues(position.x + node.width, position.y + node.height);
+    hitbox.min.setValues(
+        position.x - node.width * node.positionAnchor.x,
+        position.y - node.height * node.positionAnchor.y);
+    hitbox.max.setValues(hitbox.min.x + node.width, hitbox.min.y + node.height);
   }
 }
 
 class World implements Collidable {
   Aabb2 hitbox = new Aabb2();
+
+  // TODO: Try moving these to Aabb2
+  double get left => hitbox.min.x;
+  double get right => hitbox.max.x;
+  double get top => hitbox.min.y;
+  double get bottom => hitbox.max.y;
 
   List<Collision> _collisions = new List<Collision>();
 

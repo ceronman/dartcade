@@ -61,16 +61,6 @@ abstract class GameNode {
   double get width;
   double get height;
 
-  Vector2 get min =>
-      new Vector2(
-          position.x - width * positionAnchor.x,
-          position.y - height * positionAnchor.y);
-
-  Vector2 get max =>
-      new Vector2(
-          position.x + width * positionAnchor.x,
-          position.y + height * positionAnchor.y);
-
   set min(Vector2 value) {
     position = new Vector2(
         value.x + width * positionAnchor.x,
