@@ -31,30 +31,19 @@ class Body implements Collidable {
   double get top => hitbox.min.y;
   double get bottom => hitbox.max.y;
 
-  set left(double value) {
-    position.x = value;
-    _updateHitBox();
-  }
-  set right(double value) {
-    position.x = value - (hitbox.max.x - hitbox.min.x);
-    _updateHitBox();
-  }
-  set top(double value) {
-    position.y = value;
-    _updateHitBox();
-  }
-  set bottom(double value) {
-    position.y = value - (hitbox.max.y - hitbox.min.y);
-    _updateHitBox();
-  }
-
   Body(this.world);
 
   void update(double dt) {
+//    node.debugBoxes.add({ 'box': new Aabb2.copy(hitbox), 'color': 'blue' });
     position.x += speed.x * dt;
     position.y += speed.y * dt;
     speed.x += acceleration.x * dt;
     speed.y += acceleration.y * dt;
+    sync();
+  }
+
+  // TODO: is this the best way to do it (collision handlers)
+  void sync() {
     _updateHitBox();
     node.position.setFrom(position);
   }

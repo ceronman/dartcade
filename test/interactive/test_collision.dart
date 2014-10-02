@@ -22,13 +22,13 @@ testOuterBoxCollision(Game game) {
   var loader = new AssetLoader();
   loader.add('ship', new ImageAsset('images/ship1.png'));
   loader.load().last.then((p) {
-    var world = new World(0.0, 0.0, game.width, game.height);
+    var world = new World(50.0, 50.0, game.width-100, game.height-100);
     var sprite = new Sprite(loader['ship'])
         ..addTo(game.scene)
         ..position.setValues(game.width / 2, game.height / 2)
         ..body = new Body(world)
         ..body.restitution.setValues(1.0, 1.0)
-        ..body.speed.setValues(400.0, 200.0);
+        ..body.speed.setValues(300.0, 50.0);
 
     // TODO: This should not be needed;
     game.scene.onFrame.listen(world.update);
@@ -36,23 +36,26 @@ testOuterBoxCollision(Game game) {
     world.collide(sprite).listen((e) {
       var sprite = e.body1 as Body; // TODO: better not to have to use this.
       var world = e.body2 as World;
-      var bounce = -sprite.speed;
+
+      sprite.node.debugBoxes.add({ 'box': new Aabb2.copy(sprite.hitbox), 'color': 'red' });
+
       double entryTime;
       if (e.normal2.x > 0.0) {
-        entryTime = (world.left - sprite.left) / bounce.x;
+        entryTime = (world.left - sprite.left) / -sprite.speed.x;
       }
       else if (e.normal2.x < 0.0) {
-        entryTime = (world.right - sprite.right) / bounce.x;
+        entryTime = (world.right - sprite.right) / -sprite.speed.x;
       }
       else if (e.normal2.y > 0.0) {
-        entryTime = (world.top - sprite.top) / bounce.y;
+        entryTime = (world.top - sprite.top) / -sprite.speed.y;
       }
       else if (e.normal2.y < 0.0) {
-        entryTime = (world.bottom - sprite.bottom) / bounce.y;
+        entryTime = (world.bottom - sprite.bottom) / -sprite.speed.y;
       }
-      bounce.scale(entryTime);
-      sprite.position.add(bounce);
       sprite.speed.reflect(e.normal2);
+      sprite.position.add(sprite.speed.scaled(entryTime));
+      sprite.sync();
+      sprite.node.debugBoxes.add({ 'box': new Aabb2.copy(sprite.hitbox), 'color': 'green' });
     });
   });
 }

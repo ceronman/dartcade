@@ -61,22 +61,21 @@ class Game {
     scene.drawWithChildren(context);
   }
 
+  // TODO: Implement flexible game loop with debugging support for slow
+  //       frame rates.
   void run() {
     var initTime = 0;
     var frameCount = 0;
 
-    drawFrame(num currentTime) {
-      if (initTime == null) {
-        initTime = currentTime;
-      }
-      frameCount++;
-      double dt = (currentTime - initTime) / 1000.0;
-      initTime = currentTime;
-      update(dt);
+    var delta = 1.0/5;
+
+    drawFrame(Timer t) {
+      update(delta);
       draw(canvas.context2D);
-      html.window.requestAnimationFrame(drawFrame);
+//      html.window.requestAnimationFrame(drawFrame);
     }
-    html.window.requestAnimationFrame(drawFrame);
+//    html.window.requestAnimationFrame(drawFrame);
+    new Timer.periodic(new Duration(milliseconds: (1000).round()), drawFrame);
 
     new Timer.periodic(new Duration(seconds: 1), (t) {
       fps = frameCount;
