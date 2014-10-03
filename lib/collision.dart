@@ -30,9 +30,8 @@ class CollisionEvent {
 abstract class Collision {
   // TODO: Check if this is synchronous.
   StreamController<CollisionEvent> onCollisionController =
-      new StreamController<CollisionEvent>(sync: true);
-  Stream<CollisionEvent> get onCollision =>
-      onCollisionController.stream.asBroadcastStream();
+      new StreamController<CollisionEvent>.broadcast(sync: true);
+  Stream<CollisionEvent> get onCollision => onCollisionController.stream;
 
   void check();
 }

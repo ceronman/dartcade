@@ -55,8 +55,8 @@ abstract class GameNode {
   }
 
   StreamController<double> onFrameController =
-      new StreamController<double>(sync: true);
-  Stream<num> get onFrame => onFrameController.stream.asBroadcastStream();
+      new StreamController<double>.broadcast(sync: true);
+  Stream<num> get onFrame => onFrameController.stream;
 
   // TODO: Should this be part of box?
   double get width;
