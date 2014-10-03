@@ -54,7 +54,8 @@ abstract class GameNode {
     _body.position.setFrom(position);
   }
 
-  StreamController<num> onFrameController = new StreamController<num>();
+  StreamController<double> onFrameController =
+      new StreamController<double>(sync: true);
   Stream<num> get onFrame => onFrameController.stream.asBroadcastStream();
 
   // TODO: Should this be part of box?
@@ -166,7 +167,6 @@ abstract class GameNode {
     context.save();
     for (var item in debugBoxes) {
       context.beginPath();
-      print(item);
       var box = item['box'];
       var color = item['color'];
       context.strokeStyle = color;
@@ -179,6 +179,5 @@ abstract class GameNode {
       context.closePath();
     }
     context.restore();
-//    debugBoxes = [];
   }
 }
