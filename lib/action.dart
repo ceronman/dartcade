@@ -98,7 +98,6 @@ abstract class IntervalAction extends Action {
 
   num get duration => _duration;
   set duration(num value) {
-    // TODO: test this
     if (value <= 0) {
       throw "Invalid duration for interval";
     }
@@ -219,7 +218,6 @@ class ScaleBy extends ChangeAttributeByAction {
 
   void start() {
     super.start();
-    // TODO: this looks bad!
     deltaValue.x = startValue.x * deltaValue.x - startValue.x;
     deltaValue.y = startValue.y * deltaValue.y - startValue.y;
   }

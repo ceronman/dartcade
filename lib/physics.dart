@@ -34,9 +34,11 @@ class Body implements Collidable {
   Body(this.world);
 
   void update(double dt) {
-//    node.debugBoxes.add({ 'box': new Aabb2.copy(hitbox), 'color': 'blue' });
     position.x += speed.x * dt;
     position.y += speed.y * dt;
+
+    // TODO: Updating speed right after updating position messes up with
+    // collisions
     speed.x += acceleration.x * dt;
     speed.y += acceleration.y * dt;
     sync();
@@ -74,7 +76,7 @@ class World implements Collidable {
 
   Stream<CollisionEvent> collide(GameNode node1, [GameNode node2]) {
     if (node2 == null) {
-      var collision = new OuterBoxCollision(node1.body, this);
+      var collision = new BodyVsWorldBoxCollision(node1.body, this);
       _collisions.add(collision);
       return collision.onCollision;
     }

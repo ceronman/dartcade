@@ -18,7 +18,7 @@ part of dartcocos_test;
 @InteractiveTest('Collide world', group: 'Collision')
 testOuterBoxCollision(GameLoop game) {
 
-  game.updateFrequency = 5;
+  game.updateFrequency = 20;
   game.timeScale = 0.5;
 
   // TODO: create a better interface for the asset loader
@@ -31,7 +31,7 @@ testOuterBoxCollision(GameLoop game) {
         ..position.setValues(game.width / 2, game.height / 2)
         ..body = new Body(world)
         ..body.restitution.setValues(1.0, 1.0)
-        ..body.speed.setValues(300.0, 50.0);
+        ..body.speed.setValues(300.0, -300.0);
 
     // TODO: This should not be needed;
     game.scene.onFrame.listen(world.update);
@@ -39,24 +39,9 @@ testOuterBoxCollision(GameLoop game) {
     world.collide(sprite).listen((e) {
       var sprite = e.body1 as Body; // TODO: better not to have to use this.
       var world = e.body2 as World;
-
       sprite.node.debugBoxes.add({ 'box': new Aabb2.copy(sprite.hitbox), 'color': 'red' });
-
-      double entryTime;
-      if (e.normal2.x > 0.0) {
-        entryTime = (world.left - sprite.left) / -sprite.speed.x;
-      }
-      else if (e.normal2.x < 0.0) {
-        entryTime = (world.right - sprite.right) / -sprite.speed.x;
-      }
-      else if (e.normal2.y > 0.0) {
-        entryTime = (world.top - sprite.top) / -sprite.speed.y;
-      }
-      else if (e.normal2.y < 0.0) {
-        entryTime = (world.bottom - sprite.bottom) / -sprite.speed.y;
-      }
       sprite.speed.reflect(e.normal2);
-      sprite.position.add(sprite.speed.scaled(entryTime));
+      sprite.position.add(sprite.speed.scaled(e.entryTime));
       sprite.sync();
       sprite.node.debugBoxes.add({ 'box': new Aabb2.copy(sprite.hitbox), 'color': 'green' });
     });

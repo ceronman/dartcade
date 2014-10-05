@@ -18,17 +18,25 @@ abstract class Collidable {
   Aabb2 get hitbox;
 }
 
+class Side {
+  static Vector2 get left => new Vector2(-1.0, 0.0);
+  static Vector2 get right => new Vector2(1.0, 0.0);
+  static Vector2 get up => new Vector2(0.0, -1.0);
+  static Vector2 get down => new Vector2(0.0, 1.0);
+}
+
 class CollisionEvent {
   Collidable body1;
   Vector2 normal1;
   Collidable body2;
   Vector2 normal2;
+  double entryTime;
 
-  CollisionEvent(this.body1, this.normal1, this.body2, this.normal2);
+  CollisionEvent(this.body1, this.normal1, this.body2, this.normal2,
+      this.entryTime);
 }
 
 abstract class Collision {
-  // TODO: Check if this is synchronous.
   StreamController<CollisionEvent> onCollisionController =
       new StreamController<CollisionEvent>.broadcast(sync: true);
   Stream<CollisionEvent> get onCollision => onCollisionController.stream;
@@ -36,44 +44,44 @@ abstract class Collision {
   void check();
 }
 
-class OuterBoxCollision extends Collision {
-  Collidable outer;
-  Collidable inner;
+// TODO: Fix the double collision problem when the correction of a collision
+//       Generates another collisoin
+class BodyVsWorldBoxCollision extends Collision {
+  World world;
+  Body body;
 
-  OuterBoxCollision(this.inner, this.outer);
+  BodyVsWorldBoxCollision(this.body, this.world);
 
   void check() {
-    if (inner.hitbox.min.x < outer.hitbox.min.x) {
+    // TODO: Is it right to use infinity when the object is not moving?
+    if (body.hitbox.min.x < world.hitbox.min.x) {
+      double entryTime = body.speed.x != 0 ?
+          (world.left - body.left) / body.speed.x :
+          double.INFINITY;
       onCollisionController.add(
-          new CollisionEvent(
-              inner,
-              new Vector2(-1.0, 0.0),
-              outer,
-              new Vector2(1.0, 0.0)));
+          new CollisionEvent(body, Side.left, world, Side.right, entryTime));
+
     }
-    if (inner.hitbox.max.x > outer.hitbox.max.x) {
+    if (body.hitbox.max.x > world.hitbox.max.x) {
+      double entryTime = body.speed.x != 0 ?
+          (body.right - world.right) / body.speed.x :
+          double.INFINITY;
       onCollisionController.add(
-          new CollisionEvent(
-              inner,
-              new Vector2(1.0, 0.0),
-              outer,
-              new Vector2(-1.0, 0.0)));
+          new CollisionEvent(body, Side.right, world, Side.left, entryTime));
     }
-    if (inner.hitbox.min.y < outer.hitbox.min.y) {
+    if (body.hitbox.min.y < world.hitbox.min.y) {
+      double entryTime = body.speed.y != 0 ?
+                (world.top - body.top) / body.speed.y :
+                double.INFINITY;
       onCollisionController.add(
-          new CollisionEvent(
-              inner,
-              new Vector2(0.0, -1.0),
-              outer,
-              new Vector2(0.0, 1.0)));
+          new CollisionEvent(body, Side.up, world, Side.down, entryTime));
     }
-    if (inner.hitbox.max.y > outer.hitbox.max.y) {
+    if (body.hitbox.max.y > world.hitbox.max.y) {
+      double entryTime = body.speed.y != 0 ?
+                      (body.bottom - world.bottom) / body.speed.y :
+                      double.INFINITY;
       onCollisionController.add(
-          new CollisionEvent(
-              inner,
-              new Vector2(0.0, 1.0),
-              outer,
-              new Vector2(0.0, -1.0)));
+          new CollisionEvent(body, Side.down, world, Side.up, entryTime));
     }
   }
 }
@@ -153,9 +161,8 @@ class SweptBoxCollision extends Collision {
 //          side = Side.TOP;
         }
       }
-      onCollisionController.add(
-          new CollisionEvent(
-              body1, new Vector2.zero(), body2, new Vector2.zero()));
+//      onCollisionController.add(
+//          new CollisionEvent(body1, new Vector2.zero(), body2, new Vector2.zero()));
     }
   }
 }
