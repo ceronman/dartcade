@@ -30,7 +30,7 @@ class InteractiveTest {
   const InteractiveTest(this.name, {this.group});
 }
 
-typedef TestFunction(Game game);
+typedef TestFunction(GameLoop game);
 
 class TestCase {
   String name;
@@ -56,7 +56,7 @@ inspectTests() {
       if (annotations.isNotEmpty) {
         var annotation = annotations.first;
         var testInfo = annotation.reflectee as InteractiveTest;
-        var testCase = new TestCase(testInfo.name, (Game game) {
+        var testCase = new TestCase(testInfo.name, (GameLoop game) {
           library.invoke(testFunction.simpleName, [game]);
         });
         locations[testCase] = testFunction.location.line;
@@ -149,8 +149,8 @@ runTest(game, groups, testLink) {
 main() {
   var groups = inspectTests();
 
-  var game = new Game('#gamebox');
-  game.run();
+  var game = new GameLoop('#gamebox');
+  game.start();
 
   hashChange(e) {
     var hash = window.location.hash;

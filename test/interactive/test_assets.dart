@@ -15,7 +15,7 @@
 part of dartcocos_test;
 
 @InteractiveTest('LoadingScene', group: 'Assets')
-testLoading(Game game) {
+testLoading(GameLoop game) {
   var next = new Scene();
   var label = new Label('New scene')
       ..position.x = 50.0
@@ -40,7 +40,7 @@ testLoading(Game game) {
 }
 
 @InteractiveTest('LoadingScene with Error', group: 'Assets')
-testLoadingWithError(Game game) {
+testLoadingWithError(GameLoop game) {
   var next = new Scene();
   var label = new Label('New scene')
       ..position.x = 50.0

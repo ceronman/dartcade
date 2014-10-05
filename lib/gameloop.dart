@@ -14,13 +14,13 @@
 
 part of cocos;
 
-class Game {
-  AssetLoader assets;
+// TODO: Add game timers
+
+class GameLoop {
   KeyStateHandler keyboard;
 
   // TODO: This should be abstracted
   html.CanvasElement canvas;
-  num fps;
 
   Scene _scene;
   Scene get scene => _scene;
@@ -39,10 +39,9 @@ class Game {
   Stream<html.MouseEvent> get onMouseMove => canvas.onMouseMove;
   Stream<html.WheelEvent> get onMouseWheel => canvas.onMouseWheel;
 
-  Game(String selector, {int width, int height}) {
+  GameLoop(String selector, {int width, int height}) {
     width = width != null ? width : 640;
     height = height != null ? height : 480;
-    assets = new AssetLoader();
     keyboard = new KeyStateHandler(onKeyDown, onKeyUp);
     scene = new Scene();
 
@@ -52,34 +51,34 @@ class Game {
     gamebox.children.add(canvas);
   }
 
-  void update(double dt) {
-    scene.update(dt);
-  }
+  num _updatePeriod = 1000/60;
+  num get updateFrequency => 1000 / _updatePeriod;
+  set updateFrequency(num value) => _updatePeriod = 1000 / value;
+  num timeScale = 1.0;
+  num _initTime = 0.0;
+  num _accumulatedTime = 0.0;
+  int _frameCount = 0;
+  int fps;
 
-  void draw(html.CanvasRenderingContext2D context) {
-    context.clearRect(0, 0, canvas.width, canvas.height);
-    scene.drawWithChildren(context);
-  }
-
-  // TODO: Implement flexible game loop with debugging support for slow
-  //       frame rates.
-  void run() {
-    var initTime = 0;
-    var frameCount = 0;
-
-    var delta = 1.0/5;
-
-    drawFrame(Timer t) {
-      update(delta);
-      draw(canvas.context2D);
-//      html.window.requestAnimationFrame(drawFrame);
+  void _animationFrame(num currentTime) {
+    _frameCount++;
+    _accumulatedTime += (currentTime - _initTime) * timeScale;
+    while (_accumulatedTime >= _updatePeriod) {
+      _accumulatedTime -= _updatePeriod;
+      scene.update(_updatePeriod/1000);
     }
-//    html.window.requestAnimationFrame(drawFrame);
-    new Timer.periodic(new Duration(milliseconds: (1000).round()), drawFrame);
+    canvas.context2D.clearRect(0, 0, canvas.width, canvas.height);
+    scene.drawWithChildren(canvas.context2D);
 
+    _initTime = currentTime;
+    html.window.requestAnimationFrame(_animationFrame);
+  }
+
+  void start() {
+    html.window.requestAnimationFrame(_animationFrame);
     new Timer.periodic(new Duration(seconds: 1), (t) {
-      fps = frameCount;
-      frameCount = 0;
+      fps = _frameCount;
+      _frameCount = 0;
     });
   }
 }

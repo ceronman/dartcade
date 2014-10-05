@@ -14,9 +14,10 @@
 
 part of cocos;
 
+// TODO: Add pause / resume
 class Scene extends GameNode {
 
-  Game game;
+  GameLoop game;
 
   double get width => game.width;
   double get height => game.height;

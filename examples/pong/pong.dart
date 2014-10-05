@@ -3,7 +3,7 @@ import 'package:dartcocos/cocos.dart';
 // TODO: Find where are all those list allocations coming from.
 
 main() {
-  var game = new Game('#gamebox', width: 800, height: 400);
+  var game = new GameLoop('#gamebox', width: 800, height: 400);
 
   var loader = new AssetLoader();
   loader.add('paddle', new ImageAsset('paddle.png'));
@@ -53,5 +53,5 @@ main() {
     });
   });
 
-  game.run();
+  game.start();
 }

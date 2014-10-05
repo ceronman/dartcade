@@ -25,7 +25,7 @@ export 'package:vector_math/vector_math.dart' show Vector2, Aabb2;
 part 'action.dart';
 part 'assets.dart';
 part 'collision.dart';
-part 'game.dart';
+part 'gameloop.dart';
 part 'gamenode.dart';
 part 'geometry.dart';
 part 'input.dart';

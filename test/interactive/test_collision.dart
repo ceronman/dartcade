@@ -18,6 +18,9 @@ part of dartcocos_test;
 @InteractiveTest('Collide world', group: 'Collision')
 testOuterBoxCollision(GameLoop game) {
 
+  game.updateFrequency = 5;
+  game.timeScale = 0.5;
+
   // TODO: create a better interface for the asset loader
   var loader = new AssetLoader();
   loader.add('ship', new ImageAsset('images/ship1.png'));

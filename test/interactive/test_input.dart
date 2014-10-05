@@ -15,7 +15,7 @@
 part of dartcocos_test;
 
 @InteractiveTest('KeyStateHandler', group: 'Input')
-testKeyStateHandler(Game game) {
+testKeyStateHandler(GameLoop game) {
   var label = new Label('Use Arrow Keys')
       ..position.x = game.width / 2
       ..position.y = game.height / 2
@@ -39,7 +39,7 @@ testKeyStateHandler(Game game) {
 }
 
 @InteractiveTest('onKeyDown and onKeyUp', group: 'Input')
-testKeyEvents(Game game) {
+testKeyEvents(GameLoop game) {
   var label = new Label('Press any key')
       ..position.x = game.width / 2
       ..position.y = game.width / 2
