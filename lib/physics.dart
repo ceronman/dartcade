@@ -14,6 +14,18 @@
 
 part of cocos;
 
+class CollisionResponse {
+
+  // TODO: Think about bouncing two objects
+  static void bounce(CollisionEvent e) {
+    var body = e.body1 as Body; // TODO: better not to have to use this.
+    body.position.add(body.speed.scaled(-e.entryTime));
+    body.speed.reflect(e.normal2);
+    body.position.add(body.speed.scaled(e.entryTime));
+    body.sync();
+  }
+}
+
 // TODO: Add a debug draw for hit boxes.
 class Body implements Collidable {
   GameNode node;

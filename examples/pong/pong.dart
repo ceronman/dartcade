@@ -46,11 +46,7 @@ main() {
         ..body.restitution = new Vector2(1.0, 1.0);
 
     // TODO: Separate this into a reusable collider.
-    world.collide(ball).listen((e) {
-      var ball = e.body1;
-      var world = e.body2;
-      ball.speed.reflect(e.normal2); // TODO: proper respose by repositioning.
-    });
+    world.collide(ball).listen(CollisionResponse.bounce);
   });
 
   game.start();

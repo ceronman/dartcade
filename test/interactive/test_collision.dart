@@ -33,13 +33,6 @@ testOuterBoxCollision(GameLoop game) {
     // TODO: This should not be needed;
     game.scene.onFrame.listen(world.update);
 
-    world.collide(sprite).listen((e) {
-      var sprite = e.body1 as Body; // TODO: better not to have to use this.
-      var world = e.body2 as World;
-      sprite.position.add(sprite.speed.scaled(-e.entryTime));
-      sprite.speed.reflect(e.normal2);
-      sprite.position.add(sprite.speed.scaled(e.entryTime));
-      sprite.sync();
-    });
+    world.collide(sprite).listen(CollisionResponse.bounce);
   });
 }
