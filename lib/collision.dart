@@ -56,7 +56,7 @@ class BodyVsWorldBoxCollision extends Collision {
     // TODO: Is it right to use infinity when the object is not moving?
     if (body.hitbox.min.x < world.hitbox.min.x) {
       double entryTime = body.speed.x != 0 ?
-          (world.left - body.left) / body.speed.x :
+          (body.left - world.left) / body.speed.x :
           double.INFINITY;
       onCollisionController.add(
           new CollisionEvent(body, Side.left, world, Side.right, entryTime));
@@ -71,7 +71,7 @@ class BodyVsWorldBoxCollision extends Collision {
     }
     if (body.hitbox.min.y < world.hitbox.min.y) {
       double entryTime = body.speed.y != 0 ?
-                (world.top - body.top) / body.speed.y :
+                (body.top - world.top) / body.speed.y :
                 double.INFINITY;
       onCollisionController.add(
           new CollisionEvent(body, Side.up, world, Side.down, entryTime));

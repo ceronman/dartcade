@@ -18,20 +18,17 @@ part of dartcocos_test;
 @InteractiveTest('Collide world', group: 'Collision')
 testOuterBoxCollision(GameLoop game) {
 
-  game.updateFrequency = 20;
-  game.timeScale = 0.5;
-
   // TODO: create a better interface for the asset loader
   var loader = new AssetLoader();
   loader.add('ship', new ImageAsset('images/ship1.png'));
   loader.load().last.then((p) {
-    var world = new World(50.0, 50.0, game.width-100, game.height-100);
+    var world = new World(0.0, 0.0, game.width, game.height);
     var sprite = new Sprite(loader['ship'])
         ..addTo(game.scene)
         ..position.setValues(game.width / 2, game.height / 2)
         ..body = new Body(world)
         ..body.restitution.setValues(1.0, 1.0)
-        ..body.speed.setValues(300.0, -300.0);
+        ..body.speed.setValues(300.0, 200.0);
 
     // TODO: This should not be needed;
     game.scene.onFrame.listen(world.update);
@@ -39,11 +36,10 @@ testOuterBoxCollision(GameLoop game) {
     world.collide(sprite).listen((e) {
       var sprite = e.body1 as Body; // TODO: better not to have to use this.
       var world = e.body2 as World;
-      sprite.node.debugBoxes.add({ 'box': new Aabb2.copy(sprite.hitbox), 'color': 'red' });
+      sprite.position.add(sprite.speed.scaled(-e.entryTime));
       sprite.speed.reflect(e.normal2);
       sprite.position.add(sprite.speed.scaled(e.entryTime));
       sprite.sync();
-      sprite.node.debugBoxes.add({ 'box': new Aabb2.copy(sprite.hitbox), 'color': 'green' });
     });
   });
 }
