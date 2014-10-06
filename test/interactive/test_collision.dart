@@ -28,7 +28,8 @@ testOuterBoxCollision(GameLoop game) {
         ..position.setValues(game.width / 2, game.height / 2)
         ..body = new Body(world)
         ..body.restitution.setValues(1.0, 1.0)
-        ..body.speed.setValues(300.0, 200.0);
+        ..body.speed.setValues(300.0, 200.0)
+        ..body.restitution.setValues(0.8, 0.8);
 
     // TODO: This should not be needed;
     game.scene.onFrame.listen(world.update);

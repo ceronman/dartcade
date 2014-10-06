@@ -20,7 +20,8 @@ class CollisionResponse {
   static void bounce(CollisionEvent e) {
     var body = e.body1 as Body; // TODO: better not to have to use this.
     body.position.add(body.speed.scaled(-e.entryTime));
-    body.speed.reflect(e.normal2);
+    // TODO: is this the right way of using restitution?
+    body.speed.reflect(e.normal2).multiply(body.restitution);
     body.position.add(body.speed.scaled(e.entryTime));
     body.sync();
   }
