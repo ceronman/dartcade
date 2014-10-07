@@ -124,22 +124,30 @@ abstract class GameNode {
     for (var child in children) {
       child.update(dt);
     }
-    // find a better way of handling updates
-    if (body != null) body.update(dt);
 
-    var doneActions = [];
+    // Don't create a list here to avoid unecesary allocations of List.
+    var doneActions = null;
+
     for (var action in actions) {
       if (!action.done) {
         action.step(dt);
-      } else {
+      }
+      else if (doneActions != null) {
         doneActions.add(action);
+      } else {
+        doneActions = [ action ];
       }
     }
 
-    for (Action action in doneActions) {
-      action.stop();
-      actions.removeRange(actions.indexOf(action), 1);
+    if (doneActions != null) {
+      for (Action action in doneActions) {
+        action.stop();
+        actions.removeRange(actions.indexOf(action), 1);
+      }
     }
+
+    // TODO: find a better way of handling updates
+    if (body != null) body.update(dt);
     onFrameController.add(dt);
   }
 

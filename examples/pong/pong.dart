@@ -1,7 +1,5 @@
 import 'package:dartcocos/cocos.dart';
 
-// TODO: Find where are all those list allocations coming from.
-
 main() {
   var game = new GameLoop('#gamebox', width: 800, height: 400);
 
@@ -30,12 +28,14 @@ main() {
         ..addTo(game.scene)
         ..runAction(new Place(new Vector2(40.0, 400 / 2)))
         ..body = new Body(world)
+        ..body.restitution = new Vector2(0.0, 0.0)
         ..runAction(controller1);
 
     var paddle2 = new Sprite(loader['paddle'])
         ..addTo(game.scene)
         ..runAction(new Place(new Vector2(800.0 - 40, 400 / 2)))
         ..body = new Body(world)
+        ..body.restitution = new Vector2(0.0, 0.0)
         ..runAction(controller2);
 
     var ball = new Sprite(loader['ball'])
@@ -45,8 +45,11 @@ main() {
         ..body.speed = new Vector2(-400.0, -400.0)
         ..body.restitution = new Vector2(1.0, 1.0);
 
-    // TODO: Separate this into a reusable collider.
     world.collide(ball).listen(CollisionResponse.bounce);
+
+    // TODO: Implement collision groups here.
+    world.collide(paddle1).listen(CollisionResponse.bounce);
+    world.collide(paddle2).listen(CollisionResponse.bounce);
   });
 
   game.start();
