@@ -569,13 +569,17 @@ class ArcadeKeyboardController extends Action {
   void start() {}
   void stop() {}
 
-  // TODO: Fix both keys at the same time.
   void step(num dt) {
-    target.body.speed.x = keys[keyLeft] ?
-        speedLeft :
-        keys[keyRight] ? speedRight : 0.0;
-    target.body.speed.y = keys[keyUp] ?
-        speedUp :
-        keys[keyDown] ? speedDown : 0.0;
+    target.body.speed.setValues(0.0, 0.0);
+    if (keys[keyLeft]) {
+      target.body.speed.x = speedLeft;
+    } else if (keys[keyRight]) {
+      target.body.speed.x = speedRight;
+    }
+    if (keys[keyUp]) {
+      target.body.speed.y = speedUp;
+    } else if (keys[keyDown]) {
+      target.body.speed.y = speedDown;
+    }
   }
 }
