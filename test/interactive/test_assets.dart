@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-part of dartcocos_test;
+part of dartcade_test;
 
 @InteractiveTest('LoadingScene', group: 'Assets')
 testLoading(GameLoop game) {

@@ -12,12 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-library dartcocos_test;
+library dartcade_test;
 
 import 'dart:async';
 import 'dart:html';
 import 'dart:mirrors';
-import 'package:dartcocos/cocos.dart';
+import 'package:dartcade/dartcade.dart';
 
 part 'test_actions.dart';
 part 'test_assets.dart';
@@ -47,7 +47,7 @@ class TestGroup {
 inspectTests() {
   var locations = {};
   var testsByGroup = {};
-  var library = currentMirrorSystem().findLibrary(new Symbol('dartcocos_test'));
+  var library = currentMirrorSystem().findLibrary(new Symbol('dartcade_test'));
   for (var declaration in library.declarations.values) {
     if (declaration is MethodMirror) {
       var testFunction = declaration as MethodMirror;

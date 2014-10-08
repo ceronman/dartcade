@@ -1,4 +1,4 @@
-name: dartcocos
+name: dartcade
 description: A sample application
 dependencies:
   browser: any

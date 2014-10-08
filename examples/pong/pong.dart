@@ -1,4 +1,4 @@
-import 'package:dartcocos/cocos.dart';
+import 'package:dartcade/dartcade.dart';
 
 main() {
   var game = new GameLoop('#gamebox', width: 800, height: 400);

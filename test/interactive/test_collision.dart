@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-part of dartcocos_test;
+part of dartcade_test;
 
 //TODO: collision hitbox doesn't seem to work properly.
 @InteractiveTest('Collide world', group: 'Collision')

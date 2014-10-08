@@ -12,8 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// TODO: Rename this to dartcade. This is not a cocos port anymore.
-library cocos;
+library dartcade;
 
 import 'dart:html' as html;
 import 'dart:math';
