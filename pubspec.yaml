@@ -1,7 +1,10 @@
 name: dartcade
 version: 0.0.1
-author: Manuel Ceron
-description: artcade is a framework for HTML5 2D game development using Dart.
+author: Manuel Ceron <ceronman@gmail.com>
+description: |-
+  Dartcade is a framework for HTML5 2D game development using Dart.
+
+  Still in a very early stage of development.
 homepage: https://github.com/ceronman/dartcade
 dependencies:
   browser: any
