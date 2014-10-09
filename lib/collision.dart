@@ -71,15 +71,15 @@ class BodyVsWorldBoxCollision extends Collision {
     }
     if (body.hitbox.min.y < world.hitbox.min.y) {
       double entryTime = body.speed.y != 0 ?
-                (body.top - world.top) / body.speed.y :
-                double.INFINITY;
+          (body.top - world.top) / body.speed.y :
+          double.INFINITY;
       onCollisionController.add(
           new CollisionEvent(body, Side.up, world, Side.down, entryTime));
     }
     if (body.hitbox.max.y > world.hitbox.max.y) {
       double entryTime = body.speed.y != 0 ?
-                      (body.bottom - world.bottom) / body.speed.y :
-                      double.INFINITY;
+          (body.bottom - world.bottom) / body.speed.y :
+          double.INFINITY;
       onCollisionController.add(
           new CollisionEvent(body, Side.down, world, Side.up, entryTime));
     }
@@ -96,17 +96,19 @@ class SweptBoxCollision extends Collision {
   Vector2 _exitDistance = new Vector2.zero();
   Vector2 _entryTime = new Vector2.zero();
   Vector2 _exitTime = new Vector2.zero();
+  Vector2 _relativeSpeed = new Vector2.zero();
 
   SweptBoxCollision(this.body1, this.body2);
 
   void check() {
+    _relativeSpeed.setFrom(body1.speed).sub(body2.speed);
     _box1.copyFrom(body1.hitbox);
     _box2.copyFrom(body2.hitbox);
 
     _box1.min.sub(body1.speed);
     _box1.max.sub(body1.speed);
 
-    if (body1.speed.x > 0) {
+    if (_relativeSpeed.x > 0) {
       _entryDistance.x = _box2.min.x - _box1.max.x;
       _exitDistance.x = _box2.max.x - _box1.min.x;
     } else {
@@ -114,7 +116,7 @@ class SweptBoxCollision extends Collision {
       _exitDistance.x = _box1.max.x - _box2.min.x;
     }
 
-    if (body1.speed.y > 0) {
+    if (_relativeSpeed.y > 0) {
       _entryDistance.y = _box2.min.y - _box1.max.y;
       _exitDistance.y = _box2.max.y - _box1.min.y;
     } else {
@@ -122,20 +124,20 @@ class SweptBoxCollision extends Collision {
       _exitDistance.y = _box1.max.y - _box2.min.y;
     }
 
-    if (body1.speed.x == 0.0) {
+    if (_relativeSpeed.x == 0.0) {
       _entryTime.x = double.INFINITY;
       _exitTime.x = double.INFINITY;
     } else {
-      _entryTime.x = _entryDistance.x / body1.speed.x;
-      _exitTime.x = _exitDistance.x / body1.speed.x;
+      _entryTime.x = _entryDistance.x / _relativeSpeed.x;
+      _exitTime.x = _exitDistance.x / _relativeSpeed.x;
     }
 
-    if (body1.speed.y == 0.0) {
+    if (_relativeSpeed.y == 0.0) {
       _entryTime.y = double.INFINITY;
       _exitTime.y = double.INFINITY;
     } else {
-      _entryTime.y = _entryDistance.y / body1.speed.y;
-      _exitTime.y = _exitDistance.y / body1.speed.y;
+      _entryTime.y = _entryDistance.y / _relativeSpeed.y;
+      _exitTime.y = _exitDistance.y / _relativeSpeed.y;
     }
 
     double entryTime = max(_entryTime.x, _entryTime.y);
@@ -148,21 +150,29 @@ class SweptBoxCollision extends Collision {
 
       return null;
     } else {
+
+      Vector2 side1;
+      Vector2 side2;
+
       if (_entryTime.x > _entryTime.y) {
         if (_entryDistance.x < 0.0) {
-//          side = Side.RIGHT;
+          side1 = Side.right;
+          side2 = Side.left;
         } else {
-//          side = Side.LEFT;
+          side1 = Side.left;
+          side2 = Side.right;
         }
       } else {
         if (_entryDistance.y < 0.0) {
-//          side = Side.BOTTOM;
+          side1 = Side.down;
+          side2 = Side.up;
         } else {
-//          side = Side.TOP;
+          side1 = Side.up;
+          side2 = Side.down;
         }
       }
-//      onCollisionController.add(
-//          new CollisionEvent(body1, new Vector2.zero(), body2, new Vector2.zero()));
+      onCollisionController.add(
+          new CollisionEvent(body1, side1, body2, side2, entryTime));
     }
   }
 }

@@ -87,12 +87,14 @@ class World implements Collidable {
   }
 
   Stream<CollisionEvent> collide(GameNode node1, [GameNode node2]) {
+    Collision collision;
     if (node2 == null) {
-      var collision = new BodyVsWorldBoxCollision(node1.body, this);
-      _collisions.add(collision);
-      return collision.onCollision;
+      collision = new BodyVsWorldBoxCollision(node1.body, this);
+    } else {
+      collision = new SweptBoxCollision(node1.body, node2.body);
     }
-    return null;
+    _collisions.add(collision);
+    return collision.onCollision;
   }
 
   void update(double dt) {

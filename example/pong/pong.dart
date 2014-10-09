@@ -3,6 +3,8 @@ import 'package:dartcade/dartcade.dart';
 main() {
   var game = new GameLoop('#gamebox', width: 800, height: 400);
 
+  game.updateFrequency = 1;
+
   var loader = new AssetLoader();
   loader.add('paddle', new ImageAsset('paddle.png'));
   loader.add('ball', new ImageAsset('ball.png'));
@@ -42,14 +44,15 @@ main() {
         ..addTo(game.scene)
         ..runAction(new Place(new Vector2(800 / 2, 400 / 2)))
         ..body = new Body(world)
-        ..body.speed = new Vector2(-400.0, -400.0)
+        ..body.speed = new Vector2(-40.0, -40.0)
         ..body.restitution = new Vector2(1.0, 1.0);
 
     world.collide(ball).listen(CollisionResponse.bounce);
-
     // TODO: Implement collision groups here.
     world.collide(paddle1).listen(CollisionResponse.bounce);
     world.collide(paddle2).listen(CollisionResponse.bounce);
+
+    world.collide(ball, paddle1).listen((e) => print("Collision"));
   });
 
   game.start();
