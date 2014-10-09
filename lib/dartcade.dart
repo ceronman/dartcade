@@ -26,7 +26,6 @@ part 'assets.dart';
 part 'collision.dart';
 part 'gameloop.dart';
 part 'gamenode.dart';
-part 'geometry.dart';
 part 'input.dart';
 part 'layer.dart';
 part 'physics.dart';
