@@ -29,6 +29,8 @@ class GameLoop {
     _scene.game = this;
   }
 
+  DebugDrawer debug;
+
   double get width => canvas.width.toDouble();
   double get height => canvas.height.toDouble();
 
@@ -51,7 +53,7 @@ class GameLoop {
     gamebox.children.add(canvas);
   }
 
-  num _updatePeriod = 1000/60;
+  num _updatePeriod = 1000 / 60;
   num get updateFrequency => 1000 / _updatePeriod;
   set updateFrequency(num value) => _updatePeriod = 1000 / value;
   num timeScale = 1.0;
@@ -65,10 +67,11 @@ class GameLoop {
     _accumulatedTime += (currentTime - _initTime) * timeScale;
     while (_accumulatedTime >= _updatePeriod) {
       _accumulatedTime -= _updatePeriod;
-      scene.update(_updatePeriod/1000);
+      scene.update(_updatePeriod / 1000);
     }
     canvas.context2D.clearRect(0, 0, canvas.width, canvas.height);
     scene.drawWithChildren(canvas.context2D);
+    if (debug != null) debug.draw(canvas.context2D);
 
     _initTime = currentTime;
     html.window.requestAnimationFrame(_animationFrame);

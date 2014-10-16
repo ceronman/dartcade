@@ -115,7 +115,6 @@ abstract class GameNode {
       }
       drawWithTransform(context);
     }
-    _debugDraw(context);
   }
 
   void draw(html.CanvasRenderingContext2D context) {}
@@ -125,6 +124,7 @@ abstract class GameNode {
       child.update(dt);
     }
 
+    // TODO: Use list.removeWhere to improve the code here.
     // Don't create a list here to avoid unecesary allocations of List.
     var doneActions = null;
 
@@ -164,28 +164,5 @@ abstract class GameNode {
       action.stop();
       actions.removeRange(actions.indexOf(action), 1);
     }
-  }
-
-  // TODO: Improve debug draw system. Look how phaser does it.
-  var debugBoxes = [];
-  var debugLines = [];
-  void _debugDraw(html.CanvasRenderingContext2D context) {
-    if (debugBoxes.length == 0) return;
-
-    context.save();
-    for (var item in debugBoxes) {
-      context.beginPath();
-      var box = item['box'];
-      var color = item['color'];
-      context.strokeStyle = color;
-      context.rect(
-          box.min.x,
-          box.min.y,
-          box.max.x - box.min.x,
-          box.max.y - box.min.y);
-      context.stroke();
-      context.closePath();
-    }
-    context.restore();
   }
 }

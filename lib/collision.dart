@@ -98,14 +98,13 @@ class SweptBoxCollision extends Collision {
   Vector2 _exitTime = new Vector2.zero();
   Vector2 _relativeSpeed = new Vector2.zero();
 
-  SweptBoxCollision(this.body1, this.body2) {
-    body1.node.debugBoxes.add({ "box": _box1, "color": "red" });
-  }
+  SweptBoxCollision(this.body1, this.body2);
 
   void check() {
     _relativeSpeed = (body1.position - body1.previousPosition) - (body2.position - body2.previousPosition);
     _box1.copyFrom(body1.hitbox);
     _box2.copyFrom(body2.hitbox);
+    debug(new DebugBox(_box1));
 
     _box1.min.sub(_relativeSpeed);
     _box1.max.sub(_relativeSpeed);

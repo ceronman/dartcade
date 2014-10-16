@@ -2,6 +2,7 @@ import 'package:dartcade/dartcade.dart';
 
 main() {
   var game = new GameLoop('#gamebox', width: 800, height: 400);
+  game.debug = new DebugDrawer();
 
   game.updateFrequency = 1;
 
