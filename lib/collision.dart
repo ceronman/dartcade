@@ -98,34 +98,36 @@ class SweptBoxCollision extends Collision {
   Vector2 _exitTime = new Vector2.zero();
   Vector2 _relativeSpeed = new Vector2.zero();
 
-  SweptBoxCollision(this.body1, this.body2);
+  SweptBoxCollision(this.body1, this.body2) {
+    body1.node.debugBoxes.add({ "box": _box1, "color": "red" });
+  }
 
   void check() {
-    _relativeSpeed.setFrom(body1.speed).sub(body2.speed);
+    _relativeSpeed = (body1.position - body1.previousPosition) - (body2.position - body2.previousPosition);
     _box1.copyFrom(body1.hitbox);
     _box2.copyFrom(body2.hitbox);
 
-    _box1.min.sub(body1.speed);
-    _box1.max.sub(body1.speed);
+    _box1.min.sub(_relativeSpeed);
+    _box1.max.sub(_relativeSpeed);
 
-    if (_relativeSpeed.x > 0) {
+    if (_relativeSpeed.x > 0.0) {
       _entryDistance.x = _box2.min.x - _box1.max.x;
       _exitDistance.x = _box2.max.x - _box1.min.x;
     } else {
-      _entryDistance.x = _box1.min.x - _box2.max.x;
-      _exitDistance.x = _box1.max.x - _box2.min.x;
+      _entryDistance.x = _box2.max.x - _box1.min.x;
+      _exitDistance.x = _box2.min.x - _box2.max.x;
     }
 
-    if (_relativeSpeed.y > 0) {
+    if (_relativeSpeed.y > 0.0) {
       _entryDistance.y = _box2.min.y - _box1.max.y;
       _exitDistance.y = _box2.max.y - _box1.min.y;
     } else {
-      _entryDistance.y = _box1.min.y - _box2.max.y;
-      _exitDistance.y = _box1.max.y - _box2.min.y;
+      _entryDistance.y = _box2.max.y - _box1.min.y;
+      _exitDistance.y = _box2.min.y - _box2.max.y;
     }
 
     if (_relativeSpeed.x == 0.0) {
-      _entryTime.x = double.INFINITY;
+      _entryTime.x = -double.INFINITY;
       _exitTime.x = double.INFINITY;
     } else {
       _entryTime.x = _entryDistance.x / _relativeSpeed.x;
@@ -133,46 +135,52 @@ class SweptBoxCollision extends Collision {
     }
 
     if (_relativeSpeed.y == 0.0) {
-      _entryTime.y = double.INFINITY;
+      _entryTime.y = -double.INFINITY;
       _exitTime.y = double.INFINITY;
     } else {
       _entryTime.y = _entryDistance.y / _relativeSpeed.y;
       _exitTime.y = _exitDistance.y / _relativeSpeed.y;
     }
 
+    if (_entryTime.y > 1.0) _entryTime.y = -double.INFINITY; // From previous bug above.
+    if (_entryTime.x > 1.0) _entryTime.x = -double.INFINITY; // From previous bug above.
+
     double entryTime = max(_entryTime.x, _entryTime.y);
-    double exitTime = min(_entryTime.x, _entryTime.y);
+    double exitTime = min(_exitTime.x, _exitTime.y);
 
-    if (entryTime > exitTime ||
-        _entryTime.x < 0.0 && _entryTime.y < 0.0 ||
-        _entryTime.x > 1.0 ||
-        _entryTime.y > 1.0) {
-
-      return null;
-    } else {
-
-      Vector2 side1;
-      Vector2 side2;
-
-      if (_entryTime.x > _entryTime.y) {
-        if (_entryDistance.x < 0.0) {
-          side1 = Side.right;
-          side2 = Side.left;
-        } else {
-          side1 = Side.left;
-          side2 = Side.right;
-        }
-      } else {
-        if (_entryDistance.y < 0.0) {
-          side1 = Side.down;
-          side2 = Side.up;
-        } else {
-          side1 = Side.up;
-          side2 = Side.down;
-        }
-      }
-      onCollisionController.add(
-          new CollisionEvent(body1, side1, body2, side2, entryTime));
+    print("$_relativeSpeed $_entryDistance   $_entryTime   $_exitTime $entryTime, $exitTime");
+    if (entryTime > exitTime) return null; // This check was correct.
+    if (_entryTime.x < 0.0 && _entryTime.y < 0.0) return null;
+    if (_entryTime.x < 0.0 ) {
+      // Check that the bounding box started overlapped or not.
+      if (_box1.max.x < _box2.min.x || _box1.min.x > _box2.max.x) return null;
     }
+    if (_entryTime.y < 0.0) {
+      // Check that the bounding box started overlapped or not.
+      if (_box1.max.y < _box2.min.y || _box1.min.y > _box2.max.y) return null;
+    }
+
+    Vector2 side1;
+    Vector2 side2;
+
+    if (_entryTime.x > _entryTime.y) {
+      if (_entryDistance.x < 0.0) {
+        side1 = Side.right;
+        side2 = Side.left;
+      } else {
+        side1 = Side.left;
+        side2 = Side.right;
+      }
+    } else {
+      if (_entryDistance.y < 0.0) {
+        side1 = Side.down;
+        side2 = Side.up;
+      } else {
+        side1 = Side.up;
+        side2 = Side.down;
+      }
+    }
+    onCollisionController.add(
+        new CollisionEvent(body1, side1, body2, side2, entryTime));
   }
 }

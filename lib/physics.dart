@@ -21,6 +21,7 @@ class CollisionResponse {
     var body = e.body1 as Body; // TODO: better not to have to use this.
     body.position.add(body.speed.scaled(-e.entryTime));
     body.speed.reflect(e.normal2).multiply(body.restitution);
+    body.previousPosition.setFrom(body.position);
     body.position.add(body.speed.scaled(e.entryTime));
     body.sync();
   }
@@ -34,6 +35,7 @@ class Body implements Collidable {
   Aabb2 hitbox = new Aabb2();
 
   Vector2 position = new Vector2.zero();
+  Vector2 previousPosition = new Vector2.zero();
   Vector2 speed = new Vector2.zero();
   Vector2 acceleration = new Vector2.zero();
   Vector2 restitution = new Vector2.zero();
@@ -46,6 +48,7 @@ class Body implements Collidable {
   Body(this.world);
 
   void update(double dt) {
+    previousPosition.setFrom(position);
     position.x += speed.x * dt;
     position.y += speed.y * dt;
 
