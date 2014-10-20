@@ -68,6 +68,7 @@ class GameLoop {
     while (_accumulatedTime >= _updatePeriod) {
       _accumulatedTime -= _updatePeriod;
       scene.update(_updatePeriod / 1000);
+      if (debug != null) debug.update(_updatePeriod / 1000);
     }
     canvas.context2D.clearRect(0, 0, canvas.width, canvas.height);
     scene.drawWithChildren(canvas.context2D);

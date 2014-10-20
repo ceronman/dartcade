@@ -104,10 +104,11 @@ class SweptBoxCollision extends Collision {
     _relativeSpeed = (body1.position - body1.previousPosition) - (body2.position - body2.previousPosition);
     _box1.copyFrom(body1.hitbox);
     _box2.copyFrom(body2.hitbox);
-    debug(new DebugBox(_box1));
-
     _box1.min.sub(_relativeSpeed);
     _box1.max.sub(_relativeSpeed);
+
+    DebugDrawer.box(_box1, fg: 'green');
+    DebugDrawer.vector(body1.speed, start: body1.position, fg: 'red');
 
     if (_relativeSpeed.x > 0.0) {
       _entryDistance.x = _box2.min.x - _box1.max.x;

@@ -45,7 +45,7 @@ main() {
         ..addTo(game.scene)
         ..runAction(new Place(new Vector2(800 / 2, 400 / 2)))
         ..body = new Body(world)
-        ..body.speed = new Vector2(-40.0, 0.0)
+        ..body.speed = new Vector2(-40.0, 10.0)
         ..body.restitution = new Vector2(1.0, 1.0);
 
     world.collide(ball).listen(CollisionResponse.bounce);

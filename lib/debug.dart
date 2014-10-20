@@ -14,19 +14,19 @@
 
 part of dartcade;
 
+// TODO: Write tests for the debuggers
+
 abstract class DebugShape {
-  int drawCounter = 60;
+  int frames = 1;
+  String strokeStyle = 'white';
+  String fillStyle = null;
   void draw(html.CanvasRenderingContext2D context);
 }
 
 class DebugBox extends DebugShape {
   Aabb2 box;
-  String strokeStyle = 'rgba(255, 255, 255, 0.5)';
-  String fillStyle = 'rgba(255, 255, 255, 0.5)';
 
-  DebugBox(box, [strokeStyle, fillStyle]) {
-    if (strokeStyle != null) this.strokeStyle = strokeStyle;
-    if (fillStyle != null) this.fillStyle = fillStyle;
+  DebugBox(box) {
     this.box = new Aabb2.copy(box);
     this.box.min.x -= 0.5;
     this.box.min.y -= 0.5;
@@ -35,10 +35,7 @@ class DebugBox extends DebugShape {
   }
 
   void draw(html.CanvasRenderingContext2D context) {
-    context.save();
     context.beginPath();
-    context.strokeStyle = strokeStyle;
-    context.fillStyle = fillStyle;
     context.rect(
         box.min.x,
         box.min.y,
@@ -47,8 +44,34 @@ class DebugBox extends DebugShape {
     context.fill();
     context.stroke();
     context.closePath();
-    drawCounter--;
-    context.restore();
+  }
+}
+
+class DebugVector extends DebugShape {
+  Vector2 start = new Vector2.zero();
+  Vector2 vector = new Vector2.zero();
+
+  DebugVector(this.vector, [this.start]);
+
+  void draw(html.CanvasRenderingContext2D context) {
+    fillStyle = strokeStyle;
+    var target = start + vector;
+    var arrow = vector.normalized();
+
+    context
+        ..beginPath()
+        ..moveTo(start.x, start.y)
+        ..lineTo(target.x, target.y)
+        ..stroke()
+        ..lineTo(
+            target.x - arrow.x * 6 - arrow.y * 3,
+            target.y - arrow.y * 6 + arrow.x * 3)
+        ..lineTo(
+            target.x - arrow.x * 6 + arrow.y * 3,
+            target.y - arrow.y * 6 - arrow.x * 3)
+        ..lineTo(target.x, target.y)
+        ..fill()
+        ..closePath();
   }
 }
 
@@ -64,17 +87,39 @@ class DebugDrawer {
   }
   DebugDrawer._internal();
 
+  void update(dt) {
+    shapes.removeWhere((box) => box.frames-- <= 0);
+  }
+
   void draw(html.CanvasRenderingContext2D context) {
-    for (var box in shapes) {
-      box.draw(context);
+    for (var shape in shapes) {
+      context.save();
+      context.strokeStyle = shape.strokeStyle;
+      context.fillStyle = shape.fillStyle;
+      shape.draw(context);
+      context.restore();
     }
-    shapes.removeWhere((box) => box.drawCounter <= 0);
+
   }
 
   void add(shape) => shapes.add(shape);
-}
 
-void debug(DebugShape shape) {
-  var debugger = new DebugDrawer();
-  debugger.add(shape);
+  static void box(Aabb2 box, {fg: null, bg: null, frames: null}) {
+    var debugger = new DebugDrawer();
+    var debugBox = new DebugBox(box);
+    if (fg != null) debugBox.strokeStyle = fg;
+    if (bg != null) debugBox.fillStyle = bg;
+    if (frames != null) debugBox.frames = frames;
+    debugger.add(debugBox);
+  }
+
+  static void vector(Vector2 vector, {start: null, fg: null, bg: null, frames:
+      null}) {
+    var debugger = new DebugDrawer();
+    var debugVector = new DebugVector(vector, start);
+    if (fg != null) debugVector.strokeStyle = fg;
+    if (bg != null) debugVector.fillStyle = bg;
+    if (frames != null) debugVector.frames = frames;
+    debugger.add(debugVector);
+  }
 }
