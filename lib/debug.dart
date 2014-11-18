@@ -76,14 +76,13 @@ class DebugVector extends DebugShape {
 }
 
 class DebugDrawer {
-  List<DebugShape> shapes = new List<DebugShape>();
-
-  static DebugDrawer _instance;
-  factory DebugDrawer() {
-    if (_instance == null) {
-      _instance = new DebugDrawer._internal();
+  List<DebugShape> shapes = [];
+  static Map<String, DebugDrawer> _instances = {};
+  factory DebugDrawer(String name) {
+    if (!_instances.containsKey(name)) {
+      _instances[name] = new DebugDrawer._internal();
     }
-    return _instance;
+    return _instances[name];
   }
   DebugDrawer._internal();
 
@@ -104,22 +103,20 @@ class DebugDrawer {
 
   void add(shape) => shapes.add(shape);
 
-  static void box(Aabb2 box, {fg: null, bg: null, frames: null}) {
-    var debugger = new DebugDrawer();
+  void box(Aabb2 box, {fg: null, bg: null, frames: null}) {
     var debugBox = new DebugBox(box);
     if (fg != null) debugBox.strokeStyle = fg;
     if (bg != null) debugBox.fillStyle = bg;
     if (frames != null) debugBox.frames = frames;
-    debugger.add(debugBox);
+    add(debugBox);
   }
 
-  static void vector(Vector2 vector, {start: null, fg: null, bg: null, frames:
+  void vector(Vector2 vector, {start: null, fg: null, bg: null, frames:
       null}) {
-    var debugger = new DebugDrawer();
     var debugVector = new DebugVector(vector, start);
     if (fg != null) debugVector.strokeStyle = fg;
     if (bg != null) debugVector.fillStyle = bg;
     if (frames != null) debugVector.frames = frames;
-    debugger.add(debugVector);
+    add(debugVector);
   }
 }

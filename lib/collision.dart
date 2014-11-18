@@ -107,8 +107,10 @@ class SweptBoxCollision extends Collision {
     _box1.min.sub(_relativeSpeed);
     _box1.max.sub(_relativeSpeed);
 
-    DebugDrawer.box(_box1, fg: 'green');
-    DebugDrawer.vector(body1.speed, start: body1.position, fg: 'red');
+    var debug = new DebugDrawer('pong');
+
+    debug.box(_box1, fg: 'green');
+    debug.vector(body1.speed, start: body1.position, fg: 'red');
 
     if (_relativeSpeed.x > 0.0) {
       _entryDistance.x = _box2.min.x - _box1.max.x;

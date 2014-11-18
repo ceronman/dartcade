@@ -2,7 +2,7 @@ import 'package:dartcade/dartcade.dart';
 
 main() {
   var game = new GameLoop('#gamebox', width: 800, height: 400);
-  game.debug = new DebugDrawer();
+  game.debug = new DebugDrawer('pong');
 
   game.updateFrequency = 1;
 
