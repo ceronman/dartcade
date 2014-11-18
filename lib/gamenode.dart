@@ -124,27 +124,15 @@ abstract class GameNode {
       child.update(dt);
     }
 
-    // TODO: Use list.removeWhere to improve the code here.
-    // Don't create a list here to avoid unecesary allocations of List.
-    var doneActions = null;
-
     for (var action in actions) {
-      if (!action.done) {
+      if (action.done) {
+        action.stop();
+      } else {
         action.step(dt);
       }
-      else if (doneActions != null) {
-        doneActions.add(action);
-      } else {
-        doneActions = [ action ];
-      }
     }
 
-    if (doneActions != null) {
-      for (Action action in doneActions) {
-        action.stop();
-        actions.removeRange(actions.indexOf(action), 1);
-      }
-    }
+    actions.removeWhere((action) => action.done);
 
     // TODO: find a better way of handling updates
     if (body != null) body.update(dt);
