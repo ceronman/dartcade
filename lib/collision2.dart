@@ -18,64 +18,47 @@ abstract class Aabb2Collidable {
   Aabb2 hitbox;
 }
 
-class Aabb2InAabb2 {
-  Aabb2Collidable innerBody;
-  Aabb2Collidable outerBody;
+Vector2 checkAabb2InAabb2(Aabb2 innerBox, Aabb2 outerBox) {
+  double deltaX = 0.0;
+  double deltaY = 0.0;
 
-  Aabb2InAabb2(this.innerBody, this.outerBody);
-
-  Vector2 check() {
-    double deltaX;
-    double deltaY;
-    Aabb2 innerBox = innerBody.hitbox;
-    Aabb2 outerBox = innerBody.hitbox;
-
-    if (innerBox.min.x < outerBox.min.x) {
-      deltaX = outerBox.min.x - innerBox.min.x;
-    } else if (innerBox.max.x > outerBox.max.x) {
-      deltaX = innerBox.max.x - outerBox.max.x;
-    }
-
-    if (innerBox.min.y < outerBox.min.y) {
-      deltaY = outerBox.min.y - innerBox.min.y;
-    } else if (innerBox.max.y > outerBox.max.y) {
-      deltaX = innerBox.max.y - outerBox.max.y;
-    }
-
-    if (deltaX == 0.0 && deltaY == 0.0) {
-      return null;
-    }
-    return new Vector2(deltaX, deltaY);
+  if (innerBox.min.x < outerBox.min.x) {
+    deltaX = outerBox.min.x - innerBox.min.x;
+  } else if (innerBox.max.x > outerBox.max.x) {
+    deltaX = innerBox.max.x - outerBox.max.x;
   }
+
+  if (innerBox.min.y < outerBox.min.y) {
+    deltaY = outerBox.min.y - innerBox.min.y;
+  } else if (innerBox.max.y > outerBox.max.y) {
+    deltaX = innerBox.max.y - outerBox.max.y;
+  }
+
+  if (deltaX == 0.0 && deltaY == 0.0) {
+    return null;
+  }
+  return new Vector2(deltaX, deltaY);
 }
 
-class Aabb2VsAabb2 {
-  Aabb2Collidable body1;
-  Aabb2Collidable body2;
+Vector2 checkAabb2VsAabb2(Aabb2 box1, Aabb2 box2) {
+  var center1 = new Vector2.zero();
+  var center2 = new Vector2.zero();
+  var half1 = new Vector2.zero();
+  var half2 = new Vector2.zero();
+  box1.copyCenterAndHalfExtents(center1, half1);
+  box2.copyCenterAndHalfExtents(center2, half2);
 
-  Aabb2VsAabb2(this.body1, this.body2);
+  double dx = center1.x - center2.x;
+  double px = (half1.x + half2.x) - dx.abs();
+  if (px < 0) return null;
 
-  Vector2 _center1 = new Vector2.zero();
-  Vector2 _half1 = new Vector2.zero();
-  Vector2 _center2 = new Vector2.zero();
-  Vector2 _half2 = new Vector2.zero();
+  double dy = center1.y - center2.y;
+  double py = (half1.y + half2.y) - dy.abs();
+  if (py < 0) return null;
 
-  Vector2 check() {
-    body1.hitbox.copyCenterAndHalfExtents(_center1, _half1);
-    body2.hitbox.copyCenterAndHalfExtents(_center2, _half2);
-
-    double dx = _center1.x - _center2.x;
-    double px = (_half1.x + _half2.x) - dx.abs();
-    if (px < 0) return null;
-
-    double dy = _center1.y - _center2.y;
-    double py = (_half1.y + _half2.y) - dy.abs();
-    if (py < 0) return null;
-
-    if (px > py) {
-      return new Vector2(px * dx.sign, 0.0);
-    } else {
-      return new Vector2(0.0, py * dy.sign);
-    }
+  if (px > py) {
+    return new Vector2(px * dx.sign, 0.0);
+  } else {
+    return new Vector2(0.0, py * dy.sign);
   }
 }
