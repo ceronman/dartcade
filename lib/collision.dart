@@ -14,175 +14,109 @@
 
 part of dartcade;
 
-abstract class Collidable {
-  Aabb2 get hitbox;
-}
+class AABB2 {
+  Vector2 center = new Vector2.zero();
+  Vector2 half = new Vector2.zero();
 
-class Side {
-  static Vector2 get left => new Vector2(-1.0, 0.0);
-  static Vector2 get right => new Vector2(1.0, 0.0);
-  static Vector2 get up => new Vector2(0.0, -1.0);
-  static Vector2 get down => new Vector2(0.0, 1.0);
+  double get left => center.x - half.x;
+  double get right => center.x + half.x;
+  double get top => center.y - half.y;
+  double get bottom => center.y + half.y;
+
+  Vector2 get topLeft => new Vector2(top, left);
+  Vector2 get topRight => new Vector2(top, right);
+  Vector2 get bottomLeft => new Vector2(bottom, left);
+  Vector2 get bottomRight => new Vector2(bottom, right);
+  Vector2 get min => topLeft;
+  Vector2 get max => bottomRight;
+
+  AABB2();
+  AABB2.centerHalf(Vector2 this.center, Vector2 this.half);
 }
 
 class CollisionEvent {
-  Collidable body1;
-  Vector2 normal1;
-  Collidable body2;
-  Vector2 normal2;
-  double entryTime;
 
-  CollisionEvent(this.body1, this.normal1, this.body2, this.normal2,
-      this.entryTime);
 }
 
-abstract class Collision {
-  StreamController<CollisionEvent> onCollisionController =
-      new StreamController<CollisionEvent>.broadcast(sync: true);
-  Stream<CollisionEvent> get onCollision => onCollisionController.stream;
+abstract class Collider {
+  ArcadeBody body;
+  void syncFromBody();
 
-  void check();
+  CollisionEvent collidesWith(Collider);
 }
 
-// TODO: Fix the double collision problem when the correction of a collision
-//       Generates another collisoin
-class BodyVsWorldBoxCollision extends Collision {
-  World world;
-  Body body;
+class AABB2Collider extends Collider {
+  AABB2 boundingbox = new AABB2();
 
-  BodyVsWorldBoxCollision(this.body, this.world);
+  void syncFromBody() {
+    boundingbox.center.setFrom(body.position);
+    boundingbox.half.setValues(body.size.x / 2, body.size.y / 2);
+  }
 
-  void check() {
-    // TODO: Is it right to use infinity when the object is not moving?
-    if (body.hitbox.min.x < world.hitbox.min.x) {
-      double entryTime = body.speed.x != 0 ?
-          (body.left - world.left) / body.speed.x :
-          double.INFINITY;
-      onCollisionController.add(
-          new CollisionEvent(body, Side.left, world, Side.right, entryTime));
+  CollisionEvent collidesWith(Collider other) {
+    if (Collider is AABB2Collider) {
+      AABB2 otherbox = (other as AABB2Collider).boundingbox;
+      var delta = _checkAabb2VsAabb2(boundingbox, otherbox);
+    }
+    throw new ArgumentError("Unsupported collision with $other");
+    return null;
+  }
 
+  Vector2 _checkAabb2OutOfAabb2(AABB2 innerBox, AABB2 outerBox) {
+    double deltaX = 0.0;
+    double deltaY = 0.0;
+
+    if (innerBox.left < outerBox.left) {
+      deltaX = outerBox.left - innerBox.left;
+    } else if (innerBox.right > outerBox.right) {
+      deltaX = innerBox.right - outerBox.right;
     }
-    if (body.hitbox.max.x > world.hitbox.max.x) {
-      double entryTime = body.speed.x != 0 ?
-          (body.right - world.right) / body.speed.x :
-          double.INFINITY;
-      onCollisionController.add(
-          new CollisionEvent(body, Side.right, world, Side.left, entryTime));
+
+    if (innerBox.top < outerBox.top) {
+      deltaY = outerBox.top - innerBox.top;
+    } else if (innerBox.bottom > outerBox.bottom) {
+      deltaX = innerBox.bottom - outerBox.bottom;
     }
-    if (body.hitbox.min.y < world.hitbox.min.y) {
-      double entryTime = body.speed.y != 0 ?
-          (body.top - world.top) / body.speed.y :
-          double.INFINITY;
-      onCollisionController.add(
-          new CollisionEvent(body, Side.up, world, Side.down, entryTime));
+
+    if (deltaX == 0.0 && deltaY == 0.0) {
+      return null;
     }
-    if (body.hitbox.max.y > world.hitbox.max.y) {
-      double entryTime = body.speed.y != 0 ?
-          (body.bottom - world.bottom) / body.speed.y :
-          double.INFINITY;
-      onCollisionController.add(
-          new CollisionEvent(body, Side.down, world, Side.up, entryTime));
+    return new Vector2(deltaX, deltaY);
+  }
+
+  Vector2 _checkAabb2VsAabb2(AABB2 box1, AABB2 box2) {
+    double dx = box1.center.x - box2.center.x;
+    double px = (box1.half.x + box2.half.x) - dx.abs();
+    if (px < 0) return null;
+
+    double dy = box1.center.y - box2.center.y;
+    double py = (box1.half.y + box2.half.y) - dy.abs();
+    if (py < 0) return null;
+
+    if (px > py) {
+      return new Vector2(px * dx.sign, 0.0);
+    } else {
+      return new Vector2(0.0, py * dy.sign);
     }
   }
 }
 
-class SweptBoxCollision extends Collision {
-  Body body1;
-  Body body2;
 
-  Aabb2 _box1 = new Aabb2();
-  Aabb2 _box2 = new Aabb2();
-  Vector2 _entryDistance = new Vector2.zero();
-  Vector2 _exitDistance = new Vector2.zero();
-  Vector2 _entryTime = new Vector2.zero();
-  Vector2 _exitTime = new Vector2.zero();
-  Vector2 _relativeSpeed = new Vector2.zero();
+abstract class Collision {
 
-  SweptBoxCollision(this.body1, this.body2);
+  StreamController<CollisionEvent> controller =
+      new StreamController<CollisionEvent>.broadcast(sync: true);
+  Stream<CollisionEvent> get onCollision => controller.stream;
 
+  void check();
+}
+
+class StaticBodyVsBodyCollision extends Collision {
+  Collider collider1;
+  Collider collider2;
   void check() {
-    _relativeSpeed = (body1.position - body1.previousPosition) - (body2.position - body2.previousPosition);
-    _box1.copyFrom(body1.hitbox);
-    _box2.copyFrom(body2.hitbox);
-    _box1.min.sub(_relativeSpeed);
-    _box1.max.sub(_relativeSpeed);
+    if (collider1.collidesWith(collider2) != null) {
 
-    var debug = new DebugDrawer('pong');
-
-    debug.box(_box1, fg: 'green');
-    debug.vector(body1.speed, start: body1.position, fg: 'red');
-
-    if (_relativeSpeed.x > 0.0) {
-      _entryDistance.x = _box2.min.x - _box1.max.x;
-      _exitDistance.x = _box2.max.x - _box1.min.x;
-    } else {
-      _entryDistance.x = _box2.max.x - _box1.min.x;
-      _exitDistance.x = _box2.min.x - _box2.max.x;
     }
-
-    if (_relativeSpeed.y > 0.0) {
-      _entryDistance.y = _box2.min.y - _box1.max.y;
-      _exitDistance.y = _box2.max.y - _box1.min.y;
-    } else {
-      _entryDistance.y = _box2.max.y - _box1.min.y;
-      _exitDistance.y = _box2.min.y - _box2.max.y;
-    }
-
-    if (_relativeSpeed.x == 0.0) {
-      _entryTime.x = -double.INFINITY;
-      _exitTime.x = double.INFINITY;
-    } else {
-      _entryTime.x = _entryDistance.x / _relativeSpeed.x;
-      _exitTime.x = _exitDistance.x / _relativeSpeed.x;
-    }
-
-    if (_relativeSpeed.y == 0.0) {
-      _entryTime.y = -double.INFINITY;
-      _exitTime.y = double.INFINITY;
-    } else {
-      _entryTime.y = _entryDistance.y / _relativeSpeed.y;
-      _exitTime.y = _exitDistance.y / _relativeSpeed.y;
-    }
-
-    if (_entryTime.y > 1.0) _entryTime.y = -double.INFINITY; // From previous bug above.
-    if (_entryTime.x > 1.0) _entryTime.x = -double.INFINITY; // From previous bug above.
-
-    double entryTime = max(_entryTime.x, _entryTime.y);
-    double exitTime = min(_exitTime.x, _exitTime.y);
-
-    print("$_relativeSpeed $_entryDistance   $_entryTime   $_exitTime $entryTime, $exitTime");
-    if (entryTime > exitTime) return null; // This check was correct.
-    if (_entryTime.x < 0.0 && _entryTime.y < 0.0) return null;
-    if (_entryTime.x < 0.0 ) {
-      // Check that the bounding box started overlapped or not.
-      if (_box1.max.x < _box2.min.x || _box1.min.x > _box2.max.x) return null;
-    }
-    if (_entryTime.y < 0.0) {
-      // Check that the bounding box started overlapped or not.
-      if (_box1.max.y < _box2.min.y || _box1.min.y > _box2.max.y) return null;
-    }
-
-    Vector2 side1;
-    Vector2 side2;
-
-    if (_entryTime.x > _entryTime.y) {
-      if (_entryDistance.x < 0.0) {
-        side1 = Side.right;
-        side2 = Side.left;
-      } else {
-        side1 = Side.left;
-        side2 = Side.right;
-      }
-    } else {
-      if (_entryDistance.y < 0.0) {
-        side1 = Side.down;
-        side2 = Side.up;
-      } else {
-        side1 = Side.up;
-        side2 = Side.down;
-      }
-    }
-    onCollisionController.add(
-        new CollisionEvent(body1, side1, body2, side2, entryTime));
   }
 }
