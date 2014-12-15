@@ -51,7 +51,7 @@ abstract class GameNode {
   Body get body => _body;
   set body(Body value) {
     _body = value..node = this;
-    _body.position.setFrom(position);
+    _body.syncFromNode();
   }
 
   StreamController<double> onFrameController =
@@ -133,9 +133,6 @@ abstract class GameNode {
     }
 
     actions.removeWhere((action) => action.done);
-
-    // TODO: find a better way of handling updates
-    if (body != null) body.update(dt);
     onFrameController.add(dt);
   }
 

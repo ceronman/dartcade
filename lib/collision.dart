@@ -35,7 +35,11 @@ class AABB2 {
 }
 
 class CollisionEvent {
+  Collider collider1;
+  Collider collider2;
+  Vector2 delta;
 
+  CollisionEvent(this.collider1, this.collider1, this.delta);
 }
 
 abstract class Collider {
@@ -43,6 +47,7 @@ abstract class Collider {
   void syncFromBody();
 
   CollisionEvent collidesWith(Collider);
+  CollisionEvent isOutOf(Collider);
 }
 
 class AABB2Collider extends Collider {
@@ -57,6 +62,17 @@ class AABB2Collider extends Collider {
     if (Collider is AABB2Collider) {
       AABB2 otherbox = (other as AABB2Collider).boundingbox;
       var delta = _checkAabb2VsAabb2(boundingbox, otherbox);
+      return new CollisionEvent(this, other, delta);
+    }
+    throw new ArgumentError("Unsupported collision with $other");
+    return null;
+  }
+
+  CollisionEvent isOutOf(Collider other) {
+    if (Collider is AABB2Collider) {
+      AABB2 otherbox = (other as AABB2Collider).boundingbox;
+      var delta = _checkAabb2OutOfAabb2(boundingbox, otherbox);
+      return new CollisionEvent(this, other, delta);
     }
     throw new ArgumentError("Unsupported collision with $other");
     return null;
@@ -102,7 +118,7 @@ class AABB2Collider extends Collider {
 }
 
 
-abstract class Collision {
+abstract class CollisionCheck {
 
   StreamController<CollisionEvent> controller =
       new StreamController<CollisionEvent>.broadcast(sync: true);
@@ -111,12 +127,22 @@ abstract class Collision {
   void check();
 }
 
-class StaticBodyVsBodyCollision extends Collision {
+abstract class SingleCollisionCheck extends CollisionCheck {
   Collider collider1;
   Collider collider2;
   void check() {
-    if (collider1.collidesWith(collider2) != null) {
-
+    var event = _checkEvent();
+    if (event != null) {
+      controller.add(event);
     }
   }
+  CollisionEvent _checkEvent();
+}
+
+class StaticBodyVsBodyCollisionCheck extends SingleCollisionCheck {
+  CollisionEvent _checkEvent() => collider1.collidesWith(collider2);
+}
+
+class StaticBodyOutOfBoundsCollisionCheck extends SingleCollisionCheck {
+  CollisionEvent _checkEvent() => collider1.isOutOf(collider2);
 }

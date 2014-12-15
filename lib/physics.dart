@@ -48,11 +48,16 @@ class ArcadeBody extends Body {
     // TODO: change GameNode to use size intead of width and height??
     size.setValues(node.width, node.height);
   }
+
+  void addTo(ArcadeWorld world) {
+    world.addBody(this);
+  }
 }
 
 class ArcadeWorld {
-  List<ArcadeBody> bodies;
+  List<ArcadeBody> bodies = new List<ArcadeBody>();
   Collider collider;
+  List<CollisionCheck> collisions = new List<CollisionCheck>();
 
   ArcadeWorld(double x, double y, double width, double height);
 
@@ -63,6 +68,11 @@ class ArcadeWorld {
   void update(double dt) {
     for (var body in bodies) {
       body.update(dt);
+      body.syncToNode();
+    }
+
+    for (var collision in collisions) {
+      collision.check();
     }
   }
 }
