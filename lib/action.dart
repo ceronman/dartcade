@@ -570,16 +570,17 @@ class ArcadeKeyboardController extends Action {
   void stop() {}
 
   void step(num dt) {
-    target.body.speed.setValues(0.0, 0.0);
+    var body = target.body as ArcadeBody;
+    body.speed.setValues(0.0, 0.0);
     if (keys[keyLeft]) {
-      target.body.speed.x = speedLeft;
+      body.speed.x = speedLeft;
     } else if (keys[keyRight]) {
-      target.body.speed.x = speedRight;
+      body.speed.x = speedRight;
     }
     if (keys[keyUp]) {
-      target.body.speed.y = speedUp;
+      body.speed.y = speedUp;
     } else if (keys[keyDown]) {
-      target.body.speed.y = speedDown;
+      body.speed.y = speedDown;
     }
   }
 }

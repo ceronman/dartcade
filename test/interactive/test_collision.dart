@@ -13,27 +13,3 @@
 // limitations under the License.
 
 part of dartcade_test;
-
-//TODO: collision hitbox doesn't seem to work properly.
-@InteractiveTest('Collide world', group: 'Collision')
-testOuterBoxCollision(GameLoop game) {
-
-  // TODO: create a better interface for the asset loader
-  var loader = new AssetLoader();
-  loader.add('ship', new ImageAsset('images/ship1.png'));
-  loader.load().last.then((p) {
-    var world = new World(0.0, 0.0, game.width, game.height);
-    var sprite = new Sprite(loader['ship'])
-        ..addTo(game.scene)
-        ..position.setValues(game.width / 2, game.height / 2)
-        ..body = new Body(world)
-        ..body.restitution.setValues(1.0, 1.0)
-        ..body.speed.setValues(300.0, 200.0)
-        ..body.restitution.setValues(0.8, 0.8);
-
-    // TODO: This should not be needed;
-    game.scene.onFrame.listen(world.update);
-
-    world.collide(sprite).listen(CollisionResponse.bounce);
-  });
-}
