@@ -36,6 +36,8 @@ class ArcadeBody extends Body {
     position.y += speed.y * dt;
     speed.x += acceleration.x * dt;
     speed.y += acceleration.y * dt;
+
+    if (collider != null) collider.syncFromBody();
   }
 
   void syncToNode() {
@@ -58,8 +60,13 @@ class ArcadeWorld {
   List<ArcadeBody> bodies = new List<ArcadeBody>();
   Collider collider;
   List<CollisionCheck> collisions = new List<CollisionCheck>();
+  AABB2 boundingbox;
 
-  ArcadeWorld(double x, double y, double width, double height);
+  ArcadeWorld(double x, double y, double width, double height) {
+    boundingbox = new AABB2.centerHalf(
+        new Vector2(width / 2, height / 2),
+        new Vector2(width / 2, height / 2));
+  }
 
   void addBody(ArcadeBody body) {
     bodies.add(body);

@@ -32,6 +32,8 @@ class AABB2 {
 
   AABB2();
   AABB2.centerHalf(Vector2 this.center, Vector2 this.half);
+
+  String toString() => '$center,$half';
 }
 
 class CollisionEvent {
@@ -39,7 +41,7 @@ class CollisionEvent {
   Collider collider2;
   Vector2 delta;
 
-  CollisionEvent(this.collider1, this.collider1, this.delta);
+  CollisionEvent(this.collider1, this.collider2, this.delta);
 }
 
 abstract class Collider {
@@ -59,8 +61,8 @@ class AABB2Collider extends Collider {
   }
 
   CollisionEvent collidesWith(Collider other) {
-    if (Collider is AABB2Collider) {
-      AABB2 otherbox = (other as AABB2Collider).boundingbox;
+    if (other is AABB2Collider) {
+      AABB2 otherbox = other.boundingbox;
       var delta = _checkAabb2VsAabb2(boundingbox, otherbox);
       return new CollisionEvent(this, other, delta);
     }
@@ -69,10 +71,10 @@ class AABB2Collider extends Collider {
   }
 
   CollisionEvent isOutOf(Collider other) {
-    if (Collider is AABB2Collider) {
-      AABB2 otherbox = (other as AABB2Collider).boundingbox;
+    if (other is AABB2Collider) {
+      AABB2 otherbox = other.boundingbox;
       var delta = _checkAabb2OutOfAabb2(boundingbox, otherbox);
-      return new CollisionEvent(this, other, delta);
+      return delta == null ? null : new CollisionEvent(this, other, delta);
     }
     throw new ArgumentError("Unsupported collision with $other");
     return null;

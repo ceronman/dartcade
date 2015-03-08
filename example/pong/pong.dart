@@ -44,7 +44,7 @@ main() {
         ..runAction(controller2);
 
     var ballbody = new ArcadeBody()
-        ..speed = new Vector2(-40.0, 10.0)
+        ..speed = new Vector2(-40.0, -40.0)
         ..restitution = new Vector2(1.0, 1.0)
         ..addTo(world);
 
@@ -52,6 +52,16 @@ main() {
         ..addTo(game.scene)
         ..runAction(new Place(new Vector2(800 / 2, 400 / 2)))
         ..body = ballbody;
+
+    var collision = new StaticBodyOutOfBoundsCollisionCheck();
+    ballbody.collider = new AABB2Collider();
+    ballbody.collider.body = ballbody;
+    world.collider = new AABB2Collider();
+    world.collider.boundingbox = world.boundingbox;
+    collision.collider1 = ballbody.collider;
+    collision.collider2 = world.collider;
+    collision.onCollision.listen((event) => print('collision'));
+    world.collisions.add(collision);
   });
 
   game.start();
