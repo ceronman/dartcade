@@ -87,13 +87,13 @@ class AABB2Collider extends Collider {
     if (innerBox.left < outerBox.left) {
       deltaX = outerBox.left - innerBox.left;
     } else if (innerBox.right > outerBox.right) {
-      deltaX = innerBox.right - outerBox.right;
+      deltaX = outerBox.right - innerBox.right;
     }
 
     if (innerBox.top < outerBox.top) {
       deltaY = outerBox.top - innerBox.top;
     } else if (innerBox.bottom > outerBox.bottom) {
-      deltaX = innerBox.bottom - outerBox.bottom;
+      deltaY = outerBox.bottom - innerBox.bottom;
     }
 
     if (deltaX == 0.0 && deltaY == 0.0) {

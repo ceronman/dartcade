@@ -44,7 +44,7 @@ main() {
         ..runAction(controller2);
 
     var ballbody = new ArcadeBody()
-        ..speed = new Vector2(-40.0, -40.0)
+        ..speed = new Vector2(400.0, 400.0)
         ..restitution = new Vector2(1.0, 1.0)
         ..addTo(world);
 
@@ -60,7 +60,11 @@ main() {
     world.collider.boundingbox = world.boundingbox;
     collision.collider1 = ballbody.collider;
     collision.collider2 = world.collider;
-    collision.onCollision.listen((event) => print('collision'));
+    collision.onCollision.listen((event) {
+      ballbody.position.add(event.delta);
+      ballbody.speed.reflect(event.delta.normalized());
+      ballbody.syncToNode();
+    });
     world.collisions.add(collision);
   });
 
