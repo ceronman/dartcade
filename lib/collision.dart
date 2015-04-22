@@ -64,10 +64,9 @@ class AABB2Collider extends Collider {
     if (other is AABB2Collider) {
       AABB2 otherbox = other.boundingbox;
       var delta = _checkAabb2VsAabb2(boundingbox, otherbox);
-      return new CollisionEvent(this, other, delta);
+      return delta == null ? null : new CollisionEvent(this, other, delta);
     }
     throw new ArgumentError("Unsupported collision with $other");
-    return null;
   }
 
   CollisionEvent isOutOf(Collider other) {
@@ -77,7 +76,6 @@ class AABB2Collider extends Collider {
       return delta == null ? null : new CollisionEvent(this, other, delta);
     }
     throw new ArgumentError("Unsupported collision with $other");
-    return null;
   }
 
   Vector2 _checkAabb2OutOfAabb2(AABB2 innerBox, AABB2 outerBox) {
@@ -103,15 +101,15 @@ class AABB2Collider extends Collider {
   }
 
   Vector2 _checkAabb2VsAabb2(AABB2 box1, AABB2 box2) {
-    double dx = box1.center.x - box2.center.x;
+    double dx = box2.center.x - box1.center.x;
     double px = (box1.half.x + box2.half.x) - dx.abs();
     if (px < 0) return null;
 
-    double dy = box1.center.y - box2.center.y;
+    double dy = box2.center.y - box1.center.y;
     double py = (box1.half.y + box2.half.y) - dy.abs();
     if (py < 0) return null;
 
-    if (px > py) {
+    if (px < py) {
       return new Vector2(px * dx.sign, 0.0);
     } else {
       return new Vector2(0.0, py * dy.sign);
