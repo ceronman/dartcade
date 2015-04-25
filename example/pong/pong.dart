@@ -2,14 +2,17 @@ import 'package:dartcade/dartcade.dart';
 
 main() {
   var game = new GameLoop('#gamebox', width: 800, height: 400);
+  game.debug = new DebugDrawer('debuger');
+//  game.timeScale = 0.1;
   var loader = new AssetLoader();
   loader.add('paddle', new ImageAsset('paddle.png'));
   loader.add('ball', new ImageAsset('ball.png'));
 
   var world = new ArcadeWorld(0.0, 0.0, game.width, game.height);
-  game.scene.onFrame.listen(world.update);
 
   loader.load().last.then((p) {
+    game.scene.onFrame.listen(world.update);
+
     var controller1 = new ArcadeKeyboardController(game.keyboard)
       ..keyUp = Keys.A
       ..keyDown = Keys.Z
@@ -17,14 +20,17 @@ main() {
       ..speedDown = 400.0;
 
     var body1 = new ArcadeBody()
+      ..position = new Vector2(40.0, 400 / 2)
       ..restitution = new Vector2(0.0, 0.0)
       ..addTo(world);
 
     var paddle1 = new Sprite(loader['paddle'])
       ..addTo(game.scene)
-      ..runAction(new Place(new Vector2(40.0, 400 / 2)))
       ..body = body1
       ..runAction(controller1);
+
+    body1.syncToNode();
+    body1.syncFromNode();
 
     var controller2 = new ArcadeKeyboardController(game.keyboard)
       ..keyUp = Keys.UP
@@ -33,24 +39,40 @@ main() {
       ..speedDown = 400.0;
 
     var body2 = new ArcadeBody()
+      ..position = new Vector2(800.0 - 40, 400 / 2)
       ..restitution = new Vector2(0.0, 0.0)
       ..addTo(world);
 
     var paddle2 = new Sprite(loader['paddle'])
       ..addTo(game.scene)
-      ..runAction(new Place(new Vector2(800.0 - 40, 400 / 2)))
       ..body = body2
       ..runAction(controller2);
 
+    body2.syncToNode();
+    body2.syncFromNode();
+
     var ballbody = new ArcadeBody()
-      ..speed = new Vector2(-300.0, 200.0)
+      ..position = new Vector2(400.0, 300.0)
+      ..speed = new Vector2(-100.0, 200.0)
       ..restitution = new Vector2(1.0, 1.0)
       ..addTo(world);
 
     var ball = new Sprite(loader['ball'])
       ..addTo(game.scene)
-      ..runAction(new Place(new Vector2(800 / 2, 400 / 2)))
       ..body = ballbody;
+
+    ballbody.syncToNode();
+    ballbody.syncFromNode();
+
+    var bounce = (event) {
+      ballbody.position.add(event.delta);
+      if (event.delta.x != 0.0 && event.delta.x.sign != ballbody.speed.x.sign) {
+        ballbody.speed.x *= -1.0;
+      }
+      if (event.delta.y != 0.0 && event.delta.y.sign != ballbody.speed.y.sign) {
+        ballbody.speed.y *= -1.0;
+      }
+    };
 
     var wallsCollision = new StaticBodyOutOfBoundsCollisionCheck();
     ballbody.collider = new AABB2Collider();
@@ -59,16 +81,7 @@ main() {
     world.collider.boundingbox = world.boundingbox;
     wallsCollision.collider1 = ballbody.collider;
     wallsCollision.collider2 = world.collider;
-    wallsCollision.onCollision.listen((event) {
-      ballbody.position.add(event.delta);
-      if (event.delta.x != 0.0) {
-        ballbody.speed.reflect(new Vector2(event.delta.x.sign, 0.0));
-      }
-      if (event.delta.y != 0.0) {
-        ballbody.speed.reflect(new Vector2(0.0, event.delta.y.sign));
-      }
-      ballbody.syncToNode();
-    });
+    wallsCollision.onCollision.listen(bounce);
     world.collisions.add(wallsCollision);
 
     body1.collider = new AABB2Collider();
@@ -76,11 +89,7 @@ main() {
     var paddle1Collision = new StaticBodyVsBodyCollisionCheck()
       ..collider1 = body1.collider
       ..collider2 = ballbody.collider;
-    paddle1Collision.onCollision.listen((event) {
-      ballbody.position.add(event.delta);
-      ballbody.speed.reflect(event.delta.normalized());
-      ballbody.syncToNode();
-    });
+    paddle1Collision.onCollision.listen(bounce);
     world.collisions.add(paddle1Collision);
 
     body2.collider = new AABB2Collider();
@@ -88,11 +97,7 @@ main() {
     var paddle2Collision = new StaticBodyVsBodyCollisionCheck()
       ..collider1 = body2.collider
       ..collider2 = ballbody.collider;
-    paddle2Collision.onCollision.listen((event) {
-      ballbody.position.add(event.delta);
-      ballbody.speed.reflect(event.delta.normalized());
-      ballbody.syncToNode();
-    });
+    paddle2Collision.onCollision.listen(bounce);
     world.collisions.add(paddle2Collision);
 
     var paddle1wallCollision = new StaticBodyOutOfBoundsCollisionCheck()
@@ -101,16 +106,15 @@ main() {
 
     paddle1wallCollision.onCollision.listen((event) {
       body1.position.add(event.delta);
-      body1.syncToNode();
     });
 
     var paddle2wallCollision = new StaticBodyOutOfBoundsCollisionCheck()
+
       ..collider1 = body2.collider
       ..collider2 = world.collider;
 
     paddle2wallCollision.onCollision.listen((event) {
       body2.position.add(event.delta);
-      body2.syncToNode();
     });
 
     world.collisions.add(paddle1wallCollision);

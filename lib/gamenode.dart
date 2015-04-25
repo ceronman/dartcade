@@ -51,7 +51,6 @@ abstract class GameNode {
   Body get body => _body;
   set body(Body value) {
     _body = value..node = this;
-    _body.syncFromNode();
   }
 
   StreamController<double> onFrameController =

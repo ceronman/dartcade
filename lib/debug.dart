@@ -51,7 +51,10 @@ class DebugVector extends DebugShape {
   Vector2 start = new Vector2.zero();
   Vector2 vector = new Vector2.zero();
 
-  DebugVector(this.vector, [this.start]);
+  DebugVector(vector, start) {
+    this.start.setFrom(start);
+    this.vector.setFrom(vector);
+  }
 
   void draw(html.CanvasRenderingContext2D context) {
     fillStyle = strokeStyle;

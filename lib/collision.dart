@@ -34,6 +34,7 @@ class AABB2 {
   AABB2.centerHalf(Vector2 this.center, Vector2 this.half);
 
   String toString() => '$center,$half';
+  Aabb2 toAabb2() => new Aabb2.minMax(center - half, center + half);
 }
 
 class CollisionEvent {

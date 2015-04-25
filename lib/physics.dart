@@ -64,8 +64,7 @@ class ArcadeWorld {
 
   ArcadeWorld(double x, double y, double width, double height) {
     boundingbox = new AABB2.centerHalf(
-        new Vector2(width / 2, height / 2),
-        new Vector2(width / 2, height / 2));
+        new Vector2(width / 2, height / 2), new Vector2(width / 2, height / 2));
   }
 
   void addBody(ArcadeBody body) {
@@ -75,11 +74,14 @@ class ArcadeWorld {
   void update(double dt) {
     for (var body in bodies) {
       body.update(dt);
-      body.syncToNode();
     }
 
     for (var collision in collisions) {
       collision.check();
+    }
+
+    for (var body in bodies) {
+      body.syncToNode();
     }
   }
 }
