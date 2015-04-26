@@ -3,7 +3,8 @@ import 'package:dartcade/dartcade.dart';
 main() {
   var game = new GameLoop('#gamebox', width: 800, height: 400);
   game.debug = new DebugDrawer('debuger');
-//  game.timeScale = 0.1;
+  game.timeScale = 1.0;
+
   var loader = new AssetLoader();
   loader.add('paddle', new ImageAsset('paddle.png'));
   loader.add('ball', new ImageAsset('ball.png'));
@@ -52,8 +53,8 @@ main() {
     body2.syncFromNode();
 
     var ballbody = new ArcadeBody()
-      ..position = new Vector2(400.0, 300.0)
-      ..speed = new Vector2(-100.0, 200.0)
+      ..position = new Vector2(400.0, 200.0)
+      ..speed = new Vector2(0.0, 0.0)
       ..restitution = new Vector2(1.0, 1.0)
       ..addTo(world);
 
@@ -82,6 +83,12 @@ main() {
     wallsCollision.collider1 = ballbody.collider;
     wallsCollision.collider2 = world.collider;
     wallsCollision.onCollision.listen(bounce);
+    wallsCollision.onCollision.listen((event) {
+      if (event.delta.x != 0.0) {
+        ballbody.position.setValues(400.0, 200.0);
+        ballbody.speed.setValues(0.0, 0.0);
+      }
+    });
     world.collisions.add(wallsCollision);
 
     body1.collider = new AABB2Collider();
@@ -119,6 +126,10 @@ main() {
 
     world.collisions.add(paddle1wallCollision);
     world.collisions.add(paddle2wallCollision);
+
+    game.keyboard.onKeyDown.where(((e) => e.keyCode == Keys.SPACE)).listen((e) {
+      ballbody.speed.setValues(100.0, 200.0);
+    });
   });
 
   game.start();
