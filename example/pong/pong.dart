@@ -14,6 +14,24 @@ main() {
   loader.load().last.then((p) {
     game.scene.onFrame.listen(world.update);
 
+    var score1 = 0;
+    var score2 = 0;
+
+    var message = new Label('Press space to start')
+          ..addTo(game.scene)
+          ..align = 'center'
+          ..position = new Vector2(400.0, 40.0);
+
+    var counter1 = new Label(score1.toString())
+      ..addTo(game.scene)
+      ..align = 'center'
+      ..position = new Vector2(20.0, 40.0);
+
+    var counter2 = new Label(score1.toString())
+      ..addTo(game.scene)
+      ..align = 'center'
+      ..position = new Vector2(780.0, 40.0);
+
     var controller1 = new ArcadeKeyboardController(game.keyboard)
       ..keyUp = Keys.A
       ..keyDown = Keys.Z
@@ -84,7 +102,17 @@ main() {
     wallsCollision.collider2 = world.collider;
     wallsCollision.onCollision.listen(bounce);
     wallsCollision.onCollision.listen((event) {
-      if (event.delta.x != 0.0) {
+      var side = event.delta.x;
+      if (side != 0.0) {
+        if (side > 0) {
+          score2++;
+          counter2.text = score2.toString();
+        }
+        else {
+          score1++;
+          counter1.text = score1.toString();
+        }
+        message.runAction(new FadeIn(1));
         ballbody.position.setValues(400.0, 200.0);
         ballbody.speed.setValues(0.0, 0.0);
       }
@@ -116,7 +144,6 @@ main() {
     });
 
     var paddle2wallCollision = new StaticBodyOutOfBoundsCollisionCheck()
-
       ..collider1 = body2.collider
       ..collider2 = world.collider;
 
@@ -129,6 +156,7 @@ main() {
 
     game.keyboard.onKeyDown.where(((e) => e.keyCode == Keys.SPACE)).listen((e) {
       ballbody.speed.setValues(100.0, 200.0);
+      message.runAction(new FadeOut(1));
     });
   });
 
