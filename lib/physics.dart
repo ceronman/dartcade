@@ -21,7 +21,13 @@ abstract class Body {
 }
 
 class ArcadeBody extends Body {
-  Collider collider;
+  Collider _collider;
+
+  Collider get collider => _collider;
+  set collider(Collider value) {
+    _collider = value;
+    _collider.body = this;
+  }
 
   Vector2 size = new Vector2.zero();
   Vector2 position = new Vector2.zero();
@@ -60,11 +66,10 @@ class ArcadeWorld {
   List<ArcadeBody> bodies = new List<ArcadeBody>();
   Collider collider;
   List<CollisionCheck> collisions = new List<CollisionCheck>();
-  AABB2 boundingbox;
 
   ArcadeWorld(double x, double y, double width, double height) {
-    boundingbox = new AABB2.centerHalf(
-        new Vector2(width / 2, height / 2), new Vector2(width / 2, height / 2));
+    collider = new AABB2Collider()
+      ..boundingbox = new AABB2.xywh(x, y, width, height);
   }
 
   void addBody(ArcadeBody body) {

@@ -18,9 +18,9 @@ main() {
     var score2 = 0;
 
     var message = new Label('Press space to start')
-          ..addTo(game.scene)
-          ..align = 'center'
-          ..position = new Vector2(400.0, 40.0);
+      ..addTo(game.scene)
+      ..align = 'center'
+      ..position = new Vector2(400.0, 40.0);
 
     var counter1 = new Label(score1.toString())
       ..addTo(game.scene)
@@ -41,6 +41,7 @@ main() {
     var body1 = new ArcadeBody()
       ..position = new Vector2(40.0, 400 / 2)
       ..restitution = new Vector2(0.0, 0.0)
+      ..collider = new AABB2Collider()
       ..addTo(world);
 
     var paddle1 = new Sprite(loader['paddle'])
@@ -60,6 +61,7 @@ main() {
     var body2 = new ArcadeBody()
       ..position = new Vector2(800.0 - 40, 400 / 2)
       ..restitution = new Vector2(0.0, 0.0)
+      ..collider = new AABB2Collider()
       ..addTo(world);
 
     var paddle2 = new Sprite(loader['paddle'])
@@ -74,6 +76,7 @@ main() {
       ..position = new Vector2(400.0, 200.0)
       ..speed = new Vector2(0.0, 0.0)
       ..restitution = new Vector2(1.0, 1.0)
+      ..collider = new AABB2Collider()
       ..addTo(world);
 
     var ball = new Sprite(loader['ball'])
@@ -93,66 +96,39 @@ main() {
       }
     };
 
-    var wallsCollision = new StaticBodyOutOfBoundsCollisionCheck();
-    ballbody.collider = new AABB2Collider();
-    ballbody.collider.body = ballbody;
-    world.collider = new AABB2Collider();
-    world.collider.boundingbox = world.boundingbox;
-    wallsCollision.collider1 = ballbody.collider;
-    wallsCollision.collider2 = world.collider;
-    wallsCollision.onCollision.listen(bounce);
-    wallsCollision.onCollision.listen((event) {
-      var side = event.delta.x;
-      if (side != 0.0) {
-        if (side > 0) {
-          score2++;
-          counter2.text = score2.toString();
+    var wallsCollision = new StaticBodyOutOfBoundsCollisionCheck()
+      ..collider1 = ballbody.collider
+      ..collider2 = world.collider
+      ..onCollision.listen((event) {
+        bounce(event);
+        var side = event.delta.x;
+        if (side != 0.0) {
+          if (side > 0) {
+            score2++;
+            counter2.text = score2.toString();
+          } else {
+            score1++;
+            counter1.text = score1.toString();
+          }
+          message.runAction(new FadeIn(1));
+          ballbody.position.setValues(400.0, 200.0);
+          ballbody.speed.setValues(0.0, 0.0);
         }
-        else {
-          score1++;
-          counter1.text = score1.toString();
-        }
-        message.runAction(new FadeIn(1));
-        ballbody.position.setValues(400.0, 200.0);
-        ballbody.speed.setValues(0.0, 0.0);
-      }
-    });
+      });
     world.collisions.add(wallsCollision);
 
-    body1.collider = new AABB2Collider();
-    body1.collider.body = body1;
-    var paddle1Collision = new StaticBodyVsBodyCollisionCheck()
-      ..collider1 = body1.collider
-      ..collider2 = ballbody.collider;
-    paddle1Collision.onCollision.listen(bounce);
-    world.collisions.add(paddle1Collision);
+    var paddleBallCollision = new StaticBodyVsGroupCollisionCheck()
+      ..collider1 = ballbody.collider
+      ..colliders = [body1.collider, body2.collider]
+      ..onCollision.listen(bounce);
+    world.collisions.add(paddleBallCollision);
 
-    body2.collider = new AABB2Collider();
-    body2.collider.body = body2;
-    var paddle2Collision = new StaticBodyVsBodyCollisionCheck()
-      ..collider1 = body2.collider
-      ..collider2 = ballbody.collider;
-    paddle2Collision.onCollision.listen(bounce);
-    world.collisions.add(paddle2Collision);
-
-    var paddle1wallCollision = new StaticBodyOutOfBoundsCollisionCheck()
-      ..collider1 = body1.collider
-      ..collider2 = world.collider;
-
-    paddle1wallCollision.onCollision.listen((event) {
-      body1.position.add(event.delta);
-    });
-
-    var paddle2wallCollision = new StaticBodyOutOfBoundsCollisionCheck()
-      ..collider1 = body2.collider
-      ..collider2 = world.collider;
-
-    paddle2wallCollision.onCollision.listen((event) {
-      body2.position.add(event.delta);
-    });
-
-    world.collisions.add(paddle1wallCollision);
-    world.collisions.add(paddle2wallCollision);
+    var paddleWallCollision = new GroupOutOfBoundsCollisionCheck()
+      ..collider1 = world.collider
+      ..colliders = [body1.collider, body2.collider]
+      ..onCollision
+          .listen((event) => event.collider1.body.position.add(event.delta));
+    world.collisions.add(paddleWallCollision);
 
     game.keyboard.onKeyDown.where(((e) => e.keyCode == Keys.SPACE)).listen((e) {
       ballbody.speed.setValues(100.0, 200.0);

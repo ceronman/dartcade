@@ -32,6 +32,9 @@ class AABB2 {
 
   AABB2();
   AABB2.centerHalf(Vector2 this.center, Vector2 this.half);
+  AABB2.xywh(double x, double y, double w, double h):
+    center = new Vector2(x + w / 2.0, y + h / 2.0),
+    half = new Vector2(w / 2.0, h / 2.0);
 
   String toString() => '$center,$half';
   Aabb2 toAabb2() => new Aabb2.minMax(center - half, center + half);
@@ -102,11 +105,11 @@ class AABB2Collider extends Collider {
   }
 
   Vector2 _checkAabb2VsAabb2(AABB2 box1, AABB2 box2) {
-    double dx = box2.center.x - box1.center.x;
+    double dx = box1.center.x - box2.center.x;
     double px = (box1.half.x + box2.half.x) - dx.abs();
     if (px < 0) return null;
 
-    double dy = box2.center.y - box1.center.y;
+    double dy = box1.center.y - box2.center.y;
     double py = (box1.half.y + box2.half.y) - dy.abs();
     if (py < 0) return null;
 
@@ -146,4 +149,28 @@ class StaticBodyVsBodyCollisionCheck extends SingleCollisionCheck {
 
 class StaticBodyOutOfBoundsCollisionCheck extends SingleCollisionCheck {
   CollisionEvent _checkEvent() => collider1.isOutOf(collider2);
+}
+
+class StaticBodyVsGroupCollisionCheck extends CollisionCheck {
+  Collider collider1;
+  List<Collider> colliders;
+
+  void check() {
+    for (var other in colliders) {
+      var event = collider1.collidesWith(other);
+      if (event != null) controller.add(event);
+    }
+  }
+}
+
+class GroupOutOfBoundsCollisionCheck extends CollisionCheck {
+  Collider collider1;
+  List<Collider> colliders;
+
+  void check() {
+    for (var other in colliders) {
+      var event = other.isOutOf(collider1);
+      if (event != null) controller.add(event);
+    }
+  }
 }
