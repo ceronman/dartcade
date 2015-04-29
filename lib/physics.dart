@@ -52,9 +52,7 @@ class ArcadeBody extends Body {
 
   void syncFromNode() {
     position.setFrom(node.position);
-
-    // TODO: change GameNode to use size intead of width and height??
-    size.setValues(node.width, node.height);
+    size.setFrom(node.size);
   }
 
   void addTo(ArcadeWorld world) {

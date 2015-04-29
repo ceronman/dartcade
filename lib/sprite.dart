@@ -17,11 +17,9 @@ part of dartcade;
 class Sprite extends GameNode {
   html.ImageElement image;
 
-  get width => image.width.toDouble();
-  get height => image.height.toDouble();
-
   Sprite(html.ImageElement this.image, {pos}) : super() {
     position = pos != null ? pos : position;
+    size.setValues(image.width.toDouble(), image.height.toDouble());
   }
 
   void draw(html.CanvasRenderingContext2D context) {

@@ -58,22 +58,9 @@ abstract class GameNode {
   Stream<num> get onFrame => onFrameController.stream;
 
   // TODO: Should this be part of box?
-  double get width;
-  double get height;
-
-  set min(Vector2 value) {
-    position = new Vector2(
-        value.x + width * positionAnchor.x,
-        value.y + height * positionAnchor.y);
-  }
-
-  set max(Vector2 value) {
-    position = new Vector2(
-        value.x - width * positionAnchor.x,
-        value.y - height * positionAnchor.y);
-  }
 
   Vector2 position = new Vector2.zero();
+  Vector2 size = new Vector2.zero();
   Vector2 positionAnchor = new Vector2(0.5, 0.5);
   double rotation = 0.0;
   Vector2 rotationAnchor = new Vector2(0.5, 0.5);
@@ -90,14 +77,14 @@ abstract class GameNode {
     }
 
     if (rotation != 0) {
-      var axis_x = (rotationAnchor.x - positionAnchor.x) * width;
-      var axis_y = (rotationAnchor.y - positionAnchor.y) * height;
+      var axis_x = (rotationAnchor.x - positionAnchor.x) * size.x;
+      var axis_y = (rotationAnchor.y - positionAnchor.y) * size.y;
       context.translate(axis_x, axis_y);
       context.rotate(rotation * PI / 180);
       context.translate(-axis_x, -axis_y);
     }
 
-    context.translate(-positionAnchor.x * width, -positionAnchor.y * height);
+    context.translate(-positionAnchor.x * size.x, -positionAnchor.y * size.y);
   }
 
   void drawWithTransform(html.CanvasRenderingContext2D context) {

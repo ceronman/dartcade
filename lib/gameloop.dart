@@ -25,8 +25,7 @@ class GameLoop {
   Scene _scene;
   Scene get scene => _scene;
   set scene(Scene value) {
-    _scene = value;
-    _scene.game = this;
+    _scene = value..game = this;
   }
 
   DebugDrawer debug;

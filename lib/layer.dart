@@ -15,6 +15,5 @@
 part of dartcade;
 
 class Layer extends GameNode {
-  get width => parent.width;
-  get height => parent.height;
+  Vector2 get size => parent.size;
 }
