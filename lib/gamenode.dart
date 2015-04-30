@@ -50,7 +50,8 @@ abstract class GameNode {
   Body _body;
   Body get body => _body;
   set body(Body value) {
-    _body = value..node = this;
+    _body = value
+        ..node = this;
   }
 
   StreamController<double> onFrameController =

@@ -38,19 +38,16 @@ main() {
       ..speedUp = -400.0
       ..speedDown = 400.0;
 
-    var body1 = new ArcadeBody()
-      ..position = new Vector2(40.0, 400 / 2)
+    var paddle1 = new Sprite(loader['paddle'])
+      ..body = new ArcadeBody()
+      ..runAction(controller1)
+      ..addTo(game.scene);
+
+    paddle1.body
+      ..position.setValues(40.0, 400 / 2)
       ..restitution = new Vector2(0.0, 0.0)
       ..collider = new AABB2Collider()
       ..addTo(world);
-
-    var paddle1 = new Sprite(loader['paddle'])
-      ..addTo(game.scene)
-      ..body = body1
-      ..runAction(controller1);
-
-    body1.syncToNode();
-    body1.syncFromNode();
 
     var controller2 = new ArcadeKeyboardController(game.keyboard)
       ..keyUp = Keys.UP
@@ -58,46 +55,40 @@ main() {
       ..speedUp = -400.0
       ..speedDown = 400.0;
 
-    var body2 = new ArcadeBody()
-      ..position = new Vector2(800.0 - 40, 400 / 2)
-      ..restitution = new Vector2(0.0, 0.0)
-      ..collider = new AABB2Collider()
-      ..addTo(world);
-
     var paddle2 = new Sprite(loader['paddle'])
-      ..addTo(game.scene)
-      ..body = body2
-      ..runAction(controller2);
+      ..body = new ArcadeBody()
+      ..runAction(controller2)
+      ..addTo(game.scene);
 
-    body2.syncToNode();
-    body2.syncFromNode();
-
-    var ballbody = new ArcadeBody()
-      ..position = new Vector2(400.0, 200.0)
-      ..speed = new Vector2(0.0, 0.0)
-      ..restitution = new Vector2(1.0, 1.0)
+    paddle2.body
+      ..position.setValues(800.0 - 40, 400 / 2)
+      ..restitution = new Vector2(0.0, 0.0)
       ..collider = new AABB2Collider()
       ..addTo(world);
 
     var ball = new Sprite(loader['ball'])
       ..addTo(game.scene)
-      ..body = ballbody;
+      ..body = new ArcadeBody();
 
-    ballbody.syncToNode();
-    ballbody.syncFromNode();
+    ball.body
+      ..position.setValues(400.0, 200.0)
+      ..speed = new Vector2(0.0, 0.0)
+      ..restitution = new Vector2(1.0, 1.0)
+      ..collider = new AABB2Collider()
+      ..addTo(world);
 
     var bounce = (event) {
-      ballbody.position.add(event.delta);
-      if (event.delta.x != 0.0 && event.delta.x.sign != ballbody.speed.x.sign) {
-        ballbody.speed.x *= -1.0;
+      ball.body.position.add(event.delta);
+      if (event.delta.x != 0.0 && event.delta.x.sign != ball.body.speed.x.sign) {
+        ball.body.speed.x *= -1.0;
       }
-      if (event.delta.y != 0.0 && event.delta.y.sign != ballbody.speed.y.sign) {
-        ballbody.speed.y *= -1.0;
+      if (event.delta.y != 0.0 && event.delta.y.sign != ball.body.speed.y.sign) {
+        ball.body.speed.y *= -1.0;
       }
     };
 
     var wallsCollision = new StaticBodyOutOfBoundsCollisionCheck()
-      ..collider1 = ballbody.collider
+      ..collider1 = ball.body.collider
       ..collider2 = world.collider
       ..onCollision.listen((event) {
         bounce(event);
@@ -111,27 +102,27 @@ main() {
             counter1.text = score1.toString();
           }
           message.runAction(new FadeIn(1));
-          ballbody.position.setValues(400.0, 200.0);
-          ballbody.speed.setValues(0.0, 0.0);
+          ball.body.position.setValues(400.0, 200.0);
+          ball.body.speed.setValues(0.0, 0.0);
         }
       });
     world.collisions.add(wallsCollision);
 
     var paddleBallCollision = new StaticBodyVsGroupCollisionCheck()
-      ..collider1 = ballbody.collider
-      ..colliders = [body1.collider, body2.collider]
+      ..collider1 = ball.body.collider
+      ..colliders = [paddle1.body.collider, paddle2.body.collider]
       ..onCollision.listen(bounce);
     world.collisions.add(paddleBallCollision);
 
     var paddleWallCollision = new GroupOutOfBoundsCollisionCheck()
       ..collider1 = world.collider
-      ..colliders = [body1.collider, body2.collider]
+      ..colliders = [paddle1.body.collider, paddle2.body.collider]
       ..onCollision
           .listen((event) => event.collider1.body.position.add(event.delta));
     world.collisions.add(paddleWallCollision);
 
     game.keyboard.onKeyDown.where(((e) => e.keyCode == Keys.SPACE)).listen((e) {
-      ballbody.speed.setValues(100.0, 200.0);
+      ball.body.speed.setValues(100.0, 200.0);
       message.runAction(new FadeOut(1));
     });
   });

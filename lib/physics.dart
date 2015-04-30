@@ -16,8 +16,6 @@ part of dartcade;
 
 abstract class Body {
   GameNode node;
-  void syncToNode();
-  void syncFromNode();
 }
 
 class ArcadeBody extends Body {
@@ -29,8 +27,8 @@ class ArcadeBody extends Body {
     _collider.body = this;
   }
 
-  Vector2 size = new Vector2.zero();
-  Vector2 position = new Vector2.zero();
+  Vector2 get position => node.position;
+  Vector2 get size => node.size;
   Vector2 speed = new Vector2.zero();
   Vector2 acceleration = new Vector2.zero();
   Vector2 restitution = new Vector2.zero();
@@ -44,15 +42,6 @@ class ArcadeBody extends Body {
     speed.y += acceleration.y * dt;
 
     if (collider != null) collider.syncFromBody();
-  }
-
-  void syncToNode() {
-    node.position.setFrom(position);
-  }
-
-  void syncFromNode() {
-    position.setFrom(node.position);
-    size.setFrom(node.size);
   }
 
   void addTo(ArcadeWorld world) {
@@ -81,10 +70,6 @@ class ArcadeWorld {
 
     for (var collision in collisions) {
       collision.check();
-    }
-
-    for (var body in bodies) {
-      body.syncToNode();
     }
   }
 }
