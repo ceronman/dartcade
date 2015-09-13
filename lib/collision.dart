@@ -32,9 +32,9 @@ class AABB2 {
 
   AABB2();
   AABB2.centerHalf(Vector2 this.center, Vector2 this.half);
-  AABB2.xywh(double x, double y, double w, double h):
-    center = new Vector2(x + w / 2.0, y + h / 2.0),
-    half = new Vector2(w / 2.0, h / 2.0);
+  AABB2.xywh(double x, double y, double w, double h)
+      : center = new Vector2(x + w / 2.0, y + h / 2.0),
+        half = new Vector2(w / 2.0, h / 2.0);
 
   String toString() => '$center,$half';
   Aabb2 toAabb2() => new Aabb2.minMax(center - half, center + half);
@@ -121,9 +121,7 @@ class AABB2Collider extends Collider {
   }
 }
 
-
 abstract class CollisionCheck {
-
   StreamController<CollisionEvent> controller =
       new StreamController<CollisionEvent>.broadcast(sync: true);
   Stream<CollisionEvent> get onCollision => controller.stream;
@@ -140,6 +138,7 @@ abstract class SingleCollisionCheck extends CollisionCheck {
       controller.add(event);
     }
   }
+
   CollisionEvent _checkEvent();
 }
 

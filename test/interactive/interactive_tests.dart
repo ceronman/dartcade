@@ -78,8 +78,7 @@ showIndex(groups) {
   querySelector('#test-list').children.clear();
   querySelector('#test-title').text = '';
   for (var group in groups) {
-    var header = new HeadingElement.h2()
-      ..text = group.name;
+    var header = new HeadingElement.h2()..text = group.name;
     querySelector('#test-list').children.add(header);
     var testsUL = new UListElement();
     for (var test in group.tests) {
@@ -106,7 +105,7 @@ runTest(game, groups, testLink) {
   try {
     testGroup = groups.firstWhere((g) => g.name == groupName);
     testCase = testGroup.tests.firstWhere((t) => t.name == testName);
-  } on StateError catch (e) {
+  } on StateError {
     window.alert("ERROR: Test does not exist");
     return;
   }
@@ -158,11 +157,11 @@ main() {
 
     if (testLink.isEmpty) {
       showIndex(groups);
-    }
-    else {
+    } else {
       runTest(game, groups, testLink);
     }
-  };
+  }
+
   window.onHashChange.listen(hashChange);
   querySelector('#current-anchor').onClick.listen((e) {
     hashChange(e);

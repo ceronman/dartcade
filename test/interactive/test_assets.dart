@@ -18,9 +18,9 @@ part of dartcade_test;
 testLoading(GameLoop game) {
   var next = new Scene();
   var label = new Label('New scene')
-      ..position.x = 50.0
-      ..position.y = 50.0
-      ..addTo(next);
+    ..position.x = 50.0
+    ..position.y = 50.0
+    ..addTo(next);
 
   fakeProgress() {
     var controller = new StreamController();
@@ -43,9 +43,9 @@ testLoading(GameLoop game) {
 testLoadingWithError(GameLoop game) {
   var next = new Scene();
   var label = new Label('New scene')
-      ..position.x = 50.0
-      ..position.y = 50.0
-      ..addTo(next);
+    ..position.x = 50.0
+    ..position.y = 50.0
+    ..addTo(next);
 
   fakeProgress() {
     var controller = new StreamController();

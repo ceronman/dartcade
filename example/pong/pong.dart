@@ -79,10 +79,12 @@ main() {
 
     var bounce = (event) {
       ball.body.position.add(event.delta);
-      if (event.delta.x != 0.0 && event.delta.x.sign != ball.body.speed.x.sign) {
+      if (event.delta.x != 0.0 &&
+          event.delta.x.sign != ball.body.speed.x.sign) {
         ball.body.speed.x *= -1.0;
       }
-      if (event.delta.y != 0.0 && event.delta.y.sign != ball.body.speed.y.sign) {
+      if (event.delta.y != 0.0 &&
+          event.delta.y.sign != ball.body.speed.y.sign) {
         ball.body.speed.y *= -1.0;
       }
     };

@@ -23,13 +23,13 @@ abstract class Action {
   Action get reversed {
     throw "Reversed not implemented";
   }
+
   Action operator |(Action action) => new ActionSpawn([this, action]);
   Action operator +(Action action) => new ActionSequence([this, action]);
 
   void start();
   void step(num dt);
   void stop();
-
 }
 
 abstract class InstantAction extends Action {
@@ -49,7 +49,6 @@ class Place extends InstantAction {
     target.position = position;
   }
 }
-
 
 typedef CallFunctionCallback(GameNode node);
 
@@ -150,6 +149,7 @@ abstract class ChangeAttributeByAction extends IntervalAction {
   void start() {
     startValue = _changingValue;
   }
+
   void stop() {
     _changingValue = startValue + deltaValue;
   }
@@ -283,9 +283,8 @@ class RandomDelay extends Delay {
   num min;
   num max;
 
-  RandomDelay(num min, num max) : super(
-      min + new Random().nextDouble() * (max - min)) {
-
+  RandomDelay(num min, num max)
+      : super(min + new Random().nextDouble() * (max - min)) {
     this.min = min;
     this.max = max;
   }
@@ -555,15 +554,16 @@ class ArcadeKeyboardController extends Action {
 
   ArcadeKeyboardController clone() {
     return new ArcadeKeyboardController(keys)
-        ..speedRight = speedRight
-        ..speedDown = speedDown
-        ..speedLeft = speedLeft
-        ..speedUp = speedUp
-        ..keyUp = keyUp
-        ..keyDown = keyDown
-        ..keyLeft = keyLeft
-        ..keyRight = keyRight;
+      ..speedRight = speedRight
+      ..speedDown = speedDown
+      ..speedLeft = speedLeft
+      ..speedUp = speedUp
+      ..keyUp = keyUp
+      ..keyDown = keyDown
+      ..keyLeft = keyLeft
+      ..keyRight = keyRight;
   }
+
   ArcadeKeyboardController(this.keys);
 
   void start() {}

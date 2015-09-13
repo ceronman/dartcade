@@ -17,10 +17,10 @@ part of dartcade_test;
 @InteractiveTest('KeyStateHandler', group: 'Input')
 testKeyStateHandler(GameLoop game) {
   var label = new Label('Use Arrow Keys')
-      ..position.x = game.width / 2
-      ..position.y = game.height / 2
-      ..align = 'center'
-      ..addTo(game.scene);
+    ..position.x = game.width / 2
+    ..position.y = game.height / 2
+    ..align = 'center'
+    ..addTo(game.scene);
 
   game.scene.onFrame.listen((dt) {
     if (game.keyboard[Keys.LEFT]) {
@@ -41,10 +41,10 @@ testKeyStateHandler(GameLoop game) {
 @InteractiveTest('onKeyDown and onKeyUp', group: 'Input')
 testKeyEvents(GameLoop game) {
   var label = new Label('Press any key')
-      ..position.x = game.width / 2
-      ..position.y = game.width / 2
-      ..align = 'center'
-      ..addTo(game.scene);
+    ..position.x = game.width / 2
+    ..position.y = game.width / 2
+    ..align = 'center'
+    ..addTo(game.scene);
 
   game.onKeyDown.listen((e) => label.text = 'Pressed ${e.keyCode}');
   game.onKeyUp.listen((e) => label.text = 'Press any key');

@@ -15,7 +15,6 @@
 part of dartcade;
 
 class Label extends GameNode {
-
   String font;
   var color;
   String align;

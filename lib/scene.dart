@@ -16,7 +16,6 @@ part of dartcade;
 
 // TODO: Add pause / resume
 class Scene extends GameNode {
-
   GameLoop game;
 
   double get width => game.width;

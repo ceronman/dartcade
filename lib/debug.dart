@@ -37,10 +37,7 @@ class DebugBox extends DebugShape {
   void draw(html.CanvasRenderingContext2D context) {
     context.beginPath();
     context.rect(
-        box.min.x,
-        box.min.y,
-        box.max.x - box.min.x,
-        box.max.y - box.min.y);
+        box.min.x, box.min.y, box.max.x - box.min.x, box.max.y - box.min.y);
     context.fill();
     context.stroke();
     context.closePath();
@@ -62,19 +59,17 @@ class DebugVector extends DebugShape {
     var arrow = vector.normalized();
 
     context
-        ..beginPath()
-        ..moveTo(start.x, start.y)
-        ..lineTo(target.x, target.y)
-        ..stroke()
-        ..lineTo(
-            target.x - arrow.x * 6 - arrow.y * 3,
-            target.y - arrow.y * 6 + arrow.x * 3)
-        ..lineTo(
-            target.x - arrow.x * 6 + arrow.y * 3,
-            target.y - arrow.y * 6 - arrow.x * 3)
-        ..lineTo(target.x, target.y)
-        ..fill()
-        ..closePath();
+      ..beginPath()
+      ..moveTo(start.x, start.y)
+      ..lineTo(target.x, target.y)
+      ..stroke()
+      ..lineTo(target.x - arrow.x * 6 - arrow.y * 3,
+          target.y - arrow.y * 6 + arrow.x * 3)
+      ..lineTo(target.x - arrow.x * 6 + arrow.y * 3,
+          target.y - arrow.y * 6 - arrow.x * 3)
+      ..lineTo(target.x, target.y)
+      ..fill()
+      ..closePath();
   }
 }
 
@@ -101,7 +96,6 @@ class DebugDrawer {
       shape.draw(context);
       context.restore();
     }
-
   }
 
   void add(shape) => shapes.add(shape);
@@ -114,8 +108,7 @@ class DebugDrawer {
     add(debugBox);
   }
 
-  void vector(Vector2 vector, {start: null, fg: null, bg: null, frames:
-      null}) {
+  void vector(Vector2 vector, {start: null, fg: null, bg: null, frames: null}) {
     var debugVector = new DebugVector(vector, start);
     if (fg != null) debugVector.strokeStyle = fg;
     if (bg != null) debugVector.fillStyle = bg;

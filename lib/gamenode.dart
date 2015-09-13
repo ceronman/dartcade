@@ -15,7 +15,6 @@
 part of dartcade;
 
 abstract class GameNode {
-
   GameNode _parent;
   GameNode get parent => _parent;
   void set parent(GameNode value) {
@@ -27,6 +26,7 @@ abstract class GameNode {
     }
     _parent = value;
   }
+
   void add(GameNode node) {
     children.add(node);
     node.parent = this;
@@ -45,13 +45,13 @@ abstract class GameNode {
   void removeFromParent() {
     parent = null;
   }
+
   List<GameNode> children = new List<GameNode>();
 
   Body _body;
   Body get body => _body;
   set body(Body value) {
-    _body = value
-        ..node = this;
+    _body = value..node = this;
   }
 
   StreamController<double> onFrameController =
