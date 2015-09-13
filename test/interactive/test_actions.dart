@@ -18,14 +18,14 @@ part of dartcade_test;
 
 @InteractiveTest('Place', group: 'Action')
 testPlace(GameLoop game) {
-  var label = new Label('Place 200, 200')
+  new Label('Place 200, 200')
     ..addTo(game.scene)
     ..runAction(new Place(new Vector2(200.0, 200.0)));
 }
 
 @InteractiveTest('Show, Hide, ToggleVisibility', group: 'Action')
 testVisibility(GameLoop game) {
-  var label1 = new Label('Show')
+  new Label('Show')
     ..addTo(game.scene)
     ..align = 'center'
     ..visible = false
@@ -33,14 +33,14 @@ testVisibility(GameLoop game) {
     ..position.y = game.height / 2
     ..runAction(new Delay(1) + new Show() + new Delay(1) + new Show().reversed);
 
-  var label2 = new Label('Hide')
+  new Label('Hide')
     ..addTo(game.scene)
     ..position.x = game.width / 2
     ..position.y = game.height / 2
     ..align = 'center'
     ..runAction(new Delay(1) + new Hide() + new Delay(1) + new Hide().reversed);
 
-  var label3 = new Label('ToggleVisibility')
+  new Label('ToggleVisibility')
     ..addTo(game.scene)
     ..position.x = 3 * game.width / 4
     ..position.y = game.height / 2
@@ -59,7 +59,7 @@ testDelay(GameLoop game) {
     new MoveTo(new Vector2(0.0, game.height), 1)
   ];
 
-  var label = new Label('Move + Delay + Move')
+  new Label('Move + Delay + Move')
     ..addTo(game.scene)
     ..position.x = 0.0
     ..position.y = game.height
@@ -82,7 +82,7 @@ testSpeed(GameLoop game) {
 testAccelerate(GameLoop game) {
   var newPos = new Vector2(0.0, game.height - 50);
   Accelerate action = new Accelerate(new MoveBy(newPos, 2), 2);
-  var label = new Label('Move to bottom with 2X accel')
+  new Label('Move to bottom with 2X accel')
     ..addTo(game.scene)
     ..align = 'center'
     ..position.x = game.width / 2
@@ -95,7 +95,7 @@ testAccelDeccel(GameLoop game) {
   var newPos = new Vector2(0.0, game.height - 50);
   AccelDeccel action = new AccelDeccel(new MoveBy(newPos, 2), 2);
 
-  var label = new Label('Move to top with 2X accel-deccel')
+  new Label('Move to top with 2X accel-deccel')
     ..addTo(game.scene)
     ..align = 'center'
     ..position.x = game.width / 2
@@ -105,7 +105,7 @@ testAccelDeccel(GameLoop game) {
 
 @InteractiveTest('Blink', group: 'Action')
 testBlink(GameLoop game) {
-  var label = new Label('Blink for 2 seconds')
+  new Label('Blink for 2 seconds')
     ..addTo(game.scene)
     ..align = 'center'
     ..position.x = game.width / 2
@@ -115,7 +115,7 @@ testBlink(GameLoop game) {
 
 @InteractiveTest('MoveTo', group: 'Action')
 testMoveTo(GameLoop game) {
-  var label = new Label('MoveTo 100, 100')
+  new Label('MoveTo 100, 100')
     ..addTo(game.scene)
     ..position.x = game.width / 2
     ..position.y = game.height / 2
@@ -126,7 +126,7 @@ testMoveTo(GameLoop game) {
 testMoveBy(GameLoop game) {
   var action = new MoveBy(new Vector2(100.0, 100.0), 1);
 
-  var label = new Label('MoveBy 100, 100')
+  new Label('MoveBy 100, 100')
     ..addTo(game.scene)
     ..align = 'center'
     ..position.x = game.width / 2
@@ -136,13 +136,13 @@ testMoveBy(GameLoop game) {
 
 @InteractiveTest('RotateTo', group: 'Action')
 testRotateTo(GameLoop game) {
-  var label1 = new Label('RotateTo 45')
+  new Label('RotateTo 45')
     ..addTo(game.scene)
     ..position.x = 100.0
     ..position.y = game.height / 2
     ..runAction(new RotateTo(45, 2));
 
-  var label2 = new Label('RotateTo 45 reverse')
+  new Label('RotateTo 45 reverse')
     ..addTo(game.scene)
     ..position.x = game.width - 300
     ..position.y = game.height / 2
@@ -152,7 +152,7 @@ testRotateTo(GameLoop game) {
 @InteractiveTest('RotateBy', group: 'Action')
 testRotateBy(GameLoop game) {
   var action = new RotateBy(90, 1);
-  var label = new Label('RotateBy 90')
+  new Label('RotateBy 90')
     ..addTo(game.scene)
     ..position.x = game.width / 2
     ..position.y = game.height / 2
@@ -172,7 +172,7 @@ testScaleTo(GameLoop game) {
 testScaleBy(GameLoop game) {
   var action = new ScaleBy(new Vector2(1.0, 2.0), 1);
 
-  var label = new Label('ScaleBy 1, 2')
+  new Label('ScaleBy 1, 2')
     ..addTo(game.scene)
     ..align = 'center'
     ..position.x = game.width / 2
@@ -182,14 +182,14 @@ testScaleBy(GameLoop game) {
 
 @InteractiveTest('FadeOut, FadeIn', group: 'Action')
 testFade(GameLoop game) {
-  var label1 = new Label('Fade Out')
+  new Label('Fade Out')
     ..addTo(game.scene)
     ..align = 'center'
     ..position.x = game.width / 4
     ..position.y = game.height / 2
     ..runAction(new FadeOut(1) + new FadeOut(1).reversed);
 
-  var label2 = new Label('Fade In')
+  new Label('Fade In')
     ..addTo(game.scene)
     ..position.x = game.width / 2
     ..position.y = game.height / 2
@@ -197,7 +197,7 @@ testFade(GameLoop game) {
     ..opacity = 0.0
     ..runAction(new FadeIn(2) + new FadeIn(1).reversed);
 
-  var label3 = new Label('Fade To 0.5')
+  new Label('Fade To 0.5')
     ..addTo(game.scene)
     ..position.x = 3 * game.width / 4
     ..position.y = game.height / 2
@@ -213,7 +213,7 @@ testRepeat(GameLoop game) {
           new MoveBy(new Vector2(50.0, 0.0), 0.2),
       3);
 
-  var label = new Label('Repeat 3 (Move + Move)')
+  new Label('Repeat 3 (Move + Move)')
     ..addTo(game.scene)
     ..position.x = 0.0
     ..position.y = game.height
@@ -228,7 +228,7 @@ testSpawn(GameLoop game) {
     new ScaleBy(new Vector2(0.5, 0.5), 2)
   ]);
 
-  var label = new Label('Move | Rotate | Scale')
+  new Label('Move | Rotate | Scale')
     ..addTo(game.scene)
     ..position.x = 0.0
     ..position.y = game.height
@@ -237,7 +237,7 @@ testSpawn(GameLoop game) {
 
 @InteractiveTest('Multiple Action', group: 'Action')
 testMultiple(GameLoop game) {
-  var label = new Label('Move Rotate Scale')
+  new Label('Move Rotate Scale')
     ..addTo(game.scene)
     ..position.x = 0.0
     ..position.y = game.height
@@ -254,7 +254,7 @@ testSequence(GameLoop game) {
     new ScaleBy(new Vector2(1.5, 1.5), 1)
   ]);
 
-  var label = new Label('Move + Rotate + Scale')
+  new Label('Move + Rotate + Scale')
     ..addTo(game.scene)
     ..position.x = 0.0
     ..position.y = game.height
@@ -263,7 +263,7 @@ testSequence(GameLoop game) {
 
 @InteractiveTest('Operators', group: 'Action')
 testOperators(GameLoop game) {
-  var label1 = new Label('Show + Move + Rotate + Scale')
+  new Label('Show + Move + Rotate + Scale')
     ..addTo(game.scene)
     ..position.x = 0.0
     ..position.y = 100.0
@@ -273,7 +273,7 @@ testOperators(GameLoop game) {
         new RotateBy(360, 2) +
         new ScaleBy(new Vector2(0.5, 0.5), 2));
 
-  var label2 = new Label('Show | Move | Rotate | Scale')
+  new Label('Show | Move | Rotate | Scale')
     ..addTo(game.scene)
     ..position.x = 0.0
     ..position.y = 400.0
@@ -289,7 +289,7 @@ testCallback(GameLoop game) {
   var action = new CallFunction((label) {
     label.text = "New text";
   });
-  var label = new Label('Old text')
+  new Label('Old text')
     ..addTo(game.scene)
     ..align = 'center'
     ..position.x = game.width / 2
@@ -299,7 +299,7 @@ testCallback(GameLoop game) {
 
 @InteractiveTest('Loop', group: 'Action')
 testLoop(GameLoop game) {
-  var label = new Label('Endless Loop')
+  new Label('Endless Loop')
     ..addTo(game.scene)
     ..align = 'center'
     ..position.x = game.width / 2

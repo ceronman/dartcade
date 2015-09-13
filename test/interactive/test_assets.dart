@@ -17,7 +17,7 @@ part of dartcade_test;
 @InteractiveTest('LoadingScene', group: 'Assets')
 testLoading(GameLoop game) {
   var next = new Scene();
-  var label = new Label('New scene')
+  new Label('New scene')
     ..position.x = 50.0
     ..position.y = 50.0
     ..addTo(next);
@@ -42,7 +42,7 @@ testLoading(GameLoop game) {
 @InteractiveTest('LoadingScene with Error', group: 'Assets')
 testLoadingWithError(GameLoop game) {
   var next = new Scene();
-  var label = new Label('New scene')
+  new Label('New scene')
     ..position.x = 50.0
     ..position.y = 50.0
     ..addTo(next);
